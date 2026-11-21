@@ -1,0 +1,27 @@
+# Job4me services (plan, section 5). Images pinned by digest; Renovate keeps them current.
+# Development adds compose.dev.yaml (published ports, Mailpit); the home machine adds the `app` profile.
+name: job4me
+
+services:
+  postgres:
+    image: postgres:18@sha256:eb63372c1e05c755f55fa30cbd07aecc443676fc6c0fa90b9002d01537841e1a
+    environment:
+      POSTGRES_USER: job4me_owner
+      POSTGRES_PASSWORD: ${JOB4ME_DB_OWNER_PASSWORD:?run pnpm setup:dev first}
+      POSTGRES_DB: job4me
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    volumes:
+      # The 18 image keeps its data under /var/lib/postgresql/18/docker.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U job4me_owner -d job4me]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    shm_size: 128mb
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  pgdata:

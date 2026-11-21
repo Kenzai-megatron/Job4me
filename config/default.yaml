@@ -1,0 +1,61 @@
+# Job4me configuration (ADR 0005).
+# Every threshold, duration, quota, cap and price lives here, never in the code.
+# Machine-specific values go in config/local.yaml (not committed).
+# Secrets never go in these files: see .env.example.
+
+app:
+  # Address the browser uses. On the home machine: https://job4me.<tailnet>.ts.net
+  publicOrigin: http://localhost:5173
+  # Extra origins accepted on state-changing requests (e.g. the API port during local tests).
+  extraOrigins:
+    - http://localhost:3000
+  # WebAuthn relying party: the host name of publicOrigin.
+  rpId: localhost
+  rpName: Job4me
+  listenHost: 127.0.0.1
+  listenPort: 3000
+
+auth:
+  session:
+    idleTimeoutMinutes: 720 # 12 hours of inactivity
+    absoluteTimeoutHours: 168 # 7 days at most
+    reauthWindowMinutes: 5 # sensitive actions need a check younger than this
+    touchIntervalSeconds: 60 # how often activity is written back
+  enrollmentLinkMinutes: 15
+  challengeMinutes: 5
+  passwordStepMinutes: 5 # time allowed between the password and the second factor
+  password:
+    minLength: 12
+    maxLength: 256
+    argon2: # RFC 9106, second recommended option
+      memoryKiB: 65536
+      iterations: 3
+      parallelism: 4
+  lockout:
+    threshold: 5 # consecutive failures before the first wait
+    baseDelaySeconds: 60
+    maxDelaySeconds: 3600
+  rateLimit:
+    authRequestsPerMinute: 30
+  totp:
+    issuer: Job4me
+    window: 1 # accepted steps before and after the current one
+  recoveryCodes:
+    count: 10
+
+http:
+  bodyLimitBytes: 1048576
+
+mail:
+  # Development and tests only accept Mailpit (CLAUDE.md).
+  smtpHost: 127.0.0.1
+  smtpPort: 1025
+
+push:
+  # VAPID contact: set your own mailto: or https: address in config/local.yaml.
+  vapidSubject: mailto:job4me@example.invalid
+
+worker:
+  purgeCron: '17 * * * *' # every hour
+  expiredSessionRetentionDays: 30
+  consumedTokenRetentionDays: 7

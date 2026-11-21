@@ -1,0 +1,21 @@
+{
+  "name": "@job4me/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Configuration loading and validation (ADR 0005)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*"
+  }
+}

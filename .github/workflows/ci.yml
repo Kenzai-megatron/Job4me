@@ -68,3 +68,37 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+
+  integration:
+    name: Integration tests (PostgreSQL 18)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18@sha256:eb63372c1e05c755f55fa30cbd07aecc443676fc6c0fa90b9002d01537841e1a
+        env:
+          POSTGRES_USER: job4me_owner
+          POSTGRES_PASSWORD: ci-owner-throwaway
+          POSTGRES_DB: job4me
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U job4me_owner -d job4me"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    env:
+      JOB4ME_ENV: test
+      JOB4ME_DATABASE_OWNER_URL: postgres://job4me_owner:ci-owner-throwaway@127.0.0.1:5432/job4me
+      JOB4ME_DATABASE_URL: postgres://job4me_app:ci-app-throwaway-password@127.0.0.1:5432/job4me
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generate a throwaway master key
+        run: echo "JOB4ME_MASTER_KEY=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+      - run: pnpm test:integration

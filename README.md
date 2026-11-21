@@ -15,12 +15,15 @@ Application web (PWA) de recherche d'emploi pour un seul utilisateur, sur le mar
 
 ## Commandes
 
-| Commande         | Effet                                                |
-| ---------------- | ---------------------------------------------------- |
-| `pnpm install`   | installe les dépendances et active le hook de commit |
-| `pnpm lint`      | ESLint sur tout le dépôt                             |
-| `pnpm typecheck` | vérification des types TypeScript                    |
-| `pnpm test`      | tests unitaires                                      |
-| `pnpm format`    | formatage Prettier                                   |
+| Commande                | Effet                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `pnpm install`          | installe les dépendances et active le hook de commit                            |
+| `pnpm setup:dev`        | écrit un `.env` local avec des secrets jetables (jamais commité)                |
+| `pnpm dev`              | démarre PostgreSQL et Mailpit, applique les migrations, lance l'application     |
+| `pnpm lint`             | ESLint sur tout le dépôt                                                        |
+| `pnpm typecheck`        | vérification des types TypeScript                                               |
+| `pnpm test`             | tests unitaires                                                                 |
+| `pnpm test:integration` | tests d'intégration sur un vrai PostgreSQL (lancer `pnpm dev` ou Compose avant) |
+| `pnpm format`           | formatage Prettier                                                              |
 
-Les commandes de démarrage (`pnpm dev`, `pnpm stack:up`, `pnpm job4me …`) arrivent avec les lots suivants de la phase 0.
+Mailpit, qui capture tous les mails de développement, s'ouvre sur http://127.0.0.1:8025.

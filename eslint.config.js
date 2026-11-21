@@ -64,7 +64,7 @@ export default defineConfig(
   },
   {
     // Command-line tools and scripts talk to the terminal.
-    files: ['scripts/**', 'apps/api/src/cli/**', 'tests/**'],
+    files: ['scripts/**', 'apps/api/src/cli/**', '**/*-cli.ts', 'tests/**'],
     rules: { 'no-console': 'off' },
   },
   {
