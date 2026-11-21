@@ -1,0 +1,19 @@
+{
+  "name": "@job4me/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Job4me design system: tokens and React components",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "clsx": "2.1.1",
+    "react": "19.3.1"
+  }
+}

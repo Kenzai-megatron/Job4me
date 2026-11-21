@@ -1,0 +1,18 @@
+{
+  "name": "@job4me/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interface texts (French by default, Dutch and English ready) and Belgian formats",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@job4me/contracts": "workspace:*",
+    "@job4me/tooling": "workspace:*"
+  }
+}

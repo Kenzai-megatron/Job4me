@@ -45,7 +45,6 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
     loggerInstance: deps.logger,
     genReqId: () => randomUUID(),
     requestIdHeader: false,
-    requestIdLogLabel: 'requestId',
     bodyLimit: config.settings.http.bodyLimitBytes,
     trustProxy: false,
   });

@@ -1,0 +1,17 @@
+{
+  "name": "@job4me/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end tests: the built interface served by the real API, in Chromium",
+  "scripts": {
+    "test:e2e": "playwright test --trace off",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@job4me/tooling": "workspace:*",
+    "@playwright/test": "1.65.1",
+    "otpauth": "9.6.0"
+  }
+}

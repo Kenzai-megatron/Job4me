@@ -19,12 +19,14 @@
     "test:integration": "turbo run test:integration --concurrency=1",
     "job4me": "pnpm --filter @job4me/api run cli",
     "stack:up": "docker compose -f infra/compose.yaml --profile app up -d --build --wait",
-    "stack:down": "docker compose -f infra/compose.yaml --profile app down"
+    "stack:down": "docker compose -f infra/compose.yaml --profile app down",
+    "test:e2e": "pnpm --filter @job4me/web build && pnpm --filter @job4me/e2e test:e2e"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "26.6.6",
     "eslint": "10.15.0",
+    "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.14.0",
     "prettier": "3.10.1",
     "tsx": "4.23.15",
