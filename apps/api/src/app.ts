@@ -23,7 +23,9 @@ import { registerSecurityHeaders } from './plugins/security-headers';
 import { registerStatic } from './plugins/static';
 import './request-context';
 import { healthRoutes } from './routes/health';
-import { sessionRoutes } from './routes/session';
+import { accountRoutes } from './modules/auth/routes-account';
+import { signInRoutes } from './modules/auth/routes-sign-in';
+import { registerSessionHook } from './modules/auth/session-hook';
 
 export interface BuildOptions {
   /** Extra routes registered after the standard ones (tests only). */
@@ -61,6 +63,7 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
   await base.register(cookie);
   await base.register(rateLimit, { global: false });
   registerPreSession(base);
+  registerSessionHook(base, deps);
   registerCsrf(base, { allowedOrigins: config.allowedOrigins, csrfKey: deps.keys.csrf });
 
   const spaFallback = await registerStatic(base, deps.webDistDir);
@@ -68,7 +71,8 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
 
   const app = base.withTypeProvider<ZodTypeProvider>();
   await app.register(healthRoutes(deps));
-  await app.register(sessionRoutes(deps));
+  await app.register(signInRoutes(deps));
+  await app.register(accountRoutes(deps));
   if (!production) {
     app.get('/api/openapi.json', { schema: { hide: true } }, () => app.swagger());
   }

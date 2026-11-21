@@ -149,14 +149,17 @@ export const oneTimeTokens = pgTable(
   ],
 );
 
+// The active secret stays usable while a replacement waits for confirmation (pending_*).
 export const totpSecrets = pgTable('totp_secret', {
   userId: uuid('user_id')
     .primaryKey()
     .references(() => users.id, { onDelete: 'cascade' }),
-  secretCiphertext: bytea('secret_ciphertext').notNull(),
+  secretCiphertext: bytea('secret_ciphertext'),
   keyVersion: integer('key_version').notNull().default(1),
   confirmedAt: at('confirmed_at'),
   lastUsedStep: bigint('last_used_step', { mode: 'number' }),
+  pendingSecretCiphertext: bytea('pending_secret_ciphertext'),
+  pendingCreatedAt: at('pending_created_at'),
   createdAt: createdAt(),
 });
 
