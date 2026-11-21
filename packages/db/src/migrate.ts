@@ -54,6 +54,9 @@ async function applyGrants(client: pg.Client): Promise<void> {
     `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${role}`,
     `REVOKE UPDATE, DELETE, TRUNCATE ON "audit_log" FROM ${role}`,
     `GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${role}`,
+    // Readiness check: the runtime role may count applied migrations, nothing more.
+    `GRANT USAGE ON SCHEMA drizzle TO ${role}`,
+    `GRANT SELECT ON drizzle.__drizzle_migrations TO ${role}`,
     // pg-boss creates its own queue tables: its schema belongs to the runtime role.
     `CREATE SCHEMA IF NOT EXISTS ${quoteIdent(client, QUEUE_SCHEMA)} AUTHORIZATION ${role}`,
   ];

@@ -4,6 +4,7 @@ import { configDefaults, defineConfig } from 'vitest/config';
 export const unitConfig = defineConfig({
   test: {
     exclude: [...configDefaults.exclude, '**/*.int.test.ts'],
+    passWithNoTests: true,
   },
 });
 
