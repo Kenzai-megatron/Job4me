@@ -1,18 +1,47 @@
 # Job4me services (plan, section 5). Images pinned by digest; Renovate keeps them current.
-# Development adds compose.dev.yaml (published ports, Mailpit); the home machine adds the `app` profile.
+# Development adds compose.dev.yaml (published database port, Mailpit).
+# The home machine runs everything with the `app` profile: pnpm stack:up.
+# Secrets are files from secrets/ (pnpm setup:dev or setup:home), mounted under /run/secrets.
 name: job4me
+
+x-hardening:
+  &hardening # Same user as the owner of secrets/ (written by pnpm setup:*), so the files stay 0600.
+  user: ${JOB4ME_UID:-1000}:${JOB4ME_GID:-1000}
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+
+x-app-env: &app-env
+  JOB4ME_ENV: production
+  JOB4ME_DB_HOST: postgres
+  JOB4ME_DB_APP_PASSWORD_FILE: /run/secrets/db_app_password
+  JOB4ME_MASTER_KEY_FILE: /run/secrets/master_key
+  JOB4ME_VAPID_PUBLIC_KEY_FILE: /run/secrets/vapid_public_key
+  JOB4ME_VAPID_PRIVATE_KEY_FILE: /run/secrets/vapid_private_key
+  JOB4ME_PUBLIC_ORIGIN: ${JOB4ME_PUBLIC_ORIGIN:-http://localhost:3000}
+  JOB4ME_RP_ID: ${JOB4ME_RP_ID:-localhost}
+  JOB4ME_PUSH_CONTACT: ${JOB4ME_PUSH_CONTACT:-mailto:job4me@example.invalid}
 
 services:
   postgres:
     image: postgres:18@sha256:eb63372c1e05c755f55fa30cbd07aecc443676fc6c0fa90b9002d01537841e1a
     environment:
       POSTGRES_USER: job4me_owner
-      POSTGRES_PASSWORD: ${JOB4ME_DB_OWNER_PASSWORD:?run pnpm setup:dev first}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_owner_password
       POSTGRES_DB: job4me
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets:
+      - db_owner_password
     volumes:
       # The 18 image keeps its data under /var/lib/postgresql/18/docker.
       - pgdata:/var/lib/postgresql
+    networks:
+      - internal
     healthcheck:
       test: [CMD-SHELL, pg_isready -U job4me_owner -d job4me]
       interval: 2s
@@ -23,5 +52,107 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  migrate:
+    profiles: [app]
+    image: job4me:local
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile
+    command: [node, api/migrate.js]
+    environment:
+      <<: *app-env
+      JOB4ME_DB_OWNER_PASSWORD_FILE: /run/secrets/db_owner_password
+    secrets:
+      - db_owner_password
+      - db_app_password
+      - master_key
+      - vapid_public_key
+      - vapid_private_key
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: 'no'
+    <<: *hardening
+
+  api:
+    profiles: [app]
+    image: job4me:local
+    command: [node, api/index.js]
+    environment:
+      <<: *app-env
+      JOB4ME_LISTEN_HOST: 0.0.0.0
+    secrets:
+      - db_app_password
+      - master_key
+      - vapid_public_key
+      - vapid_private_key
+    volumes:
+      - files:/var/lib/job4me/files
+    ports:
+      # Only this machine: Tailscale (`tailscale serve`) brings it to your devices over HTTPS.
+      - 127.0.0.1:${JOB4ME_HTTP_PORT:-3000}:3000
+    networks:
+      - internal
+      - edge
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/ready').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    restart: unless-stopped
+    <<: *hardening
+
+  worker:
+    profiles: [app]
+    image: job4me:local
+    command: [node, worker/index.js]
+    environment:
+      <<: *app-env
+    secrets:
+      - db_app_password
+      - master_key
+      - vapid_public_key
+      - vapid_private_key
+    volumes:
+      - files:/var/lib/job4me/files
+    networks:
+      # Needs the Internet for push services today, job sources and APIs later.
+      - internal
+      - edge
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    <<: *hardening
+
+secrets:
+  db_owner_password:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/db_owner_password
+  db_app_password:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/db_app_password
+  master_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/master_key
+  vapid_public_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/vapid_public_key
+  vapid_private_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/vapid_private_key
+
+networks:
+  # No route to the outside: the database is only reachable by the application.
+  internal:
+    internal: true
+  edge: {}
+
 volumes:
   pgdata:
+  # Generated documents (CVs, letters) from a later phase; empty in phase 0.
+  files:

@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+**/playwright-report
+**/test-results
+tests/e2e/.state
+.git
+.env
+.env.*
+secrets
+config/local.yaml

@@ -37,6 +37,8 @@ describe('loadConfig', () => {
     expect(config.settings.auth.lockout.threshold).toBe(7);
     expect(config.settings.app.publicOrigin).toBe('https://job4me.example.ts.net');
     expect(config.settings.mail.smtpHost).toBe('smtp.example.org');
+    // The development origins in extraOrigins never reach production.
+    expect(config.allowedOrigins).toEqual(['https://job4me.example.ts.net']);
   });
 
   it('rejects a value outside its bounds', () => {
@@ -87,6 +89,24 @@ describe('secrets', () => {
     const file = join(makeRepo(), 'secret.txt');
     writeFileSync(file, 'from-file\n');
     expect(readSecret('SOME_SECRET', { SOME_SECRET_FILE: file })).toBe('from-file');
+  });
+
+  it('builds connection strings from a host and password files', () => {
+    const dir = makeRepo();
+    writeFileSync(join(dir, 'app'), 'p@ss/word\n');
+    writeFileSync(join(dir, 'owner'), 'owner-secret\n');
+    writeFileSync(join(dir, 'key'), 'a2V5\n');
+    const secrets = loadSecrets({
+      JOB4ME_DB_HOST: 'postgres',
+      JOB4ME_DB_APP_PASSWORD_FILE: join(dir, 'app'),
+      JOB4ME_DB_OWNER_PASSWORD_FILE: join(dir, 'owner'),
+      JOB4ME_MASTER_KEY_FILE: join(dir, 'key'),
+    });
+    expect(secrets.databaseUrl).toBe('postgres://job4me_app:p%40ss%2Fword@postgres:5432/job4me');
+    expect(secrets.databaseOwnerUrl).toBe(
+      'postgres://job4me_owner:owner-secret@postgres:5432/job4me',
+    );
+    expect(secrets.masterKey).toBe('a2V5');
   });
 
   it('fails when a required secret is missing', () => {

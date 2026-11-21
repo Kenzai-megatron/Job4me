@@ -1,14 +1,19 @@
-# Development only: published ports on 127.0.0.1 (never on every interface) and Mailpit.
+# Development only: the database port on 127.0.0.1 (never on every interface) and Mailpit.
 services:
   postgres:
     ports:
       - 127.0.0.1:${JOB4ME_DB_PORT:-5432}:5432
+    networks:
+      - internal
+      - edge
 
   mailpit:
     image: axllent/mailpit:v1.34.0@sha256:23a2ef85bc50853ab3093645d1d64679afd8887e89da5e48a88940c172591a4e
     ports:
       - 127.0.0.1:8025:8025
       - 127.0.0.1:1025:1025
+    networks:
+      - edge
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

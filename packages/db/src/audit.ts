@@ -1,4 +1,6 @@
-import { and, desc, eq, type Executor, lt, schema } from '@job4me/db';
+import { and, desc, eq, lt } from 'drizzle-orm';
+import type { Executor } from './client';
+import * as schema from './schema';
 
 export type AuditOutcome = 'success' | 'failure' | 'denied';
 export type AuditActor = 'user' | 'cli' | 'system';

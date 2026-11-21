@@ -28,7 +28,7 @@ import QRCode from 'qrcode';
 import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import type { SessionContext } from '../../request-context';
-import { listAuditForUser } from '../audit/audit';
+import { listAuditForUser } from '@job4me/db';
 import { consumeChallenge, storeChallenge } from './challenges';
 import { addMs, authDurations, clock } from './clock';
 import { reauthUntil, requireRecentAuth, requireSession } from './guards';

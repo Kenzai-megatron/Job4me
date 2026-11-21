@@ -4,6 +4,7 @@ import { connect } from '@job4me/db';
 import { parseMasterKey } from '@job4me/security';
 import { PasswordTooWeakError } from '../modules/auth/users';
 import { auditTail, CliError, sessionsRevokeAll, userCreate, userEnrollLink } from './commands';
+import { sendTestMail } from './mail';
 
 // `pnpm job4me <command>`: administration from the machine itself, the root of trust (ADR 0003).
 
@@ -14,6 +15,7 @@ const HELP = `Utilisation : pnpm job4me <commande> [options]
   sessions:revoke-all --email <adresse>        déconnecte toutes les sessions
   audit:tail [--limit 20]                      derniers événements du journal d'audit
   config:check                                 vérifie la configuration et les secrets
+  mail:test --to <adresse>                     envoie un mail de test (Mailpit en développement)
 
 Le mot de passe est demandé sans écho ; hors terminal, il est lu sur l'entrée standard.`;
 
@@ -90,6 +92,7 @@ async function main(): Promise<void> {
     options: {
       email: { type: 'string' },
       name: { type: 'string' },
+      to: { type: 'string' },
       limit: { type: 'string', default: '20' },
     },
     allowPositionals: false,
@@ -113,6 +116,13 @@ async function main(): Promise<void> {
       `Clés VAPID (notifications) : ${secrets.vapidPublicKey && secrets.vapidPrivateKey ? 'présentes' : 'absentes'}`,
     );
     console.log('Configuration valide.');
+    return;
+  }
+
+  if (command === 'mail:test') {
+    const to = required(values.to, 'to');
+    await sendTestMail(config, to);
+    console.log(`Mail de test envoyé à ${to}. En développement : http://127.0.0.1:8025 (Mailpit).`);
     return;
   }
 

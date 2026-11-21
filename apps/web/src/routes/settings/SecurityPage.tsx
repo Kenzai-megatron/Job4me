@@ -7,6 +7,7 @@ import { api } from '../../api/client';
 import { auditQuery, securityQuery, sessionsQuery } from '../../api/queries';
 import { createPasskey } from '../../auth/webauthn';
 import { errorMessage } from '../../components/errors';
+import { NotificationsSection } from '../../components/NotificationsSection';
 import { useWithReauth } from '../../components/ReauthProvider';
 import { RecoveryCodes } from '../../components/RecoveryCodes';
 
@@ -84,6 +85,7 @@ export function SecurityPage() {
         </>
       ) : null}
       <SessionsSection sessions={sessions.data?.sessions ?? []} onChange={refresh} />
+      <NotificationsSection />
       <AuditSection entries={audit.data?.entries ?? []} />
     </div>
   );
