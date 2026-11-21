@@ -1,0 +1,12 @@
+# gitleaks configuration (ADR 0008): default rules plus project allowlist.
+title = "Job4me"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documentation placeholders and public test vectors"
+paths = [
+  '''pnpm-lock\.yaml''',
+  '''\.env\.example''',
+]

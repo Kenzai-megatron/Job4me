@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+dist
+coverage
+.turbo
+playwright-report
+test-results
+# Documentation is written by hand: keep it as is
+docs
+CLAUDE.md

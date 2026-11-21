@@ -1,0 +1,36 @@
+{
+  "name": "job4me",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=26.0.0 <27"
+  },
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
+    "dev": "tsx scripts/dev.ts",
+    "setup:dev": "tsx scripts/setup-dev.ts",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "turbo run test",
+    "test:integration": "turbo run test:integration --concurrency=1",
+    "job4me": "pnpm --filter @job4me/api run cli",
+    "stack:up": "docker compose -f infra/compose.yaml --profile app up -d --build --wait",
+    "stack:down": "docker compose -f infra/compose.yaml --profile app down"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.6.6",
+    "eslint": "10.15.0",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
+    "tsx": "4.23.15",
+    "turbo": "2.11.13",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.73.0",
+    "vitest": "5.1.1"
+  }
+}

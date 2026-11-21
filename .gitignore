@@ -1,0 +1,22 @@
+# Dependencies and build output
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+coverage/
+
+# Tests
+playwright-report/
+test-results/
+blob-report/
+
+# Local configuration and secrets: never committed
+.env
+.env.*
+!.env.example
+config/local.yaml
+secrets/
+
+# System
+.DS_Store
+*.log
