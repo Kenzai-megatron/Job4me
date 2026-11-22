@@ -12,7 +12,8 @@ export default defineConfig({
   testDir: './specs',
   fullyParallel: false,
   workers: 1,
-  retries: process.env.CI ? 1 : 0,
+  // No retry: the specs share one single-use enrollment link, so a retry could never pass.
+  retries: 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: ORIGIN,
