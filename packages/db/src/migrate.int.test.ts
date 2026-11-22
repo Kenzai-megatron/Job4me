@@ -22,7 +22,7 @@ afterAll(async () => {
 });
 
 describe('migrations', () => {
-  it('create the phase 0 tables', async () => {
+  it('create the phase 0 and phase 1 tables', async () => {
     const { rows } = await owner.query<{ tablename: string }>(
       "select tablename from pg_tables where schemaname = 'public' order by tablename",
     );
@@ -30,14 +30,46 @@ describe('migrations', () => {
       'audit_log',
       'auth_challenge',
       'auth_throttle',
+      'certification',
+      'education',
+      'elimination_rule',
+      'excluded_company',
+      'experience',
+      'fact',
+      'language_level',
       'one_time_token',
       'passkey',
+      'profile',
+      'profile_identity',
       'push_subscription',
       'recovery_code',
+      'search_keyword',
+      'sector_preference',
       'session',
+      'skill',
+      'target_job',
+      'title_filter_rule',
       'totp_secret',
       'user',
     ]);
+  });
+
+  it('turn on row-level security for every profile table (ADR 0011)', async () => {
+    const { rows } = await owner.query<{ relname: string; relrowsecurity: boolean }>(
+      "select relname, relrowsecurity from pg_class where relnamespace = 'public'::regnamespace and relkind = 'r'",
+    );
+    const guarded = rows.filter((row) => row.relrowsecurity).map((row) => row.relname);
+    for (const table of [
+      'profile',
+      'profile_identity',
+      'skill',
+      'experience',
+      'fact',
+      'search_keyword',
+    ]) {
+      expect(guarded).toContain(table);
+    }
+    expect(guarded).not.toContain('session');
   });
 
   it('are idempotent', async () => {

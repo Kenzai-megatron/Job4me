@@ -231,7 +231,9 @@
     "database_unavailable": "Le serveur ne répond pas pour le moment.",
     "migrations_pending": "Le serveur est en cours de mise à jour.",
     "internal_error": "Une erreur est survenue. Réessayez dans un instant.",
-    "network": "Connexion impossible avec le serveur. Vérifiez votre accès réseau."
+    "network": "Connexion impossible avec le serveur. Vérifiez votre accès réseau.",
+    "duplicate": "Cette entrée existe déjà.",
+    "limit_reached": "Le nombre maximal est atteint."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",

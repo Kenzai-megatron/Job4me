@@ -73,3 +73,10 @@ export async function createTestDatabase(prefix: string): Promise<TestDatabase> 
     },
   };
 }
+
+/** A plain connection for tests that must bypass the application code (row-level security). */
+export async function rawConnection(connectionString: string) {
+  const client = new pg.Client({ connectionString });
+  await client.connect();
+  return client;
+}

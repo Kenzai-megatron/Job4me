@@ -8,6 +8,7 @@ export interface Keys {
   totp: Buffer;
   recovery: Buffer;
   csrf: Buffer;
+  identity: Buffer;
 }
 
 export function deriveKeys(masterKeyBase64: string): Keys {
@@ -16,6 +17,7 @@ export function deriveKeys(masterKeyBase64: string): Keys {
     totp: deriveKey(master, 'totp'),
     recovery: deriveKey(master, 'recovery'),
     csrf: deriveKey(master, 'csrf'),
+    identity: deriveKey(master, 'identity'),
   };
 }
 
