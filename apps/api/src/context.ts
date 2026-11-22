@@ -26,10 +26,17 @@ export interface JobQueue {
   send(name: string, data: Record<string, unknown>): Promise<string | null>;
 }
 
+/** Imported files (ADR 0010): their own key, apart from the master key, and the files volume. */
+export interface ImportStore {
+  key: Buffer;
+  filesDir: string;
+}
+
 export interface AppDeps {
   config: Config;
   db: Database;
   keys: Keys;
+  imports: ImportStore;
   logger: Logger;
   queue?: JobQueue;
   vapidPublicKey?: string;

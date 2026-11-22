@@ -49,7 +49,9 @@ pnpm setup:home --origin https://job4me.<ton-tailnet>.ts.net --contact mailto:<t
 
 La commande crée le dossier `secrets/` (lisible par toi seul) et le fichier `.env`, qui ne contient que des réglages et des chemins. Lance-la avec ton utilisateur habituel, pas avec `sudo` : les conteneurs tournent sous ton identité, pour lire les secrets sans les ouvrir à tous.
 
-**Recopie tout de suite le contenu des cinq fichiers de `secrets/` dans ton gestionnaire de mots de passe**, une note sécurisée par fichier. Le plus précieux est `master_key` : sans elle, les secrets TOTP chiffrés en base deviennent illisibles.
+**Recopie tout de suite le contenu des fichiers de `secrets/` dans ton gestionnaire de mots de passe**, une note sécurisée par fichier. Les plus précieux sont `master_key` (sans elle, les secrets TOTP et l'identité chiffrés en base deviennent illisibles) et `import_key` (sans elle, les CV importés et leur texte extrait le deviennent).
+
+Les fichiers importés, chiffrés, vivent dans `var/files/` à la racine du dépôt (jamais dans Git ni dans l'image) ; les sauvegardes du lot 6 les emporteront.
 
 ## 4. Démarrer
 
@@ -103,7 +105,7 @@ Pour te connecter aussi depuis ton PC : sur la page de connexion, choisis la pas
 
 | Besoin | Commande |
 | --- | --- |
-| Mettre à jour | `git pull && pnpm install && pnpm stack:up` (migrations comprises) |
+| Mettre à jour | `git pull && pnpm install && pnpm setup:home && pnpm stack:up` (secrets et réglages nouveaux ajoutés sans toucher aux anciens, migrations comprises) |
 | Lire les journaux | `pnpm stack:logs api` ou `pnpm stack:logs worker` |
 | Arrêter | `pnpm stack:down` (les données restent dans le volume `job4me_pgdata`) |
 | Derniers événements de sécurité | `pnpm stack:cli audit:tail --limit 50` |

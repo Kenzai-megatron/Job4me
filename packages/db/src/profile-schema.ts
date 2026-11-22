@@ -20,13 +20,13 @@ import { users } from './schema';
 // guarded twice (ADR 0011): the user_id filter of each query, and row-level security that only
 // shows the rows of the user set in the transaction parameter app.user_id.
 
-const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => 'bytea' });
-const at = (name: string) => timestamp(name, { withTimezone: true });
+export const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => 'bytea' });
+export const at = (name: string) => timestamp(name, { withTimezone: true });
 
 /** The row belongs to the user of the current transaction (no parameter: no row). */
 export const OWNED_BY_CURRENT_USER = sql`user_id = nullif(current_setting('app.user_id', true), '')::uuid`;
 
-const ownerPolicy = (table: string) =>
+export const ownerPolicy = (table: string) =>
   pgPolicy(`${table}_owner`, {
     for: 'all',
     to: 'public',
@@ -34,7 +34,7 @@ const ownerPolicy = (table: string) =>
     withCheck: OWNED_BY_CURRENT_USER,
   });
 
-const common = () => ({
+export const common = () => ({
   id: uuid('id')
     .primaryKey()
     .default(sql`uuidv7()`),

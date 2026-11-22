@@ -24,6 +24,14 @@ const CLIENT_ERRORS: Record<string, { status: number; code: ErrorCode }> = {
   FST_ERR_CTP_INVALID_MEDIA_TYPE: { status: 415, code: 'unsupported_media_type' },
   FST_ERR_CTP_EMPTY_JSON_BODY: { status: 400, code: 'invalid_body' },
   FST_ERR_CTP_INVALID_JSON_BODY: { status: 400, code: 'invalid_body' },
+  // Uploads (@fastify/multipart): one file, nothing else.
+  FST_REQ_FILE_TOO_LARGE: { status: 413, code: 'file_too_large' },
+  FST_FILES_LIMIT: { status: 400, code: 'invalid_body' },
+  FST_PARTS_LIMIT: { status: 400, code: 'invalid_body' },
+  FST_FIELDS_LIMIT: { status: 400, code: 'invalid_body' },
+  FST_PROTO_VIOLATION: { status: 400, code: 'invalid_body' },
+  FST_MP_PREMATURE_CLOSE: { status: 400, code: 'invalid_body' },
+  FST_INVALID_MULTIPART_CONTENT_TYPE: { status: 415, code: 'unsupported_media_type' },
 };
 
 /** Error messages never carry internal details (SPEC section 11). */

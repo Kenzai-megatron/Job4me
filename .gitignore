@@ -16,6 +16,8 @@ blob-report/
 !.env.example
 config/local.yaml
 secrets/
+# Files volume (imported files, encrypted): never committed
+var/
 
 # System
 .DS_Store

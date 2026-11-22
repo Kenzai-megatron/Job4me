@@ -7,6 +7,8 @@ export interface TestDatabase {
   name: string;
   ownerUrl: string;
   appUrl: string;
+  /** The extractor role's connection, when the environment provides its password. */
+  extractorUrl: string | undefined;
   drop: () => Promise<void>;
 }
 
@@ -21,7 +23,8 @@ export async function recreateDatabase(
   ownerServerUrl: string,
   appServerUrl: string,
   name: string,
-): Promise<{ ownerUrl: string; appUrl: string }> {
+  extractorServerUrl?: string,
+): Promise<{ ownerUrl: string; appUrl: string; extractorUrl: string | undefined }> {
   const admin = new pg.Client({ connectionString: withDatabase(ownerServerUrl, 'postgres') });
   await admin.connect();
   try {
@@ -32,8 +35,9 @@ export async function recreateDatabase(
   }
   const ownerUrl = withDatabase(ownerServerUrl, name);
   const appUrl = withDatabase(appServerUrl, name);
-  await runMigrations({ ownerUrl, appUrl });
-  return { ownerUrl, appUrl };
+  const extractorUrl = extractorServerUrl ? withDatabase(extractorServerUrl, name) : undefined;
+  await runMigrations({ ownerUrl, appUrl, extractorUrl });
+  return { ownerUrl, appUrl, extractorUrl };
 }
 
 /**
@@ -57,11 +61,15 @@ export async function createTestDatabase(prefix: string): Promise<TestDatabase> 
   }
   const ownerUrl = withDatabase(ownerServerUrl, name);
   const appUrl = withDatabase(appServerUrl, name);
-  await runMigrations({ ownerUrl, appUrl });
+  const extractorUrl = secrets.databaseExtractorUrl
+    ? withDatabase(secrets.databaseExtractorUrl, name)
+    : undefined;
+  await runMigrations({ ownerUrl, appUrl, extractorUrl });
   return {
     name,
     ownerUrl,
     appUrl,
+    extractorUrl,
     drop: async () => {
       const client = new pg.Client({ connectionString: withDatabase(ownerServerUrl, 'postgres') });
       await client.connect();

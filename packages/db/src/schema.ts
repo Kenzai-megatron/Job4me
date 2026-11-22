@@ -252,3 +252,6 @@ export type PushSubscription = typeof pushSubscriptions.$inferSelect;
 
 // Phase 1 profile tables (row-level security, ADR 0011).
 export * from './profile-schema';
+
+// Phase 1 imports: uploaded files and their extraction (ADR 0010).
+export * from './import-schema';

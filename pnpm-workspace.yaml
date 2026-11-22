@@ -13,3 +13,7 @@ blockExoticSubdeps: true
 # Dependencies allowed to run install scripts; every other one is blocked.
 onlyBuiltDependencies:
   - esbuild
+# Optional dependencies left out: pdfjs-dist only needs @napi-rs/canvas (native code) to render pages,
+# and the extractor reads text only (ADR 0010).
+ignoredOptionalDependencies:
+  - '@napi-rs/canvas'

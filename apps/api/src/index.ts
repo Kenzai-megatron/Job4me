@@ -1,13 +1,20 @@
-import { loadConfig, loadSecrets } from '@job4me/config';
+import { ConfigError, loadConfig, loadSecrets } from '@job4me/config';
 import { connect, queueOptions } from '@job4me/db';
 import { PgBoss } from 'pg-boss';
 import { createLogger } from '@job4me/logger';
+import { parseKey } from '@job4me/security';
 import { buildApp } from './app';
 import { deriveKeys } from './context';
 
 async function main(): Promise<void> {
   const config = loadConfig();
   const secrets = loadSecrets();
+  if (!secrets.importKey) {
+    throw new ConfigError(
+      'missing secret JOB4ME_IMPORT_KEY (or JOB4ME_IMPORT_KEY_FILE); run pnpm setup:dev',
+    );
+  }
+  const importKey = parseKey(secrets.importKey, 'import key');
   const logger = createLogger({ name: 'api' });
   const database = connect(secrets.databaseUrl, { applicationName: 'job4me-api' });
   // The API only adds jobs; the worker runs them and does the queue maintenance.
@@ -24,6 +31,7 @@ async function main(): Promise<void> {
     config,
     db: database.db,
     keys: deriveKeys(secrets.masterKey),
+    imports: { key: importKey, filesDir: config.settings.files.dir },
     logger,
     queue: boss,
     vapidPublicKey: secrets.vapidPublicKey,

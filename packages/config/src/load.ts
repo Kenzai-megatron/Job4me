@@ -7,6 +7,7 @@ import {
   type Environment,
   environmentSchema,
   MAILPIT_HOSTS,
+  type ExtractorSecrets,
   type Secrets,
   type Settings,
   settingsSchema,
@@ -100,6 +101,9 @@ function overridesFromEnv(env: Env): unknown {
     push: {
       ...(pushContact ? { vapidSubject: pushContact } : {}),
     },
+    files: {
+      ...(env.JOB4ME_FILES_DIR ? { dir: env.JOB4ME_FILES_DIR } : {}),
+    },
   };
 }
 
@@ -186,6 +190,13 @@ function composedDatabaseUrl(env: Env, user: string, passwordName: string): stri
   return `postgres://${user}:${encodeURIComponent(password)}@${host}:${port}/${name}`;
 }
 
+function extractorDatabaseUrl(env: Env): string | undefined {
+  return (
+    readSecret('JOB4ME_DATABASE_EXTRACTOR_URL', env) ??
+    composedDatabaseUrl(env, 'job4me_extractor', 'JOB4ME_DB_EXTRACTOR_PASSWORD')
+  );
+}
+
 /** Reads the secrets the application needs. Values are never logged. */
 export function loadSecrets(env: Env = process.env): Secrets {
   const databaseUrl =
@@ -202,7 +213,20 @@ export function loadSecrets(env: Env = process.env): Secrets {
       readSecret('JOB4ME_DATABASE_OWNER_URL', env) ??
       composedDatabaseUrl(env, 'job4me_owner', 'JOB4ME_DB_OWNER_PASSWORD'),
     masterKey: requireSecret('JOB4ME_MASTER_KEY', env),
+    databaseExtractorUrl: extractorDatabaseUrl(env),
+    importKey: readSecret('JOB4ME_IMPORT_KEY', env),
     vapidPublicKey: readSecret('JOB4ME_VAPID_PUBLIC_KEY', env),
     vapidPrivateKey: readSecret('JOB4ME_VAPID_PRIVATE_KEY', env),
   };
+}
+
+/** The isolated extractor's secrets: its own database role and the import key, nothing else. */
+export function loadExtractorSecrets(env: Env = process.env): ExtractorSecrets {
+  const databaseUrl = extractorDatabaseUrl(env);
+  if (!databaseUrl) {
+    throw new ConfigError(
+      'missing database settings: JOB4ME_DATABASE_EXTRACTOR_URL, or JOB4ME_DB_HOST with JOB4ME_DB_EXTRACTOR_PASSWORD(_FILE); run pnpm setup:dev',
+    );
+  }
+  return { databaseUrl, importKey: requireSecret('JOB4ME_IMPORT_KEY', env) };
 }

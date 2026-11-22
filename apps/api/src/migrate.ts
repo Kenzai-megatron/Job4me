@@ -9,6 +9,7 @@ async function main(): Promise<void> {
   await runMigrations({
     ownerUrl: secrets.databaseOwnerUrl,
     appUrl: secrets.databaseUrl,
+    extractorUrl: secrets.databaseExtractorUrl,
     ...(process.env.JOB4ME_MIGRATIONS_DIR
       ? { migrationsFolder: process.env.JOB4ME_MIGRATIONS_DIR }
       : {}),

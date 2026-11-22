@@ -10,3 +10,5 @@ tests/e2e/.state
 .env.*
 secrets
 config/local.yaml
+# Files volume: imported files never enter an image or the build cache.
+var

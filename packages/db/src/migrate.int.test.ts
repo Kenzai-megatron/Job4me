@@ -36,6 +36,7 @@ describe('migrations', () => {
       'excluded_company',
       'experience',
       'fact',
+      'import_run',
       'language_level',
       'one_time_token',
       'passkey',
@@ -50,6 +51,7 @@ describe('migrations', () => {
       'target_job',
       'title_filter_rule',
       'totp_secret',
+      'upload',
       'user',
     ]);
   });
@@ -66,6 +68,8 @@ describe('migrations', () => {
       'experience',
       'fact',
       'search_keyword',
+      'upload',
+      'import_run',
     ]) {
       expect(guarded).toContain(table);
     }
@@ -74,7 +78,11 @@ describe('migrations', () => {
 
   it('are idempotent', async () => {
     await expect(
-      runMigrations({ ownerUrl: database.ownerUrl, appUrl: database.appUrl }),
+      runMigrations({
+        ownerUrl: database.ownerUrl,
+        appUrl: database.appUrl,
+        extractorUrl: database.extractorUrl,
+      }),
     ).resolves.toBeUndefined();
   });
 
@@ -83,6 +91,28 @@ describe('migrations', () => {
       "insert into \"user\" (email, display_name, webauthn_user_handle) values ('a@example.org', 'A', '\\x01') returning id",
     );
     expect(rows[0]!.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/);
+  });
+});
+
+describe('extractor role (ADR 0010)', () => {
+  it('has no rights of its own and only a few columns of the import tables', async () => {
+    const { rows } = await owner.query(
+      "select rolsuper, rolcreaterole, rolcreatedb, rolbypassrls from pg_roles where rolname = 'job4me_extractor'",
+    );
+    expect(rows[0]).toEqual({
+      rolsuper: false,
+      rolcreaterole: false,
+      rolcreatedb: false,
+      rolbypassrls: false,
+    });
+    const tables = await owner.query<{ table_name: string }>(
+      "select distinct table_name from information_schema.column_privileges where grantee = 'job4me_extractor' order by table_name",
+    );
+    expect(tables.rows.map((row) => row.table_name)).toEqual(['import_run', 'upload']);
+    const whole = await owner.query(
+      "select table_name from information_schema.table_privileges where grantee = 'job4me_extractor'",
+    );
+    expect(whole.rows).toEqual([]);
   });
 });
 
