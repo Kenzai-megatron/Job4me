@@ -3,6 +3,8 @@ import {
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
   useEffect,
   useId,
   useRef,
@@ -107,6 +109,181 @@ export function TextField({ label, hint, error, className, id, ...rest }: TextFi
         </p>
       ) : null}
     </div>
+  );
+}
+
+/** Label, hint and error shared by the form fields below (same layout as TextField). */
+function FieldFrame({
+  id,
+  label,
+  hint,
+  error,
+  className,
+  children,
+}: {
+  id: string;
+  label: string;
+  hint?: string;
+  error?: string | null;
+  className?: string;
+  children: (describedBy: string | undefined) => ReactNode;
+}) {
+  const hintId = `${id}-hint`;
+  const errorId = `${id}-error`;
+  const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(' ');
+  return (
+    <div className={clsx('flex flex-col gap-1', className)}>
+      <label htmlFor={id} className="text-sm font-semibold">
+        {label}
+      </label>
+      {children(describedBy || undefined)}
+      {hint ? (
+        <p id={hintId} className="text-sm text-muted">
+          {hint}
+        </p>
+      ) : null}
+      {error ? (
+        <p id={errorId} className="text-sm font-medium text-danger">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  hint?: string;
+  error?: string | null;
+  options: { value: string; label: string }[];
+  /** Text of an empty first choice; without it, a value is required. */
+  emptyLabel?: string;
+}
+
+export function SelectField({
+  label,
+  hint,
+  error,
+  className,
+  id,
+  options,
+  emptyLabel,
+  ...rest
+}: SelectFieldProps) {
+  const generated = useId();
+  const selectId = id ?? generated;
+  return (
+    <FieldFrame id={selectId} label={label} hint={hint} error={error} className={className}>
+      {(describedBy) => (
+        <select
+          id={selectId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          className={clsx(
+            'min-h-11 rounded-md border bg-surface px-3 text-base text-ink',
+            focusRing,
+            error ? 'border-danger' : 'border-line-strong',
+          )}
+          {...rest}
+        >
+          {emptyLabel !== undefined ? <option value="">{emptyLabel}</option> : null}
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )}
+    </FieldFrame>
+  );
+}
+
+export interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label: string;
+  hint?: string;
+  error?: string | null;
+}
+
+export function TextAreaField({ label, hint, error, className, id, ...rest }: TextAreaFieldProps) {
+  const generated = useId();
+  const areaId = id ?? generated;
+  return (
+    <FieldFrame id={areaId} label={label} hint={hint} error={error} className={className}>
+      {(describedBy) => (
+        <textarea
+          id={areaId}
+          rows={4}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          className={clsx(
+            'rounded-md border bg-surface px-3 py-2 text-base text-ink placeholder:text-muted',
+            focusRing,
+            error ? 'border-danger' : 'border-line-strong',
+          )}
+          {...rest}
+        />
+      )}
+    </FieldFrame>
+  );
+}
+
+export interface CheckboxFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+  label: string;
+}
+
+/** A checkbox with its label on the right, 44 px tall to stay easy to tap. */
+export function CheckboxField({ label, className, id, ...rest }: CheckboxFieldProps) {
+  const generated = useId();
+  const boxId = id ?? generated;
+  return (
+    <div className={clsx('flex min-h-11 items-center gap-3', className)}>
+      <input
+        id={boxId}
+        type="checkbox"
+        className={clsx('size-5 rounded border-line-strong accent-accent', focusRing)}
+        {...rest}
+      />
+      <label htmlFor={boxId} className="text-base">
+        {label}
+      </label>
+    </div>
+  );
+}
+
+/** Several choices from a list, as checkboxes grouped under one legend. */
+export function CheckboxGroup({
+  legend,
+  options,
+  value,
+  onChange,
+  className,
+}: {
+  legend: string;
+  options: { value: string; label: string }[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  className?: string;
+}) {
+  return (
+    <fieldset className={clsx('flex flex-col gap-1', className)}>
+      <legend className="text-sm font-semibold">{legend}</legend>
+      <div className="flex flex-wrap gap-x-6">
+        {options.map((option) => (
+          <CheckboxField
+            key={option.value}
+            label={option.label}
+            checked={value.includes(option.value)}
+            onChange={(event) =>
+              onChange(
+                event.target.checked
+                  ? [...value, option.value]
+                  : value.filter((item) => item !== option.value),
+              )
+            }
+          />
+        ))}
+      </div>
+    </fieldset>
   );
 }
 

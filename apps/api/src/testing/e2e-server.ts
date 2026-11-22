@@ -35,8 +35,22 @@ async function main() {
     name: 'Mehdi',
     password: E2E_PASSWORD,
   });
+  // A second account, enrolled by the profile specs on their own.
+  const profile = await userCreate(database.db, config, {
+    email: 'profile@example.org',
+    name: 'Mehdi',
+    password: E2E_PASSWORD,
+  });
   mkdirSync(dirname(stateFile), { recursive: true });
-  writeFileSync(stateFile, JSON.stringify({ link, email: E2E_EMAIL, password: E2E_PASSWORD }));
+  writeFileSync(
+    stateFile,
+    JSON.stringify({
+      link,
+      email: E2E_EMAIL,
+      password: E2E_PASSWORD,
+      profileLink: profile.link,
+    }),
+  );
 
   const app = await buildApp({
     config,

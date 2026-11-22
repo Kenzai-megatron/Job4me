@@ -238,5 +238,190 @@
   "mail": {
     "testSubject": "Job4me : mail de test",
     "testBody": "Ce message vérifie le chemin des mails de Job4me. En développement, il n'arrive que dans Mailpit. Aucune action n'est nécessaire."
+  },
+  "profile": {
+    "title": "Profil",
+    "intro": "La seule source de vérité de Job4me : chaque ligne d'un CV ou d'une lettre viendra de ce que vous écrivez ici.",
+    "completeness": {
+      "title": "Complétude",
+      "percent": "Profil complet à {{percent}} %",
+      "complete": "Toutes les rubriques utiles sont remplies.",
+      "missing": "À compléter :",
+      "item": "{{rubric}} ({{count}} sur {{min}})"
+    },
+    "rubrics": {
+      "identity": "Identité et contact",
+      "practical": "Critères pratiques",
+      "motivations": "Motivations",
+      "targetJobs": "Métiers cibles",
+      "keywords": "Mots-clés de recherche",
+      "experiences": "Expériences",
+      "facts": "Réalisations",
+      "skills": "Compétences informatiques",
+      "languages": "Langues",
+      "education": "Formation",
+      "certifications": "Certifications",
+      "sectors": "Secteurs",
+      "eliminations": "Critères éliminatoires",
+      "titleFilters": "Pré-filtre de titre",
+      "excludedCompanies": "Entreprises exclues"
+    },
+    "intros": {
+      "identity": "Chiffrées et jamais envoyées à l'IA : ces informations n'entrent que dans l'en-tête de vos documents.",
+      "practical": "Ils servent au filtre et au score des offres.",
+      "motivations": "Ce que vous cherchez : évolution, sens, équilibre, rémunération, télétravail.",
+      "targetJobs": "1 à 3 intitulés visés : chacun aura son CV maître.",
+      "keywords": "Les mots-clés de la collecte, en français, néerlandais et anglais ; les prioritaires servent aux sources les plus lentes.",
+      "experiences": "Vos postes, du plus récent au plus ancien.",
+      "facts": "Chaque réalisation devient un fait réutilisable : l'IA ne pourra rien écrire d'autre.",
+      "skills": "Outils et langages, avec votre niveau et vos années de pratique.",
+      "languages": "Niveau CECR, de A1 à C2.",
+      "education": "Diplômes et établissements.",
+      "certifications": "Certificats et organismes.",
+      "sectors": "Préférés, acceptés ou exclus.",
+      "eliminations": "Ce qui écarte une offre d'office : langue exigée, secteur, horaires, déplacements.",
+      "titleFilters": "Expressions cherchées dans l'intitulé des offres, avant toute notation.",
+      "excludedCompanies": "Aucune offre proposée et aucun envoi, dont votre employeur actuel."
+    },
+    "fields": {
+      "fullName": "Nom complet",
+      "email": "Adresse e-mail",
+      "phone": "Téléphone",
+      "commune": "Commune",
+      "drivingLicences": "Permis de conduire",
+      "transport": "Moyens de déplacement",
+      "baseCity": "Ville de base",
+      "basePostalCode": "Code postal",
+      "radiusKm": "Rayon de recherche (km)",
+      "contractTypes": "Contrats",
+      "workRegimes": "Régime",
+      "remotePreference": "Télétravail",
+      "salaryMinMonthly": "Salaire mensuel brut minimum (€)",
+      "availableFrom": "Disponible à partir du",
+      "motivations": "Ce que vous cherchez",
+      "motivationTags": "Étiquettes",
+      "title": "Intitulé",
+      "keyword": "Mot-clé",
+      "language": "Langue",
+      "priority": "Prioritaire",
+      "employer": "Employeur",
+      "location": "Lieu",
+      "startMonth": "Début",
+      "endMonth": "Fin",
+      "current": "Poste actuel",
+      "description": "Description",
+      "text": "Réalisation",
+      "experienceId": "Expérience liée",
+      "name": "Nom",
+      "level": "Niveau",
+      "years": "Années de pratique",
+      "overall": "Niveau global",
+      "understanding": "Compréhension",
+      "speaking": "Expression orale",
+      "writing": "Écriture",
+      "degree": "Diplôme",
+      "institution": "Établissement",
+      "year": "Année",
+      "issuer": "Organisme",
+      "sector": "Secteur",
+      "kind": "Type",
+      "value": "Valeur",
+      "list": "Liste",
+      "expression": "Expression",
+      "reason": "Raison"
+    },
+    "hints": {
+      "month": "Mois et année.",
+      "drivingLicences": "Exemple : B, C1, séparés par des virgules.",
+      "basePostalCode": "4 chiffres.",
+      "radiusKm": "Sans valeur : {{km}} km.",
+      "tags": "Séparées par des virgules."
+    },
+    "options": {
+      "contractTypes": {
+        "permanent": "CDI",
+        "fixed_term": "CDD",
+        "interim": "Intérim",
+        "freelance": "Indépendant",
+        "internship": "Stage",
+        "student_job": "Job étudiant"
+      },
+      "workRegimes": {
+        "full_time": "Temps plein",
+        "part_time": "Temps partiel"
+      },
+      "remotePreferences": {
+        "on_site": "Sur place",
+        "hybrid": "Hybride",
+        "remote": "Télétravail complet"
+      },
+      "transport": {
+        "car": "Voiture",
+        "motorbike": "Moto",
+        "public_transport": "Transports en commun",
+        "bike": "Vélo",
+        "walk": "À pied"
+      },
+      "skillLevels": {
+        "beginner": "Débutant",
+        "intermediate": "Intermédiaire",
+        "advanced": "Avancé",
+        "expert": "Expert"
+      },
+      "keywordLanguages": {
+        "fr": "Français",
+        "nl": "Néerlandais",
+        "en": "Anglais"
+      },
+      "languages": {
+        "fr": "Français",
+        "nl": "Néerlandais",
+        "en": "Anglais",
+        "de": "Allemand",
+        "es": "Espagnol",
+        "it": "Italien",
+        "pt": "Portugais",
+        "ar": "Arabe",
+        "tr": "Turc",
+        "pl": "Polonais",
+        "ro": "Roumain"
+      },
+      "sectorKinds": {
+        "preferred": "Préféré",
+        "accepted": "Accepté",
+        "excluded": "Exclu"
+      },
+      "eliminationKinds": {
+        "language": "Langue exigée",
+        "sector": "Secteur",
+        "schedule": "Horaires",
+        "travel": "Déplacements",
+        "other": "Autre"
+      },
+      "titleFilterLists": {
+        "keep": "Garder",
+        "reject": "Rejeter",
+        "always": "Toujours garder"
+      }
+    },
+    "actions": {
+      "add": "Ajouter",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "keep": "Garder",
+      "reject": "Écarter"
+    },
+    "empty": "Rien pour l'instant.",
+    "choose": "Choisir…",
+    "none": "Aucun",
+    "saved": "Enregistré.",
+    "priority": "prioritaire",
+    "current": "en cours",
+    "proposed": "proposé",
+    "yearsValue_one": "{{count}} an",
+    "yearsValue_other": "{{count}} ans",
+    "keywordsAdvice": "{{count}} validés ; il en faut au moins {{min}}."
   }
 }
