@@ -17,10 +17,10 @@ const state = (): State => JSON.parse(readFileSync(STATE_FILE, 'utf8')) as State
 let recoveryCodes: string[] = [];
 
 /** A platform authenticator with Face ID-like user verification, emulated by Chromium. */
-async function addVirtualAuthenticator(page: Page): Promise<CDPSession> {
-  const client = await page.context().newCDPSession(page);
+async function addVirtualAuthenticator(page: Page) {
+  const client: CDPSession = await page.context().newCDPSession(page);
   await client.send('WebAuthn.enable');
-  await client.send('WebAuthn.addVirtualAuthenticator', {
+  const { authenticatorId } = await client.send('WebAuthn.addVirtualAuthenticator', {
     options: {
       protocol: 'ctap2',
       transport: 'internal',
@@ -30,7 +30,10 @@ async function addVirtualAuthenticator(page: Page): Promise<CDPSession> {
       automaticPresenceSimulation: true,
     },
   });
-  return client;
+  /** Whether the authenticator answers by itself, as if someone touched it at once. */
+  const answerAlone = (enabled: boolean) =>
+    client.send('WebAuthn.setAutomaticPresenceSimulation', { authenticatorId, enabled });
+  return { answerAlone };
 }
 
 /** Fails the test on any CSP violation or uncaught error in the page. */
@@ -59,7 +62,7 @@ test.describe.configure({ mode: 'serial' });
 
 test('enrolls with the one-time link: passkey, TOTP and recovery codes', async ({ page }) => {
   const problems = watchConsole(page);
-  await addVirtualAuthenticator(page);
+  const authenticator = await addVirtualAuthenticator(page);
   await page.goto(state().link);
   await expect(page.getByRole('heading', { name: 'Configurer votre accès' })).toBeVisible();
   // The token leaves the address bar as soon as it is read.
@@ -84,15 +87,16 @@ test('enrolls with the one-time link: passkey, TOTP and recovery codes', async (
 
   await expect(page.getByRole('heading', { name: 'Bonjour Mehdi' })).toBeVisible();
 
-  // Same browser, same virtual authenticator: sign out, then back in with the passkey.
+  // Same browser, same virtual authenticator: sign out, then back in with the passkey. The sign-in
+  // page offers the passkey through autofill, which a person has to pick; an authenticator that
+  // answers by itself would sign straight back in, so it waits while the page is checked.
+  await authenticator.answerAlone(false);
   await page.getByRole('button', { name: 'Se déconnecter' }).first().click();
   await expect(page.getByRole('heading', { name: 'Connexion' })).toBeVisible();
   await expectAccessible(page);
-  const home = page.getByRole('heading', { name: 'Bonjour Mehdi' });
-  const passkeyButton = page.getByRole('button', { name: 'Se connecter avec une passkey' });
-  await expect(home.or(passkeyButton)).toBeVisible();
-  if (await passkeyButton.isVisible()) await passkeyButton.click();
-  await expect(home).toBeVisible();
+  await page.getByRole('button', { name: 'Se connecter avec une passkey' }).click();
+  await authenticator.answerAlone(true);
+  await expect(page.getByRole('heading', { name: 'Bonjour Mehdi' })).toBeVisible();
   expect(problems).toEqual([]);
 });
 
