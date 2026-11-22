@@ -24,8 +24,9 @@ Les jeux de règles Semgrep du registre (TypeScript, Node.js, OWASP) n'ont pas p
 | 8 | Une adresse connue et verrouillée répond 429, une adresse inconnue 401 : l'existence du compte se devine après 5 échecs. | faible | accepté (un seul utilisateur, accès Tailscale) |
 | 9 | Limites de débit par adresse IP : derrière `tailscale serve`, un seul compteur pour tous les appareils. | faible | accepté |
 | 10 | Aucun filtre sur l'en-tête `Host` (rebinding DNS vers `127.0.0.1:3000`). | faible | accepté : sans cookie, rien de lisible ; écritures bloquées par le contrôle d'`Origin` |
-| 11 | Avis modéré esbuild ≤ 0.24.2, par `drizzle-kit`, en développement seulement. | faible | accepté : le serveur de développement d'esbuild n'est pas utilisé |
+| 11 | Avis modéré esbuild ≤ 0.24.2, par `drizzle-kit`, en développement seulement. | faible | accepté : le serveur de développement d'esbuild n'est pas utilisé ; exception dans `osv-scanner.toml` jusqu'au 28/02/2027 |
 | 12 | Premier passage de la CI : les règles Semgrep du registre relèvent 6 réglages de gestionnaires de paquets trop permissifs (3 jours au lieu de 7 pour pnpm et Renovate, aucun délai pour npm, sous-dépendances venues de git ou d'archives acceptées, pas de politique de confiance pnpm). | moyenne (chaîne d'approvisionnement) | corrigé au lot 7 : 7 jours partout, `blockExoticSubdeps`, `trustPolicy: no-downgrade` ; installations en ligne et hors ligne vérifiées |
+| 13 | Première analyse hebdomadaire : 92 vulnérabilités connues dans 18 paquets Debian de l'image de base de Node (aucune critique, 38 élevées), presque toutes sans correctif publié ; seuls zlib et une partie de glibc en ont un. Aucune dans les dépendances npm de l'image. | moyenne (surface de l'image) | suivi : rapport hebdomadaire sans blocage, correctifs apportés par les mises à jour de l'image de base que propose Renovate ; à réévaluer en phase 1 avec une image de base plus réduite (distroless) |
 
 ## Points vérifiés sans constat
 

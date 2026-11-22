@@ -1,7 +1,8 @@
 name: Weekly vulnerability scan
 
-# Known vulnerabilities in the locked dependencies and in the built image (Debian packages and
-# production node_modules), with osv-scanner. A failure sends GitHub's usual e-mail.
+# Known vulnerabilities with osv-scanner: the locked dependencies (a finding fails the run and
+# GitHub sends its usual e-mail; exceptions live in osv-scanner.toml, each with an expiry date)
+# and the built image (Debian packages and production node_modules, reported in the summary).
 # Trivy, named in the phase 0 plan, is set aside since its March 2026 supply-chain compromise.
 
 on:
@@ -53,5 +54,20 @@ jobs:
           chmod +x osv-scanner
       - name: Build the image as the home machine does
         run: docker build -f infra/docker/Dockerfile -t job4me:scan .
-      - name: Scan the image
-        run: ./osv-scanner scan image job4me:scan
+      - name: Scan the image (reported in the run summary)
+        # Debian packages of the base image often have no fix yet: listing them must not turn every
+        # run red. The fixes arrive with the base image updates Renovate proposes; tool errors
+        # (exit codes above 1) still fail the job. Dependencies are gated by the other job.
+        run: |
+          set +e
+          ./osv-scanner scan image job4me:scan > image-scan.txt
+          code=$?
+          set -e
+          cat image-scan.txt
+          {
+            echo '### Application image (osv-scanner)'
+            echo '```'
+            cat image-scan.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$code" -gt 1 ]; then exit "$code"; fi
