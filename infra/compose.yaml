@@ -79,6 +79,8 @@ services:
   api:
     profiles: [app]
     image: job4me:local
+    # Built by the migrate service, never pulled from a registry.
+    pull_policy: never
     command: [node, api/index.js]
     environment:
       <<: *app-env
@@ -114,6 +116,7 @@ services:
   worker:
     profiles: [app]
     image: job4me:local
+    pull_policy: never
     command: [node, worker/index.js]
     environment:
       <<: *app-env
