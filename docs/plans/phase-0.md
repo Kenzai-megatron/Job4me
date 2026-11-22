@@ -91,7 +91,7 @@ flowchart LR
 - **`pnpm dev`** démarre `postgres` et `mailpit` (attente des sondes de santé), applique les migrations, puis lance l'API, le worker et le serveur Vite en mode surveillance sur l'hôte. **`pnpm stack:up`** met tout en conteneurs, pour la machine du domicile et les tests de bout en bout.
 - **Tailscale** s'installe sur la machine Linux elle-même, hors Compose : `tailscale serve` sert `127.0.0.1:3000` en HTTPS sur l'adresse `job4me.‹tailnet›.ts.net`.
 - **Deux rôles PostgreSQL** : `job4me_owner` possède les tables et passe les migrations ; `job4me_app`, utilisé à l'exécution, lit et écrit les données sans pouvoir modifier le schéma, et n'a que `INSERT` et `SELECT` sur `audit_log`.
-- **Secrets** : en développement, `pnpm setup:dev` génère un `.env` local avec des clés aléatoires, jamais commité ; en profil `app`, secrets Compose montés en fichiers et lus par des variables `*_FILE`, invisibles dans `docker inspect`.
+- **Secrets** : `pnpm setup:dev` (ou `setup:home` sur la machine de la maison) génère des clés aléatoires en fichiers dans `secrets/`, jamais commités, et un `.env` qui ne contient que des réglages et des chemins ; les variables `*_FILE` les lisent, et en profil `app` ce sont des secrets Compose montés en fichiers, invisibles dans `docker inspect` (modifié le 21/11/2026 : fichiers dès le développement).
 - **Durcissement** : utilisateur non root, système de fichiers en lecture seule quand c'est possible, `no-new-privileges`, aucune capacité Linux superflue, sondes `/api/health` (processus vivant) et `/api/ready` (base joignable, migrations à jour).
 - **Mails** : en développement, toute configuration SMTP autre que Mailpit est refusée au démarrage ; `pnpm job4me mail:test` vérifie le chemin.
 - **Volumes** : `pgdata` (monté sur `/var/lib/postgresql`, l'image 18 ayant déplacé ses données) et `files`, vide en phase 0. Le chiffrement du volume vient du chiffrement du disque de la machine Linux (LUKS), un prérequis (décision D4).
@@ -210,7 +210,7 @@ Ce modèle sera repris dans `docs/security/threat-model.md` et complété avant 
 | `security` | Semgrep (règles TypeScript, Node et OWASP), audit des dépendances, zizmor sur les workflows, SBOM CycloneDX en artefact |
 
 - Tous les jobs doivent passer. `permissions: contents: read` par défaut, actions épinglées par SHA, annulation des exécutions dépassées, cache du store pnpm.
-- Une analyse planifiée chaque semaine : vulnérabilités des images Docker (Trivy) et des dépendances (osv-scanner).
+- Une analyse planifiée chaque semaine : vulnérabilités de l'image Docker et des dépendances, avec osv-scanner (modifié le 22/11/2026 : Trivy, compromis en mars 2026, est écarté ; voir la revue de sécurité).
 - Renovate : mises à jour groupées chaque semaine, versions publiées depuis au moins 3 jours, fusion automatique des seuls correctifs d'outils de développement, CI verte exigée.
 - En local, un hook pre-commit lance gitleaks sur les fichiers indexés et le formatage. Messages de commit en anglais.
 - Budget : un dépôt privé gratuit dispose de 2 000 minutes d'Actions par mois ; objectif, moins de 8 minutes par exécution.

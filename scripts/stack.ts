@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { ENV_FILE, run, STACK_COMPOSE as COMPOSE } from './lib';
+import { ENV_FILE, readEnvFile, run, STACK_COMPOSE as COMPOSE } from './lib';
 
 // `pnpm stack:*`: the whole application in containers, as on the home machine (profile app).
 
@@ -13,7 +13,7 @@ async function main() {
   switch (command) {
     case 'up':
       await run('docker', [...COMPOSE, 'up', '-d', '--build', '--wait']);
-      console.log('Job4me runs on http://127.0.0.1:3000 (Tailscale serves it over HTTPS).');
+      console.log(`Job4me is up: ${readEnvFile().JOB4ME_PUBLIC_ORIGIN ?? 'http://localhost:3000'}`);
       break;
     case 'down':
       await run('docker', [...COMPOSE, 'down']);

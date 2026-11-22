@@ -63,6 +63,10 @@ export function accountRoutes(deps: AppDeps): FastifyPluginAsyncZod {
   const { settings } = deps.config;
   const now = clock(deps);
   const durations = authDurations(settings);
+  // Routes that check a secret or hash a password (Argon2id is costly): same budget as sign-in.
+  const rateLimit = {
+    rateLimit: { max: settings.auth.rateLimit.authRequestsPerMinute, timeWindow: '1 minute' },
+  };
 
   async function currentUser(session: SessionContext) {
     const user = await findUserById(deps.db, session.userId);
@@ -161,7 +165,10 @@ export function accountRoutes(deps: AppDeps): FastifyPluginAsyncZod {
 
     app.post(
       '/api/auth/reauth/passkey/verify',
-      { schema: { body: passkeyVerifyRequestSchema, response: { 200: reauthResponseSchema } } },
+      {
+        config: rateLimit,
+        schema: { body: passkeyVerifyRequestSchema, response: { 200: reauthResponseSchema } },
+      },
       async (request, reply) => {
         const session = requireSession(request);
         const response = request.body.response as unknown as AuthenticationResponseJSON;
@@ -201,7 +208,10 @@ export function accountRoutes(deps: AppDeps): FastifyPluginAsyncZod {
 
     app.post(
       '/api/auth/reauth/password',
-      { schema: { body: reauthPasswordRequestSchema, response: { 200: reauthResponseSchema } } },
+      {
+        config: rateLimit,
+        schema: { body: reauthPasswordRequestSchema, response: { 200: reauthResponseSchema } },
+      },
       async (request, reply) => {
         const session = requireSession(request);
         const user = await currentUser(session);
@@ -272,7 +282,10 @@ export function accountRoutes(deps: AppDeps): FastifyPluginAsyncZod {
 
     app.post(
       '/api/auth/totp/confirm',
-      { schema: { body: totpConfirmRequestSchema, response: { 200: okResponseSchema } } },
+      {
+        config: rateLimit,
+        schema: { body: totpConfirmRequestSchema, response: { 200: okResponseSchema } },
+      },
       async (request) => {
         const session = requireSession(request);
         const confirmed = await confirmTotpSetup(deps.db, {
@@ -443,7 +456,10 @@ export function accountRoutes(deps: AppDeps): FastifyPluginAsyncZod {
     // Password fallback.
     app.post(
       '/api/auth/password/change',
-      { schema: { body: changePasswordRequestSchema, response: { 200: okResponseSchema } } },
+      {
+        config: rateLimit,
+        schema: { body: changePasswordRequestSchema, response: { 200: okResponseSchema } },
+      },
       async (request) => {
         const session = requireRecentAuth(request, deps);
         let passwordHash: string;

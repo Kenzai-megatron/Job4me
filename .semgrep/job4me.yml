@@ -1,0 +1,47 @@
+# Project rules (threat model, docs/security/threat-model.md). They run offline, before the
+# registry rulesets, in the CI security job. Rule tests: semgrep --test .semgrep
+rules:
+  - id: job4me-no-direct-http
+    languages: [typescript]
+    severity: ERROR
+    message: >-
+      Outbound HTTP from the API, the worker and the packages must go through the polite
+      collection client (CLAUDE.md: personal pace, pauses, stop at the first 403 or 429, one
+      switch per source). Phase 0 has no outbound call besides Web Push.
+    paths:
+      exclude: ['apps/web/**', 'tests/**', 'scripts/**', '**/*.test.ts', '**/testing/**']
+    pattern-either:
+      - pattern: fetch(...)
+      - pattern: globalThis.fetch(...)
+      - pattern-regex: from\s+['"](node:)?(http|https|undici|axios|got|node-fetch)['"]
+
+  - id: job4me-no-math-random
+    languages: [typescript]
+    severity: ERROR
+    message: Math.random is predictable; use node:crypto (randomBytes, randomInt) or crypto.getRandomValues.
+    paths:
+      exclude: ['**/*.test.ts', '**/*.test.tsx']
+    pattern: Math.random()
+
+  - id: job4me-no-sql-raw
+    languages: [typescript]
+    severity: ERROR
+    message: sql.raw() bypasses parameter binding; use the sql`...` template or the query builder.
+    pattern: sql.raw(...)
+
+  - id: job4me-mail-host-from-config
+    languages: [typescript]
+    severity: ERROR
+    message: >-
+      The SMTP host comes from the configuration, which only accepts Mailpit outside production
+      (CLAUDE.md: development mail never reaches a real mailbox).
+    pattern: |
+      $MAILER.createTransport({..., host: "$HOST", ...})
+
+  - id: job4me-no-eval
+    languages: [typescript]
+    severity: ERROR
+    message: Code is never built from strings (no eval, no Function constructor).
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)

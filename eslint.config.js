@@ -33,6 +33,7 @@ export default defineConfig(
       '**/playwright-report/**',
       '**/test-results/**',
       'docs/**',
+      '.semgrep/**',
     ],
   },
   js.configs.recommended,

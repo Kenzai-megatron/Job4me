@@ -55,6 +55,8 @@ mail:
 push:
   # VAPID contact: set your own mailto: or https: address in config/local.yaml.
   vapidSubject: mailto:job4me@example.invalid
+  # Test notifications a signed-in user may request per minute (push services throttle senders).
+  testRequestsPerMinute: 6
 
 worker:
   purgeCron: '17 * * * *' # every hour

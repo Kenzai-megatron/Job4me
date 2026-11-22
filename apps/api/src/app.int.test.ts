@@ -208,3 +208,23 @@ describe('audit log', () => {
     expect(rows.some((row) => row.action === 'test.recorded')).toBe(true);
   });
 });
+
+describe('rate limits (threat model row 11)', () => {
+  it('answers 429 beyond the sign-in request budget', async () => {
+    const own = await createTestApp();
+    try {
+      const client = new TestBrowser((options) => own.app.inject(options), own.origin);
+      await client.refresh();
+      const budget = own.deps.config.settings.auth.rateLimit.authRequestsPerMinute;
+      for (let request = 0; request < budget; request++) {
+        expect((await client.post('/api/auth/passkey/options')).statusCode).toBe(200);
+      }
+      const refused = await client.post('/api/auth/passkey/options');
+      expect(refused.statusCode).toBe(429);
+      expect(refused.json()).toMatchObject({ error: 'rate_limited' });
+      expect(refused.headers['retry-after']).toBeDefined();
+    } finally {
+      await own.close();
+    }
+  });
+});
