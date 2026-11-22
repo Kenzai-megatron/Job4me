@@ -58,6 +58,28 @@ push:
   # Test notifications a signed-in user may request per minute (push services throttle senders).
   testRequestsPerMinute: 6
 
+profile:
+  # Search radius around the base city when the profile sets none (SPEC section 4).
+  defaultRadiusKm: 40
+  maxTargetJobs: 3
+  # Search keywords (docs/SOURCES.md, section 1.3): full list and priority ones.
+  keywords:
+    min: 25
+    max: 35
+    priority: 10
+  # Completeness: weight of each rubric (they add up to 100) and the entries it needs.
+  completeness:
+    identity: { weight: 10, min: 1 }
+    practical: { weight: 10, min: 1 }
+    motivations: { weight: 5, min: 1 }
+    targetJobs: { weight: 15, min: 1 }
+    keywords: { weight: 15, min: 25 }
+    experiences: { weight: 15, min: 1 }
+    facts: { weight: 10, min: 3 }
+    skills: { weight: 10, min: 3 }
+    languages: { weight: 5, min: 1 }
+    education: { weight: 5, min: 1 }
+
 worker:
   purgeCron: '17 * * * *' # every hour
   expiredSessionRetentionDays: 30

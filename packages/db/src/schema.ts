@@ -249,3 +249,6 @@ export type Session = typeof sessions.$inferSelect;
 export type AuthChallenge = typeof authChallenges.$inferSelect;
 export type AuditEntry = typeof auditLog.$inferSelect;
 export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+
+// Phase 1 profile tables (row-level security, ADR 0011).
+export * from './profile-schema';

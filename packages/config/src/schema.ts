@@ -10,6 +10,20 @@ const port = z.number().int().min(1).max(65535);
 
 export const MAILPIT_HOSTS = ['127.0.0.1', 'localhost', 'mailpit'] as const;
 
+/** Rubrics counted by the profile completeness (same list as @job4me/contracts). */
+export const completenessRubrics = [
+  'identity',
+  'practical',
+  'motivations',
+  'targetJobs',
+  'keywords',
+  'experiences',
+  'facts',
+  'skills',
+  'languages',
+  'education',
+] as const;
+
 export const environmentSchema = z.enum(['development', 'test', 'production']);
 export type Environment = z.infer<typeof environmentSchema>;
 
@@ -92,6 +106,19 @@ export const settingsSchema = z
         .regex(/^(mailto:\S+@\S+|https:\/\/\S+)$/, 'must be a mailto: or https: address'),
       testRequestsPerMinute: z.number().int().min(1).max(60),
     }),
+    profile: z.object({
+      defaultRadiusKm: z.number().int().min(1).max(300),
+      maxTargetJobs: z.number().int().min(1).max(10),
+      keywords: z.object({
+        min: z.number().int().min(1).max(100),
+        max: z.number().int().min(1).max(200),
+        priority: z.number().int().min(1).max(50),
+      }),
+      completeness: z.record(
+        z.enum(completenessRubrics),
+        z.object({ weight: z.number().int().min(0).max(100), min: z.number().int().min(1) }),
+      ),
+    }),
     worker: z.object({
       purgeCron: z.string().min(9),
       expiredSessionRetentionDays: z.number().int().min(1).max(365),
@@ -99,6 +126,17 @@ export const settingsSchema = z
     }),
   })
   .superRefine((settings, ctx) => {
+    const weights = Object.values(settings.profile.completeness).reduce(
+      (sum, rubric) => sum + rubric.weight,
+      0,
+    );
+    if (weights !== 100) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['profile', 'completeness'],
+        message: `weights must add up to 100, not ${weights}`,
+      });
+    }
     if (settings.auth.lockout.maxDelaySeconds < settings.auth.lockout.baseDelaySeconds) {
       ctx.addIssue({
         code: 'custom',

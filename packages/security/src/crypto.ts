@@ -9,7 +9,7 @@ import {
 } from 'node:crypto';
 
 /** Purposes for keys derived from the master key (ADR 0004). */
-export type KeyPurpose = 'totp' | 'recovery' | 'csrf' | 'mail-token' | 'files';
+export type KeyPurpose = 'totp' | 'recovery' | 'csrf' | 'mail-token' | 'files' | 'identity';
 
 const FORMAT_VERSION = 1;
 const NONCE_BYTES = 12;

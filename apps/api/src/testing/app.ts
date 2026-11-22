@@ -76,7 +76,7 @@ export class TestBrowser {
     return response;
   }
 
-  async send(method: 'POST' | 'PATCH' | 'DELETE', url: string, payload?: unknown) {
+  async send(method: 'POST' | 'PUT' | 'PATCH' | 'DELETE', url: string, payload?: unknown) {
     const response = await this.inject({
       method,
       url,

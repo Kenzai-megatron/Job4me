@@ -21,6 +21,8 @@ export const errorCodes = [
   'last_sign_in_method',
   'totp_not_ready',
   'push_not_configured',
+  'duplicate',
+  'limit_reached',
   'database_unavailable',
   'migrations_pending',
   'internal_error',
