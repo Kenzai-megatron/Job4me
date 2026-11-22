@@ -32,8 +32,10 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
   await skills.getByLabel('Nom').fill('Excel');
   await skills.getByLabel('Niveau').selectOption({ label: 'Expert' });
   await skills.getByRole('button', { name: 'Enregistrer' }).click();
-  await expect(skills.getByText('Excel')).toBeVisible();
-  await expect(skills.getByText('Expert')).toBeVisible();
+  // The list refreshes before the form closes: read the entry, not the form's options.
+  const excel = skills.getByRole('listitem').filter({ hasText: 'Excel' });
+  await expect(excel).toContainText('Expert');
+  await expect(skills.getByRole('button', { name: 'Enregistrer' })).toBeHidden();
 
   const weights = { identity: 10, skills: 10 / 3 };
   await expect(

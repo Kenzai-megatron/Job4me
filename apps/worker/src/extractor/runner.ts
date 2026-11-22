@@ -13,9 +13,13 @@ import type { ExtractLimits } from '@job4me/imports/extract';
 // Each file is read in its own thread (ADR 0010): a memory budget, a time budget, and nothing
 // it prints reaches the logs. The thread's answer is checked like any untrusted input.
 
+/** Why a thread gave no usable answer; logged without any content. */
+export type ThreadFailure =
+  'out_of_memory' | 'thread_error' | 'thread_exit' | 'timeout' | 'invalid_answer';
+
 export type Outcome =
   | { ok: true; document: ExtractedDocument; stats: ImportStats }
-  | { ok: false; code: ImportErrorCode };
+  | { ok: false; code: ImportErrorCode; reason?: ThreadFailure };
 
 export type Runner = (kind: ImportKind, bytes: Buffer) => Promise<Outcome>;
 
@@ -37,8 +41,11 @@ function threadExecArgv(): string[] | undefined {
 
 /** Checks the thread's answer: a known shape, within the bounds, or a known error code. */
 export function checkOutcome(message: unknown, limits: ExtractLimits): Outcome {
-  const failed = (code: ImportErrorCode): Outcome => ({ ok: false, code });
-  if (typeof message !== 'object' || message === null) return failed('extraction_failed');
+  const failed = (code: ImportErrorCode, reason?: ThreadFailure): Outcome =>
+    reason ? { ok: false, code, reason } : { ok: false, code };
+  if (typeof message !== 'object' || message === null) {
+    return failed('extraction_failed', 'invalid_answer');
+  }
   const answer = message as { ok?: unknown; code?: unknown; document?: unknown; stats?: unknown };
   if (answer.ok === false) {
     const code = importErrorCodes.find((known) => known === answer.code);
@@ -46,7 +53,9 @@ export function checkOutcome(message: unknown, limits: ExtractLimits): Outcome {
   }
   const document = extractedDocumentSchema.safeParse(answer.document);
   const stats = importStatsSchema.safeParse(answer.stats);
-  if (answer.ok !== true || !document.success || !stats.success) return failed('extraction_failed');
+  if (answer.ok !== true || !document.success || !stats.success) {
+    return failed('extraction_failed', 'invalid_answer');
+  }
   if (document.data.kind === 'text' && document.data.text.length > limits.maxExtractedChars) {
     return failed('file_too_complex');
   }
@@ -88,18 +97,20 @@ export function threadRunner(options: ThreadOptions): Runner {
         resolve(outcome);
       };
       const timer = setTimeout(
-        () => finish({ ok: false, code: 'extraction_timeout' }),
+        () => finish({ ok: false, code: 'extraction_timeout', reason: 'timeout' }),
         options.timeoutMs,
       );
       worker.once('message', (message: unknown) => finish(checkOutcome(message, options.limits)));
       worker.once('error', (error: NodeJS.ErrnoException) =>
-        finish({
-          ok: false,
-          code:
-            error.code === 'ERR_WORKER_OUT_OF_MEMORY' ? 'file_too_complex' : 'extraction_failed',
-        }),
+        finish(
+          error.code === 'ERR_WORKER_OUT_OF_MEMORY'
+            ? { ok: false, code: 'file_too_complex', reason: 'out_of_memory' }
+            : { ok: false, code: 'extraction_failed', reason: 'thread_error' },
+        ),
       );
-      worker.once('exit', () => finish({ ok: false, code: 'extraction_failed' }));
+      worker.once('exit', () =>
+        finish({ ok: false, code: 'extraction_failed', reason: 'thread_exit' }),
+      );
 
       // A copy the thread owns: the decrypted file never stays shared between the two.
       const copy = new Uint8Array(bytes);

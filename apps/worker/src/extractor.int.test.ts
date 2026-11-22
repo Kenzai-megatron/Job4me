@@ -26,7 +26,12 @@ const settings = (() => {
   process.env.JOB4ME_ENV ??= 'test';
   return loadConfig().settings.imports;
 })();
-const runner = threadRunner({ limits: settings, timeoutMs: 20_000, memoryMb: 128 });
+// The memory budget of the configuration, as in the extract container.
+const runner = threadRunner({
+  limits: settings,
+  timeoutMs: 20_000,
+  memoryMb: settings.extractor.memoryMb,
+});
 
 beforeAll(async () => {
   database = await createTestDatabase('extractor');
@@ -91,6 +96,12 @@ async function drain() {
 }
 
 describe('extraction', () => {
+  it('answers from the thread within its budgets', async () => {
+    // Printed in full on failure: the reason tells memory, crash and exit apart.
+    expect(await runner('cv_pdf', makePdf([['Alex Exemple']]))).toMatchObject({ ok: true });
+    expect(await runner('cv_docx', makeDocx(['Alex Exemple']))).toMatchObject({ ok: true });
+  });
+
   it('reads a PDF in a thread and stores the text encrypted, with figures only in clear', async () => {
     const id = await queue('cv_pdf', makePdf([['Alex Exemple', 'Analyste de données']]));
     await drain();
@@ -151,6 +162,7 @@ describe('extraction', () => {
     expect(await slow('cv_pdf', makePdf([['x']]))).toEqual({
       ok: false,
       code: 'extraction_timeout',
+      reason: 'timeout',
     });
   });
 
@@ -158,6 +170,7 @@ describe('extraction', () => {
     expect(checkOutcome({ ok: true, document: { kind: 'shell' }, stats: {} }, settings)).toEqual({
       ok: false,
       code: 'extraction_failed',
+      reason: 'invalid_answer',
     });
     expect(checkOutcome({ ok: false, code: 'rm -rf' }, settings)).toEqual({
       ok: false,

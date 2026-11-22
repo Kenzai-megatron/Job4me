@@ -101,6 +101,7 @@ export async function processNext(deps: ExtractorDeps): Promise<boolean> {
   log.info(
     {
       outcome: outcome.ok ? 'extracted' : outcome.code,
+      ...(!outcome.ok && outcome.reason ? { reason: outcome.reason } : {}),
       durationMs: Date.now() - started,
       ...(outcome.ok ? { stats: outcome.stats } : {}),
     },
