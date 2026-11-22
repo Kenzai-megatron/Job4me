@@ -8,7 +8,7 @@ Revue du 22/11/2026, par Claude, sur les lots 1 à 7 (branche `phase-0/lot-7-clo
 - **Contrôles automatiques** passés en local : 59 tests d'intégration sur PostgreSQL 18, tests unitaires, 6 tests de bout en bout sur l'API puis sur la pile en conteneurs en mode production, règles Semgrep du projet, `pnpm audit`, actionlint, zizmor, `pnpm check:compose`.
 - **Vérification de la pile en conteneurs** : utilisateur, système de fichiers en lecture seule, capacités, réseaux, ports publiés, montage des secrets, en-têtes servis.
 
-Les jeux de règles Semgrep du registre (TypeScript, Node.js, OWASP) n'ont pas pu tourner ici : `semgrep.dev` est bloqué dans l'environnement de Claude. Ils tourneront à la première exécution de la CI.
+Les jeux de règles Semgrep du registre (TypeScript, Node.js, OWASP) n'ont pas pu tourner dans l'environnement de Claude, où `semgrep.dev` est bloqué ; ils ont tourné à la première exécution de la CI sur GitHub (constat 12).
 
 ## Constats
 
@@ -25,6 +25,7 @@ Les jeux de règles Semgrep du registre (TypeScript, Node.js, OWASP) n'ont pas p
 | 9 | Limites de débit par adresse IP : derrière `tailscale serve`, un seul compteur pour tous les appareils. | faible | accepté |
 | 10 | Aucun filtre sur l'en-tête `Host` (rebinding DNS vers `127.0.0.1:3000`). | faible | accepté : sans cookie, rien de lisible ; écritures bloquées par le contrôle d'`Origin` |
 | 11 | Avis modéré esbuild ≤ 0.24.2, par `drizzle-kit`, en développement seulement. | faible | accepté : le serveur de développement d'esbuild n'est pas utilisé |
+| 12 | Premier passage de la CI : les règles Semgrep du registre relèvent 6 réglages de gestionnaires de paquets trop permissifs (3 jours au lieu de 7 pour pnpm et Renovate, aucun délai pour npm, sous-dépendances venues de git ou d'archives acceptées, pas de politique de confiance pnpm). | moyenne (chaîne d'approvisionnement) | corrigé au lot 7 : 7 jours partout, `blockExoticSubdeps`, `trustPolicy: no-downgrade` ; installations en ligne et hors ligne vérifiées |
 
 ## Points vérifiés sans constat
 
@@ -41,6 +42,6 @@ Les jeux de règles Semgrep du registre (TypeScript, Node.js, OWASP) n'ont pas p
 
 ## Reste à vérifier
 
-1. **Première exécution de la CI sur GitHub**, dont les règles Semgrep du registre ; tout constat sera trié avant fusion.
+1. **Première exécution de la CI sur GitHub** : faite le 22/11/2026 ; les alertes des règles Semgrep du registre sont corrigées (constat 12).
 2. **Sur la machine de la maison et l'iPhone** (critère 5 du plan) : HTTPS par `tailscale serve`, passkey Face ID, installation sur l'écran d'accueil, notification reçue par le service push d'Apple.
 3. **Chiffrement du disque (LUKS)** de la machine, prérequis de la décision D4.

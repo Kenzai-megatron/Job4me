@@ -211,7 +211,7 @@ Ce modèle sera repris dans `docs/security/threat-model.md` et complété avant 
 
 - Tous les jobs doivent passer. `permissions: contents: read` par défaut, actions épinglées par SHA, annulation des exécutions dépassées, cache du store pnpm.
 - Une analyse planifiée chaque semaine : vulnérabilités de l'image Docker et des dépendances, avec osv-scanner (modifié le 22/11/2026 : Trivy, compromis en mars 2026, est écarté ; voir la revue de sécurité).
-- Renovate : mises à jour groupées chaque semaine, versions publiées depuis au moins 3 jours, fusion automatique des seuls correctifs d'outils de développement, CI verte exigée.
+- Renovate : mises à jour groupées chaque semaine, versions publiées depuis au moins 7 jours, fusion automatique des seuls correctifs d'outils de développement, CI verte exigée (modifié le 22/11/2026 : 7 jours au lieu de 3, sur alerte de Semgrep).
 - En local, un hook pre-commit lance gitleaks sur les fichiers indexés et le formatage. Messages de commit en anglais.
 - Budget : un dépôt privé gratuit dispose de 2 000 minutes d'Actions par mois ; objectif, moins de 8 minutes par exécution.
 - **Dépôt privé sur un compte gratuit (décision D1)** : pas de protection de branche ni de règles, pas de CodeQL ni de blocage des secrets à l'envoi. Semgrep et gitleaks couvrent l'analyse et les secrets. Le travail arrive par pull request, une par lot (décision D6) ; pendant la phase 0, Claude la fusionne lui-même après une CI verte.

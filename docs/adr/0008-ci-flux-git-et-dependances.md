@@ -11,7 +11,7 @@ Dépôt GitHub privé sur un compte gratuit : ni protection de branche, ni CodeQ
 - **Flux Git** : un lot = une branche et une pull request. Pendant la phase 0, Claude fusionne lui-même chaque pull request quand la CI est verte (choix de Mehdi du 21/11/2026, à revoir plus tard).
 - **CI GitHub Actions** : `secrets` (gitleaks), `lint` (Prettier, ESLint, types), `unit`, `integration` (PostgreSQL 18), `e2e` (Playwright avec authentificateur WebAuthn virtuel), `security` (Semgrep, audit des dépendances, zizmor, SBOM CycloneDX).
 - **Durcissement des workflows** : `permissions: contents: read`, actions épinglées par SHA, pas de `pull_request_target`, aucun secret nécessaire en phase 0.
-- **Dépendances** : lockfile figé, scripts d'installation bloqués sauf liste blanche, délai de 3 jours avant d'adopter une version, Renovate chaque semaine, analyse hebdomadaire des images (Trivy) et des dépendances (osv-scanner).
+- **Dépendances** : lockfile figé, scripts d'installation bloqués sauf liste blanche, délai de 7 jours avant d'adopter une version, Renovate chaque semaine, analyse hebdomadaire de l'image et des dépendances avec osv-scanner (modifié le 22/11/2026 : 7 jours au lieu de 3 ; Trivy écarté après sa compromission de mars 2026).
 - **Localement** : un hook pre-commit lance gitleaks (s'il est installé) et Prettier sur les fichiers indexés.
 
 ## Conséquences
