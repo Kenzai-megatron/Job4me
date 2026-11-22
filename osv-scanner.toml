@@ -1,0 +1,7 @@
+# osv-scanner exceptions (docs/security/review-phase-0.md). Each one has a reason and an expiry
+# date, after which the weekly scan fails again and the exception is reviewed.
+
+[[IgnoredVulns]]
+id = "GHSA-67mh-4wv8-2f99"
+effectiveUntil = 2027-02-28
+reason = "esbuild 0.18 reaches us only through drizzle-kit, in development; the advisory concerns esbuild's development server, which Job4me never starts."
