@@ -1,0 +1,14 @@
+#!/bin/sh
+# Job4me pre-commit hook (ADR 0008): secret scan and formatting of staged files.
+set -eu
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --pre-commit --staged --redact --no-banner
+else
+  echo "pre-commit: gitleaks not found, secret scan skipped (it still runs in CI)." >&2
+fi
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$staged" ]; then
+  echo "$staged" | tr '\n' '\0' | xargs -0 pnpm exec prettier --check --ignore-unknown
+fi
