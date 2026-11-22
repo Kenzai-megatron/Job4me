@@ -72,7 +72,7 @@ export const importRuns = pgTable(
     ),
     check(
       'import_run_error_code_check',
-      sql`${t.errorCode} is null or ${t.errorCode} in ('unsupported_file', 'file_too_large', 'file_too_complex', 'file_protected', 'file_macros', 'no_text', 'extraction_failed', 'extraction_timeout')`,
+      sql`${t.errorCode} is null or ${t.errorCode} in ('unsupported_file', 'file_too_large', 'file_too_complex', 'file_protected', 'file_macros', 'no_text', 'extraction_failed', 'extraction_timeout', 'ai_disabled', 'ai_cap_reached', 'ai_refused', 'ai_invalid_output', 'ai_failed')`,
     ),
     ownerPolicy('import_run'),
     pgPolicy('import_run_extractor_read', { for: 'select', to: extractorRole, using: sql`true` }),

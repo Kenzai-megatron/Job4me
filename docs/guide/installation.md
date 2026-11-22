@@ -53,6 +53,25 @@ La commande crée le dossier `secrets/` (lisible par toi seul) et le fichier `.e
 
 Les fichiers importés, chiffrés, vivent dans `var/files/` à la racine du dépôt (jamais dans Git ni dans l'image) ; les sauvegardes du lot 6 les emporteront.
 
+### Activer l'IA (facultatif)
+
+Sans clé, tout fonctionne sauf la structuration du CV par l'IA et la proposition des mots-clés. Pour l'activer :
+
+1. Dans la [console d'Anthropic](https://platform.claude.com), crée une clé d'API et règle un **plafond de dépense mensuel** (Job4me applique en plus ses propres plafonds : 2 $ par semaine et 10 $ au total, dans `config/default.yaml`).
+2. Écris la clé dans le fichier secret, sans qu'elle passe par l'historique du terminal :
+
+```bash
+read -rs CLE && printf '%s' "$CLE" > secrets/anthropic_api_key && unset CLE
+```
+
+3. Redémarre le worker, seul conteneur à recevoir la clé :
+
+```bash
+pnpm stack:up
+```
+
+Paramètres > IA montre ensuite la dépense de la semaine, le total et les derniers appels, sans leur contenu.
+
 ## 4. Démarrer
 
 ```bash

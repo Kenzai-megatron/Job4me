@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { completenessQuery } from '../../api/profile';
 import { IdentitySection, MotivationsSection, PracticalSection } from './DocumentSections';
 import { ImportsSection } from './ImportsSection';
+import { KeywordProposer } from './KeywordProposer';
 import { rubricSections } from './fields';
 import { ListSection } from './ListSection';
 
@@ -99,6 +100,7 @@ export function ProfilePage() {
               ? t('profile.keywordsAdvice', { count: keywords.count, min: keywords.min })
               : undefined
           }
+          extra={section.slug === 'keywords' ? <KeywordProposer /> : undefined}
         />
       ))}
     </div>

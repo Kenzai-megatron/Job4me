@@ -28,6 +28,7 @@ export const errorCodes = [
   'file_too_complex',
   'file_protected',
   'file_macros',
+  'keywords_need_target_job',
   'database_unavailable',
   'migrations_pending',
   'internal_error',

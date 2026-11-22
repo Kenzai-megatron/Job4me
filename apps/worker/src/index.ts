@@ -1,10 +1,14 @@
 import { loadConfig, loadSecrets } from '@job4me/config';
-import { type PushTestJob, QUEUES } from '@job4me/contracts';
+import { type KeywordsProposeJob, type PushTestJob, QUEUES } from '@job4me/contracts';
 import { connect, queueOptions } from '@job4me/db';
 import { createLogger } from '@job4me/logger';
+import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
+import { createAiService } from './ai/service';
+import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired } from './jobs/purge';
 import { sendTestNotification } from './jobs/push-test';
+import { startStructurer } from './jobs/structurer';
 
 // The worker runs background jobs from the PostgreSQL queue (SPEC section 10).
 
@@ -23,6 +27,7 @@ async function main(): Promise<void> {
 
   await ensureQueue(boss, QUEUES.pushTest);
   await ensureQueue(boss, QUEUES.maintenancePurge);
+  await ensureQueue(boss, QUEUES.keywordsPropose);
   await boss.schedule(QUEUES.maintenancePurge, config.settings.worker.purgeCron, null, {
     tz: 'Europe/Brussels',
   });
@@ -52,10 +57,37 @@ async function main(): Promise<void> {
     logger.info(result, 'expired records purged');
   });
 
+  // Claude API (ADR 0009): without a key, every AI step answers "not configured".
+  const ai = createAiService({
+    db: database.db,
+    settings: config.settings,
+    logger,
+    apiKey: secrets.anthropicApiKey,
+  });
+  logger.info({ enabled: ai.enabled }, 'claude api');
+  await boss.work<KeywordsProposeJob>(QUEUES.keywordsPropose, async (jobs) => {
+    for (const job of jobs) {
+      await proposeKeywords({ db: database.db, ai, settings: config.settings, logger }, job.data);
+    }
+  });
+
+  const structurer = secrets.importKey
+    ? startStructurer({
+        db: database.db,
+        ai,
+        settings: config.settings,
+        importKey: parseKey(secrets.importKey, 'import key'),
+        identityKey: deriveKey(parseMasterKey(secrets.masterKey), 'identity'),
+        logger,
+      })
+    : null;
+  if (!structurer) logger.warn('import key missing: CV imports are not structured (pnpm setup:*)');
+
   logger.info('worker started');
 
   const shutdown = async (signal: string) => {
     logger.info({ signal }, 'shutting down');
+    await structurer?.stop();
     await boss.stop({ graceful: true });
     await database.close();
     process.exit(0);

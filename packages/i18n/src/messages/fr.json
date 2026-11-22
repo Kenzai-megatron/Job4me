@@ -238,7 +238,8 @@
     "file_too_large": "Ce fichier est trop volumineux : 5 Mo au plus.",
     "file_too_complex": "Ce fichier est trop complexe à lire (trop de pages, d'entrées ou de texte).",
     "file_protected": "Ce fichier est protégé par un mot de passe : enregistrez-en une copie sans protection.",
-    "file_macros": "Les documents Word à macros ne sont pas acceptés : enregistrez-le en .docx."
+    "file_macros": "Les documents Word à macros ne sont pas acceptés : enregistrez-le en .docx.",
+    "keywords_need_target_job": "Ajoutez d'abord au moins un métier visé."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",
@@ -427,7 +428,22 @@
     "proposed": "proposé",
     "yearsValue_one": "{{count}} an",
     "yearsValue_other": "{{count}} ans",
-    "keywordsAdvice": "{{count}} validés ; il en faut au moins {{min}}."
+    "keywordsAdvice": "{{count}} validés ; il en faut au moins {{min}}.",
+    "keywordsAi": {
+      "hint": "Claude part de vos métiers visés, compétences, secteurs et langues ; jamais de votre identité. Ses propositions restent à garder ou écarter, une par une.",
+      "propose": "Proposer avec l'IA",
+      "queued": "Demande transmise…",
+      "running": "Claude propose des mots-clés…",
+      "done_one": "{{count}} mot-clé proposé : gardez-le ou écartez-le ci-dessous.",
+      "done_other": "{{count}} mots-clés proposés : gardez ou écartez chacun ci-dessous.",
+      "failed": {
+        "ai_disabled": "L'IA n'est pas configurée sur ce serveur : ajoutez les mots-clés à la main.",
+        "ai_cap_reached": "Le plafond de dépense de l'IA est atteint (Paramètres > IA).",
+        "ai_refused": "Le modèle a refusé la demande : réessayez plus tard ou ajoutez les mots-clés à la main.",
+        "ai_invalid_output": "La réponse de l'IA était inexploitable : réessayez.",
+        "ai_failed": "L'IA n'a pas répondu : réessayez dans un moment."
+      }
+    }
   },
   "imports": {
     "title": "Importer un CV ou LinkedIn",
@@ -468,7 +484,49 @@
       "file_macros": "Le document contient des macros.",
       "no_text": "Aucun texte trouvé : s'il s'agit d'un scan, exportez votre CV en PDF depuis Word ou Google Docs.",
       "extraction_failed": "La lecture a échoué. Réessayez avec un autre export du fichier.",
-      "extraction_timeout": "La lecture a pris trop de temps. Réessayez avec un fichier plus simple."
+      "extraction_timeout": "La lecture a pris trop de temps. Réessayez avec un fichier plus simple.",
+      "ai_disabled": "L'IA n'est pas configurée sur ce serveur.",
+      "ai_cap_reached": "Le plafond de dépense de l'IA est atteint.",
+      "ai_refused": "Le modèle a refusé d'analyser ce CV.",
+      "ai_invalid_output": "La réponse de l'IA était inexploitable.",
+      "ai_failed": "La structuration du CV a échoué."
+    },
+    "proposals_one": "{{count}} proposition à relire",
+    "proposals_other": "{{count}} propositions à relire",
+    "aiNotes": {
+      "ai_disabled": "L'IA n'est pas configurée sur ce serveur : seules les coordonnées trouvées dans le CV sont proposées.",
+      "ai_cap_reached": "Le plafond de dépense de l'IA est atteint (Paramètres > IA) : seules les coordonnées trouvées dans le CV sont proposées.",
+      "ai_refused": "Le modèle a refusé d'analyser ce CV : seules les coordonnées trouvées sont proposées.",
+      "ai_invalid_output": "La réponse de l'IA était inexploitable, deux fois : seules les coordonnées trouvées sont proposées.",
+      "ai_failed": "L'IA n'a pas répondu : seules les coordonnées trouvées sont proposées."
+    }
+  },
+  "settings": {
+    "tabs": "Pages des paramètres",
+    "security": "Sécurité",
+    "ai": "IA"
+  },
+  "ai": {
+    "title": "IA",
+    "intro": "Ce que coûtent les appels à l'API Claude, comparé aux plafonds. Le contenu des demandes et des réponses n'est jamais gardé.",
+    "spend": "Dépenses",
+    "week": "Sur 7 jours : {{amount}} sur un plafond de {{cap}}",
+    "total": "Depuis le début : {{amount}} sur un plafond de {{cap}}",
+    "capsHint": "Au-delà d'un plafond, aucun appel n'est envoyé. Réglez aussi un plafond mensuel dans la console d'Anthropic.",
+    "calls": "Derniers appels",
+    "empty": "Aucun appel pour le moment.",
+    "tokens": "{{input}} jetons lus, {{output}} écrits",
+    "usages": {
+      "cv_structuring": "Structuration du CV",
+      "keywords": "Proposition de mots-clés"
+    },
+    "statuses": {
+      "succeeded": "réussi",
+      "refused": "refusé par le modèle",
+      "invalid_output": "réponse inexploitable",
+      "failed": "échec de l'appel",
+      "blocked": "bloqué par un plafond",
+      "disabled": "IA non configurée"
     }
   }
 }

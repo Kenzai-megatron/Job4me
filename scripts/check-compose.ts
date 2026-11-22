@@ -82,6 +82,17 @@ function check(name: string, model: Model): string[] {
   return problems;
 }
 
+/** The Claude API key reaches the worker and nothing else (ADR 0009). */
+function checkAiKey(name: string, model: Model): string[] {
+  return Object.entries(model.services)
+    .filter(
+      ([service, spec]) =>
+        service !== 'worker' &&
+        (spec.secrets ?? []).some((secret) => secret.source === 'anthropic_api_key'),
+    )
+    .map(([service]) => `${name}/${service}: must not receive the Claude API key`);
+}
+
 function checkExtractor(name: string, model: Model): string[] {
   const spec = model.services.extract;
   if (!spec) return [`${name}: no extract service`];
@@ -113,6 +124,8 @@ async function main(): Promise<void> {
     ...check('dev', dev),
     ...checkExtractor('home', home),
     ...checkExtractor('dev', dev),
+    ...checkAiKey('home', home),
+    ...checkAiKey('dev', dev),
   ];
   const postgres = home.services.postgres;
   if (!postgres) problems.push('home: no postgres service');

@@ -25,6 +25,19 @@ export const completenessRubrics = [
 ] as const;
 
 export const environmentSchema = z.enum(['development', 'test', 'production']);
+
+const priceSchema = z.object({
+  input: z.number().min(0),
+  output: z.number().min(0),
+  cacheRead: z.number().min(0),
+  cacheWrite: z.number().min(0),
+});
+
+const aiTaskSchema = z.object({
+  model: z.string().regex(/^claude-[a-z0-9-]+$/),
+  maxTokens: z.number().int().min(256).max(64_000),
+  effort: z.enum(['low', 'medium', 'high', 'xhigh', 'max']),
+});
 export type Environment = z.infer<typeof environmentSchema>;
 
 export const settingsSchema = z
@@ -149,6 +162,31 @@ export const settingsSchema = z
         staleAfterMs: z.number().int().min(1000),
       }),
     }),
+    ai: z.object({
+      /** Hypothèse (plan, decision P4): 2 $ per rolling week and 10 $ for the whole phase. */
+      caps: z.object({
+        weeklyUsd: z.number().min(0).max(1000),
+        totalUsd: z.number().min(0).max(10_000),
+      }),
+      timeoutMs: z.number().int().min(5000).max(600_000),
+      maxRetries: z.number().int().min(0).max(5),
+      /** Characters per token when estimating a request before sending it (low = cautious). */
+      charsPerToken: z.number().min(1).max(10),
+      cvStructuring: aiTaskSchema,
+      keywords: aiTaskSchema.extend({
+        fallbacks: z.boolean(),
+        requestsPerHour: z.number().int().min(1).max(100),
+        /** A request still pending after this long no longer blocks a new one. */
+        staleAfterMs: z.number().int().min(60_000),
+      }),
+      structuring: z.object({
+        pollIntervalMs: z.number().int().min(500).max(60_000),
+        staleAfterMs: z.number().int().min(60_000),
+      }),
+      /** USD per million tokens, by model; an unknown model (a fallback) is priced at `unknown`. */
+      prices: z.record(z.string(), priceSchema),
+      unknownModelPrice: priceSchema,
+    }),
     worker: z.object({
       purgeCron: z.string().min(9),
       expiredSessionRetentionDays: z.number().int().min(1).max(365),
@@ -205,6 +243,8 @@ export interface Secrets {
   databaseExtractorUrl: string | undefined;
   /** 32-byte key of imported files and extracted texts, base64 (ADR 0010), apart from the master key. */
   importKey: string | undefined;
+  /** Claude API key (ADR 0009): on the home machine only; empty or absent, the AI is off. */
+  anthropicApiKey: string | undefined;
   vapidPublicKey: string | undefined;
   vapidPrivateKey: string | undefined;
 }

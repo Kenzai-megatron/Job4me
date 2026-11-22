@@ -25,9 +25,12 @@ export { queueOptions } from './queue';
 export { withUser } from './scope';
 export * as schema from './schema';
 export type {
+  AiCall,
   AuditEntry,
   AuthChallenge,
+  ImportProposal,
   ImportRunRow,
+  KeywordProposalRun,
   Passkey,
   Profile,
   PushSubscription,

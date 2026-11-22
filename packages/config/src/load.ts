@@ -215,6 +215,7 @@ export function loadSecrets(env: Env = process.env): Secrets {
     masterKey: requireSecret('JOB4ME_MASTER_KEY', env),
     databaseExtractorUrl: extractorDatabaseUrl(env),
     importKey: readSecret('JOB4ME_IMPORT_KEY', env),
+    anthropicApiKey: readSecret('JOB4ME_ANTHROPIC_API_KEY', env) || undefined,
     vapidPublicKey: readSecret('JOB4ME_VAPID_PUBLIC_KEY', env),
     vapidPrivateKey: readSecret('JOB4ME_VAPID_PRIVATE_KEY', env),
   };

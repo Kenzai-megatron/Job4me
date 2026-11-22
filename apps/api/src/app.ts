@@ -26,6 +26,7 @@ import { healthRoutes } from './routes/health';
 import { accountRoutes } from './modules/auth/routes-account';
 import { signInRoutes } from './modules/auth/routes-sign-in';
 import { registerSessionHook } from './modules/auth/session-hook';
+import { aiRoutes } from './modules/ai/routes';
 import { importRoutes } from './modules/imports/routes';
 import { profileRoutes } from './modules/profile/routes';
 import { pushRoutes } from './modules/push/routes';
@@ -78,6 +79,7 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
   await app.register(pushRoutes(deps));
   await app.register(profileRoutes(deps));
   await app.register(importRoutes(deps));
+  await app.register(aiRoutes(deps));
   if (!production) {
     app.get('/api/openapi.json', { schema: { hide: true } }, () => app.swagger());
   }

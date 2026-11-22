@@ -47,6 +47,19 @@ describe('createLogger', () => {
     expect(line).toContain('[redacted]');
   });
 
+  it('masks API keys in headers (Claude API, ADR 0009)', () => {
+    const { lines, logger } = capture();
+    logger.info(
+      {
+        headers: { 'x-api-key': 'sk-ant-api-key-for-tests', authorization: 'Bearer sk-ant-token' },
+        client: { apiKey: 'sk-ant-api-key-for-tests' },
+      },
+      'request',
+    );
+    const line = lines.join('');
+    expect(line).not.toContain('sk-ant');
+  });
+
   it('masks the request URL and drops cookies', () => {
     const { lines, logger } = capture();
     logger.info(

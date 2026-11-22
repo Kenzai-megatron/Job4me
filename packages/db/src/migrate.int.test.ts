@@ -27,6 +27,7 @@ describe('migrations', () => {
       "select tablename from pg_tables where schemaname = 'public' order by tablename",
     );
     expect(rows.map((row) => row.tablename)).toEqual([
+      'ai_call',
       'audit_log',
       'auth_challenge',
       'auth_throttle',
@@ -36,7 +37,9 @@ describe('migrations', () => {
       'excluded_company',
       'experience',
       'fact',
+      'import_proposal',
       'import_run',
+      'keyword_proposal_run',
       'language_level',
       'one_time_token',
       'passkey',
@@ -70,6 +73,9 @@ describe('migrations', () => {
       'search_keyword',
       'upload',
       'import_run',
+      'import_proposal',
+      'ai_call',
+      'keyword_proposal_run',
     ]) {
       expect(guarded).toContain(table);
     }
@@ -91,6 +97,16 @@ describe('migrations', () => {
       "insert into \"user\" (email, display_name, webauthn_user_handle) values ('a@example.org', 'A', '\\x01') returning id",
     );
     expect(rows[0]!.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/);
+  });
+});
+
+describe('views', () => {
+  it('show the ready imports to the application across accounts, ids only', async () => {
+    const { rows } = await owner.query<{ column_name: string }>(
+      "select column_name from information_schema.columns where table_name = 'import_run_ready' order by ordinal_position",
+    );
+    expect(rows.map((row) => row.column_name)).toEqual(['id', 'user_id', 'status', 'updated_at']);
+    await expect(app.query('select count(*) from import_run_ready')).resolves.toBeTruthy();
   });
 });
 

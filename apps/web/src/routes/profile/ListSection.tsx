@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../api/client';
 import { type RubricItem, rubricQuery } from '../../api/profile';
@@ -172,10 +172,13 @@ function EntryForm({
 export function ListSection({
   section,
   advice,
+  extra,
 }: {
   section: RubricSection;
   /** A line under the intro, such as the advised number of keywords. */
   advice?: string;
+  /** Something more above the entries, such as the AI proposal of keywords. */
+  extra?: ReactNode;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -230,6 +233,7 @@ export function ListSection({
       intro={t(`profile.intros.${section.key}`)}
     >
       {advice ? <p className="text-sm text-muted">{advice}</p> : null}
+      {extra}
       {items.length === 0 && !adding ? (
         <p className="text-sm text-muted">{t('profile.empty')}</p>
       ) : (
