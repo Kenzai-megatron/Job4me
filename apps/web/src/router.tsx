@@ -13,6 +13,7 @@ import { EnrollPage } from './routes/EnrollPage';
 import { HomePage } from './routes/HomePage';
 import { LoginPage } from './routes/LoginPage';
 import { PlaceholderPage } from './routes/PlaceholderPage';
+import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
 
 interface RouterContext {
@@ -71,7 +72,7 @@ const documentsRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => appRoute,
   path: '/profile',
-  component: () => <PlaceholderPage section="profile" phase={1} />,
+  component: ProfilePage,
 });
 const securityRoute = createRoute({
   getParentRoute: () => appRoute,

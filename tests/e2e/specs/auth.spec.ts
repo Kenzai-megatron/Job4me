@@ -1,62 +1,11 @@
-import { readFileSync } from 'node:fs';
-import AxeBuilder from '@axe-core/playwright';
-import { type CDPSession, expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { Secret, TOTP } from 'otpauth';
-import { STATE_FILE } from '../playwright.config';
+import { addVirtualAuthenticator, expectAccessible, state, watchConsole } from '../helpers';
 
 // Phase 0 end to end: enrollment link, passkey, TOTP, recovery codes, sign-in and fallback,
 // on the built interface served by the real API, with its real CSP.
 
-interface State {
-  link: string;
-  email: string;
-  password: string;
-}
-
-const state = (): State => JSON.parse(readFileSync(STATE_FILE, 'utf8')) as State;
 let recoveryCodes: string[] = [];
-
-/** A platform authenticator with Face ID-like user verification, emulated by Chromium. */
-async function addVirtualAuthenticator(page: Page) {
-  const client: CDPSession = await page.context().newCDPSession(page);
-  await client.send('WebAuthn.enable');
-  const { authenticatorId } = await client.send('WebAuthn.addVirtualAuthenticator', {
-    options: {
-      protocol: 'ctap2',
-      transport: 'internal',
-      hasResidentKey: true,
-      hasUserVerification: true,
-      isUserVerified: true,
-      automaticPresenceSimulation: true,
-    },
-  });
-  /** Whether the authenticator answers by itself, as if someone touched it at once. */
-  const answerAlone = (enabled: boolean) =>
-    client.send('WebAuthn.setAutomaticPresenceSimulation', { authenticatorId, enabled });
-  return { answerAlone };
-}
-
-/** Fails the test on any CSP violation or uncaught error in the page. */
-function watchConsole(page: Page) {
-  const problems: string[] = [];
-  page.on('console', (message) => {
-    if (message.type() === 'error' && /Content Security Policy|Refused to/.test(message.text())) {
-      problems.push(message.text());
-    }
-  });
-  page.on('pageerror', (error) => problems.push(error.message));
-  return problems;
-}
-
-async function expectAccessible(page: Page) {
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
-    .analyze();
-  const serious = results.violations.filter(
-    (v) => v.impact === 'serious' || v.impact === 'critical',
-  );
-  expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
-}
 
 test.describe.configure({ mode: 'serial' });
 

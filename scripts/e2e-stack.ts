@@ -29,29 +29,38 @@ async function main(): Promise<void> {
     throw new Error('test:e2e:stack creates a test account: never on the home machine.');
   }
   const origin = `http://localhost:${env.JOB4ME_HTTP_PORT ?? '3000'}`;
-  const email = `e2e-${randomBytes(4).toString('hex')}@example.org`;
   const password = randomBytes(18).toString('base64url');
-  const output = await capture(
-    'docker',
-    [
-      ...STACK_COMPOSE,
-      'exec',
-      '-T',
-      'api',
-      'node',
-      'api/cli.js',
-      'user:create',
-      '--email',
-      email,
-      '--name',
-      'Mehdi',
-    ],
-    `${password}\n`,
-  );
-  const link = /https?:\/\/\S+\/enroll#\S+/.exec(output)?.[0];
-  if (!link) throw new Error('user:create printed no enrollment link');
+  /** Creates an account through the CLI in the API container and returns its link. */
+  const createAccount = async (email: string) => {
+    const output = await capture(
+      'docker',
+      [
+        ...STACK_COMPOSE,
+        'exec',
+        '-T',
+        'api',
+        'node',
+        'api/cli.js',
+        'user:create',
+        '--email',
+        email,
+        '--name',
+        'Mehdi',
+      ],
+      `${password}\n`,
+    );
+    const link = /https?:\/\/\S+\/enroll#\S+/.exec(output)?.[0];
+    if (!link) throw new Error('user:create printed no enrollment link');
+    return link;
+  };
+  const suffix = randomBytes(4).toString('hex');
+  const email = `e2e-${suffix}@example.org`;
+  const link = await createAccount(email);
+  const profileLink = await createAccount(`e2e-profile-${suffix}@example.org`);
   mkdirSync(join(ROOT, 'tests', 'e2e', '.state'), { recursive: true });
-  writeFileSync(STATE_FILE, JSON.stringify({ link, email, password }), { mode: 0o600 });
+  writeFileSync(STATE_FILE, JSON.stringify({ link, email, password, profileLink }), {
+    mode: 0o600,
+  });
   await run('pnpm', ['--filter', '@job4me/e2e', 'test:e2e'], { env: { E2E_BASE_URL: origin } });
 }
 
