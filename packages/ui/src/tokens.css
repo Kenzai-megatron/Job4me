@@ -1,0 +1,71 @@
+/*
+ * Job4me design tokens (SPEC section 9, Hypothèse validated on 20/11/2026):
+ * near-black ink, warm off-white ground, neutral greys, a single deep-blue accent.
+ * Status colours are reserved for score bands, always shown with their number and label.
+ */
+:root {
+  color-scheme: light;
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --surface-muted: #f0efea;
+  --ink: #15171c;
+  --muted: #586070;
+  --line: #e3e1db;
+  --line-strong: #c8c5bd;
+  --accent: #1d3b8f;
+  --accent-hover: #172f73;
+  --accent-soft: #e9eef9;
+  --on-accent: #ffffff;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --score-80: #1e7b4f;
+  --score-60: #1b6e86;
+  --score-40: #8f5d00;
+  --score-0: #676c76;
+  --radius: 6px;
+  --radius-lg: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #101217;
+    --surface: #171a21;
+    --surface-muted: #1d2129;
+    --ink: #ecedef;
+    --muted: #a2a8b4;
+    --line: #2a2f39;
+    --line-strong: #3e4452;
+    --accent: #93b0ff;
+    --accent-hover: #b0c6ff;
+    --accent-soft: #1b2442;
+    --on-accent: #0d1530;
+    --danger: #ff8a80;
+    --danger-soft: #3a1714;
+    --score-80: #5bc88e;
+    --score-60: #5ab7cf;
+    --score-40: #e2a63c;
+    --score-0: #9aa0ab;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #101217;
+  --surface: #171a21;
+  --surface-muted: #1d2129;
+  --ink: #ecedef;
+  --muted: #a2a8b4;
+  --line: #2a2f39;
+  --line-strong: #3e4452;
+  --accent: #93b0ff;
+  --accent-hover: #b0c6ff;
+  --accent-soft: #1b2442;
+  --on-accent: #0d1530;
+  --danger: #ff8a80;
+  --danger-soft: #3a1714;
+  --score-80: #5bc88e;
+  --score-60: #5ab7cf;
+  --score-40: #e2a63c;
+  --score-0: #9aa0ab;
+}

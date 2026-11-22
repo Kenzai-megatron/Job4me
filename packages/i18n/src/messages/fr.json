@@ -1,0 +1,236 @@
+{
+  "app": {
+    "skipToContent": "Aller au contenu",
+    "offline": "Vous êtes hors ligne : Job4me reprendra dès le retour de la connexion."
+  },
+  "common": {
+    "loading": "Chargement…",
+    "cancel": "Annuler",
+    "continue": "Continuer",
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "copy": "Copier",
+    "copied": "Copié",
+    "download": "Télécharger",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "retry": "Réessayer",
+    "never": "jamais",
+    "done": "Terminé"
+  },
+  "nav": {
+    "main": "Navigation principale",
+    "home": "Accueil",
+    "offers": "Offres",
+    "applications": "Candidatures",
+    "documents": "Documents",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "account": "Compte",
+    "logout": "Se déconnecter"
+  },
+  "login": {
+    "title": "Connexion",
+    "intro": "Connectez-vous avec la passkey de cet appareil : Face ID, empreinte ou code de l'appareil.",
+    "passkeyButton": "Se connecter avec une passkey",
+    "passkeyField": "Passkey",
+    "usePassword": "Utiliser le mot de passe de secours",
+    "usePasskey": "Revenir à la passkey",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "passwordSubmit": "Continuer",
+    "codeTitle": "Deuxième étape",
+    "codeIntro": "Saisissez le code à 6 chiffres de votre application d'authentification, ou l'un de vos codes de secours.",
+    "code": "Code",
+    "codeSubmit": "Se connecter",
+    "noWebAuthn": "Ce navigateur ne prend pas en charge les passkeys. Utilisez le mot de passe de secours ou un navigateur récent."
+  },
+  "enroll": {
+    "title": "Configurer votre accès",
+    "steps": "Étape {{current}} sur {{total}}",
+    "passkeyTitle": "Créer votre passkey",
+    "passkeyIntro": "Une passkey remplace le mot de passe : elle reste sur votre appareil et se déverrouille par Face ID, empreinte ou code. Elle ne fonctionne que sur l'adresse de Job4me, ce qui la rend insensible à l'hameçonnage.",
+    "passkeyName": "Nom de cet appareil",
+    "passkeyNameHint": "Par exemple : iPhone, PC du bureau.",
+    "passkeyButton": "Créer la passkey",
+    "totpTitle": "Activer le code à 6 chiffres",
+    "totpIntro": "Ce code complète le mot de passe de secours. Scannez le QR code avec une application d'authentification (1Password, Bitwarden, Google Authenticator…), puis saisissez le code affiché.",
+    "totpQrAlt": "QR code à scanner avec votre application d'authentification",
+    "totpManual": "Saisie manuelle de la clé",
+    "totpCode": "Code à 6 chiffres",
+    "totpConfirm": "Activer",
+    "totpSkip": "Plus tard",
+    "totpSkipWarning": "Sans ce code, le mot de passe de secours ne fonctionne pas : votre passkey reste le seul moyen d'entrer.",
+    "codesTitle": "Vos codes de secours",
+    "codesIntro": "Chaque code sert une seule fois, à la place du code à 6 chiffres. Rangez-les dans votre gestionnaire de mots de passe : ils ne seront plus jamais affichés.",
+    "codesStored": "J'ai rangé ces codes en lieu sûr",
+    "codesFile": "codes-de-secours-job4me.txt",
+    "finish": "Accéder à Job4me",
+    "linkInvalidTitle": "Lien expiré ou déjà utilisé",
+    "linkInvalid": "Demandez un nouveau lien sur la machine de Job4me avec la commande pnpm job4me user:enroll-link.",
+    "noToken": "Ce lien est incomplet. Ouvrez le lien d'enrôlement tel qu'il a été affiché."
+  },
+  "placeholder": {
+    "comingInPhase": "Arrive en phase {{phase}}",
+    "home": "Le résumé de la semaine : nouvelles offres à 80 ou plus, actions à faire, envois programmés et quotas.",
+    "offers": "Les offres collectées, notées sur 100 et classées, avec leur explication.",
+    "applications": "Le suivi de chaque candidature, des relances aux entretiens.",
+    "documents": "Vos CV maîtres et les dossiers adaptés à chaque offre, en PDF et en DOCX.",
+    "profile": "Votre profil, vos mots-clés et l'import de votre CV et de votre archive LinkedIn."
+  },
+  "home": {
+    "welcome": "Bonjour {{name}}",
+    "setupTitle": "Terminez la configuration de votre accès",
+    "setupTotp": "Le code à 6 chiffres n'est pas encore activé : sans lui, le mot de passe de secours ne fonctionne pas.",
+    "setupCodes": "Vous n'avez plus de code de secours disponible.",
+    "setupLink": "Ouvrir les paramètres de sécurité"
+  },
+  "security": {
+    "title": "Sécurité",
+    "intro": "Vos moyens de connexion, vos sessions et le journal de ce qui s'est passé sur votre compte.",
+    "passkeys": {
+      "title": "Passkeys",
+      "intro": "Gardez au moins deux passkeys, par exemple votre téléphone et votre ordinateur.",
+      "add": "Ajouter une passkey",
+      "synced": "Synchronisée",
+      "created": "Créée le {{date}}",
+      "lastUsed": "Dernière utilisation : {{date}}",
+      "renameLabel": "Nouveau nom",
+      "deleteConfirm": "Supprimer la passkey « {{name}} » ? L'appareil concerné ne pourra plus se connecter.",
+      "nameLabel": "Nom de l'appareil"
+    },
+    "totp": {
+      "title": "Code à 6 chiffres",
+      "enabled": "Activé",
+      "disabled": "Pas encore activé",
+      "setup": "Activer",
+      "reset": "Remplacer",
+      "intro": "Il complète le mot de passe de secours, qui ne suffit jamais seul."
+    },
+    "recovery": {
+      "title": "Codes de secours",
+      "remaining_one": "{{count}} code disponible",
+      "remaining_other": "{{count}} codes disponibles",
+      "regenerate": "Générer de nouveaux codes",
+      "regenerateConfirm": "Les anciens codes cesseront de fonctionner.",
+      "intro": "Chaque code sert une fois, à la place du code à 6 chiffres."
+    },
+    "password": {
+      "title": "Mot de passe de secours",
+      "intro": "Toujours suivi d'un code. Une passkey résiste mieux à l'hameçonnage : avec deux passkeys, vous pouvez désactiver ce secours.",
+      "change": "Changer le mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordHint": "Au moins 12 caractères. Une phrase facile à retenir convient très bien.",
+      "fallbackOn": "Secours activé",
+      "fallbackOff": "Secours désactivé",
+      "enableFallback": "Activer le secours",
+      "disableFallback": "Désactiver le secours",
+      "changed": "Mot de passe changé."
+    },
+    "sessions": {
+      "title": "Sessions ouvertes",
+      "current": "Cette session",
+      "unknownDevice": "Appareil inconnu",
+      "since": "Ouverte le {{date}}",
+      "lastSeen": "Dernière activité : {{date}}",
+      "revoke": "Fermer",
+      "revokeOthers": "Fermer toutes les autres sessions",
+      "revoked_one": "{{count}} session fermée.",
+      "revoked_other": "{{count}} sessions fermées."
+    },
+    "audit": {
+      "title": "Journal d'audit",
+      "intro": "Les derniers événements de votre compte. Ce journal ne peut être ni modifié ni effacé.",
+      "empty": "Aucun événement pour l'instant."
+    }
+  },
+  "reauth": {
+    "title": "Confirmez que c'est vous",
+    "intro": "Cette action est sensible : confirmez votre identité pour continuer.",
+    "passkey": "Confirmer avec ma passkey",
+    "usePassword": "Utiliser le mot de passe et un code",
+    "password": "Mot de passe",
+    "code": "Code à 6 chiffres ou code de secours",
+    "submit": "Confirmer"
+  },
+  "authMethods": {
+    "passkey": "Passkey",
+    "password_totp": "Mot de passe et code",
+    "password_recovery": "Mot de passe et code de secours"
+  },
+  "audit": {
+    "outcomes": {
+      "success": "Réussi",
+      "failure": "Échec",
+      "denied": "Refusé"
+    },
+    "actions": {
+      "user.created": "Compte créé",
+      "enrollment.link_issued": "Lien d'enrôlement émis",
+      "passkey.registered": "Passkey enregistrée",
+      "passkey.renamed": "Passkey renommée",
+      "passkey.removed": "Passkey supprimée",
+      "auth.login.succeeded": "Connexion",
+      "auth.login.failed": "Échec de connexion",
+      "auth.logout": "Déconnexion",
+      "auth.locked": "Verrouillage temporaire",
+      "auth.reauth": "Confirmation d'identité",
+      "totp.setup_started": "Code à 6 chiffres en préparation",
+      "totp.enabled": "Code à 6 chiffres activé",
+      "recovery_codes.generated": "Codes de secours générés",
+      "recovery_code.used": "Code de secours utilisé",
+      "password.changed": "Mot de passe changé",
+      "password_fallback.enabled": "Secours par mot de passe activé",
+      "password_fallback.disabled": "Secours par mot de passe désactivé",
+      "session.revoked": "Session fermée",
+      "sessions.revoked_others": "Autres sessions fermées",
+      "sessions.revoked_all": "Toutes les sessions fermées",
+      "push.test_sent": "Notification de test envoyée",
+      "unknown": "Événement"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "intro": "Sur iPhone, installez d'abord Job4me sur l'écran d'accueil (Partager, puis « Sur l'écran d'accueil »).",
+    "enable": "Activer les notifications",
+    "enabled": "Notifications activées sur cet appareil.",
+    "denied": "Les notifications sont bloquées dans les réglages de ce navigateur.",
+    "unsupported": "Ce navigateur ne propose pas les notifications. Sur iPhone, ouvrez Job4me depuis l'écran d'accueil.",
+    "test": "Envoyer une notification de test",
+    "testSent": "Notification de test envoyée : elle arrive dans quelques secondes.",
+    "testTitle": "Job4me",
+    "testBody": "Les notifications fonctionnent sur cet appareil."
+  },
+  "scores": {
+    "band80": "postuler aujourd'hui",
+    "band60": "pertinent",
+    "band40": "faute de mieux",
+    "band0": "hors sujet"
+  },
+  "errors": {
+    "validation_error": "Certaines informations ne sont pas valides.",
+    "invalid_body": "La demande est mal formée.",
+    "payload_too_large": "Ce contenu est trop volumineux.",
+    "unsupported_media_type": "Ce format n'est pas accepté.",
+    "not_found": "Cet élément n'existe pas ou plus.",
+    "unauthenticated": "Votre session a expiré : reconnectez-vous.",
+    "forbidden": "Cette action n'est pas autorisée.",
+    "csrf_failed": "La page a expiré : rechargez-la puis réessayez.",
+    "reauth_required": "Confirmez votre identité pour continuer.",
+    "rate_limited": "Trop de tentatives : patientez une minute.",
+    "locked": "Trop d'essais : réessayez dans {{minutes}} min, ou utilisez votre passkey.",
+    "invalid_credentials": "Adresse ou mot de passe incorrect.",
+    "invalid_code": "Ce code n'est pas valide ou a déjà servi.",
+    "link_invalid": "Ce lien a expiré ou a déjà été utilisé.",
+    "passkey_failed": "La passkey n'a pas été acceptée. Réessayez.",
+    "passkey_cancelled": "Opération annulée ou délai dépassé.",
+    "password_too_weak": "Ce mot de passe est trop faible : choisissez au moins 12 caractères, sans suite évidente.",
+    "last_sign_in_method": "Impossible : ce serait votre dernier moyen de connexion.",
+    "totp_not_ready": "Activez d'abord le code à 6 chiffres.",
+    "push_not_configured": "Les notifications ne sont pas configurées sur ce serveur.",
+    "database_unavailable": "Le serveur ne répond pas pour le moment.",
+    "migrations_pending": "Le serveur est en cours de mise à jour.",
+    "internal_error": "Une erreur est survenue. Réessayez dans un instant.",
+    "network": "Connexion impossible avec le serveur. Vérifiez votre accès réseau."
+  }
+}

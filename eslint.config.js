@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import job4me from './packages/tooling/eslint/job4me-plugin.js';
@@ -95,9 +96,22 @@ export default defineConfig(
     },
   },
   {
+    files: ['apps/web/**/*.{ts,tsx}', 'packages/ui/**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
+  {
     files: ['apps/web/src/**/*.tsx'],
     ignores: ['apps/web/src/**/*.test.tsx', 'apps/web/src/dev/**'],
     rules: { 'job4me/no-jsx-literals': 'error' },
+  },
+  {
+    // TanStack Router redirects are thrown on purpose: they are not errors.
+    files: ['apps/web/src/router.tsx'],
+    rules: { '@typescript-eslint/only-throw-error': 'off' },
   },
   {
     files: ['apps/web/public/sw.js'],

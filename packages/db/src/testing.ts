@@ -10,10 +10,30 @@ export interface TestDatabase {
   drop: () => Promise<void>;
 }
 
-function withDatabase(url: string, database: string): string {
+export function withDatabase(url: string, database: string): string {
   const parsed = new URL(url);
   parsed.pathname = `/${database}`;
   return parsed.toString();
+}
+
+/** Drops then creates a database on the development server, migrated and granted (tests only). */
+export async function recreateDatabase(
+  ownerServerUrl: string,
+  appServerUrl: string,
+  name: string,
+): Promise<{ ownerUrl: string; appUrl: string }> {
+  const admin = new pg.Client({ connectionString: withDatabase(ownerServerUrl, 'postgres') });
+  await admin.connect();
+  try {
+    await admin.query(`DROP DATABASE IF EXISTS ${admin.escapeIdentifier(name)} WITH (FORCE)`);
+    await admin.query(`CREATE DATABASE ${admin.escapeIdentifier(name)}`);
+  } finally {
+    await admin.end();
+  }
+  const ownerUrl = withDatabase(ownerServerUrl, name);
+  const appUrl = withDatabase(appServerUrl, name);
+  await runMigrations({ ownerUrl, appUrl });
+  return { ownerUrl, appUrl };
 }
 
 /**
