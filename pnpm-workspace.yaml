@@ -4,8 +4,12 @@ packages:
   - tests/*
 
 # Supply-chain hardening (ADR 0001, ADR 0008)
-# Wait 3 days (in minutes) before installing a freshly published version.
-minimumReleaseAge: 4320
+# Wait 7 days (in minutes) before installing a freshly published version.
+minimumReleaseAge: 10080
+# Refuse a version published with a weaker trust level (provenance, trusted publisher) than earlier ones.
+trustPolicy: no-downgrade
+# Transitive dependencies come from the registry only, never from git or tarball URLs.
+blockExoticSubdeps: true
 # Dependencies allowed to run install scripts; every other one is blocked.
 onlyBuiltDependencies:
   - esbuild

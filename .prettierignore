@@ -9,3 +9,4 @@ docs
 CLAUDE.md
 secrets
 tests/e2e/.state
+.semgrep/job4me.ts

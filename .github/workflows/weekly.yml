@@ -1,0 +1,57 @@
+name: Weekly vulnerability scan
+
+# Known vulnerabilities in the locked dependencies and in the built image (Debian packages and
+# production node_modules), with osv-scanner. A failure sends GitHub's usual e-mail.
+# Trivy, named in the phase 0 plan, is set aside since its March 2026 supply-chain compromise.
+
+on:
+  schedule:
+    - cron: '23 5 * * 1' # Monday, 05:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-scan
+  cancel-in-progress: false
+
+env:
+  # renovate: datasource=github-releases depName=google/osv-scanner
+  OSV_SCANNER_VERSION: 2.7.1
+  OSV_SCANNER_SHA256: fb7dab19a8bd9bbe5c3189f09d4b7ee1820c9553a23bac202648a56efd2f6ee8
+
+jobs:
+  dependencies:
+    name: Locked dependencies (osv-scanner)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install osv-scanner
+        run: |
+          curl -fsSL -o osv-scanner "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_amd64"
+          echo "${OSV_SCANNER_SHA256}  osv-scanner" | sha256sum -c -
+          chmod +x osv-scanner
+      - name: Scan pnpm-lock.yaml
+        run: ./osv-scanner scan source --lockfile pnpm-lock.yaml
+
+  image:
+    name: Application image (osv-scanner)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install osv-scanner
+        run: |
+          curl -fsSL -o osv-scanner "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_amd64"
+          echo "${OSV_SCANNER_SHA256}  osv-scanner" | sha256sum -c -
+          chmod +x osv-scanner
+      - name: Build the image as the home machine does
+        run: docker build -f infra/docker/Dockerfile -t job4me:scan .
+      - name: Scan the image
+        run: ./osv-scanner scan image job4me:scan

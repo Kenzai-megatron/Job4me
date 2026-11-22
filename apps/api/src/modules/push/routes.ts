@@ -112,7 +112,15 @@ export function pushRoutes(deps: AppDeps): FastifyPluginAsyncZod {
 
     app.post(
       '/api/push/test',
-      { schema: { response: { 200: okResponseSchema } } },
+      {
+        config: {
+          rateLimit: {
+            max: deps.config.settings.push.testRequestsPerMinute,
+            timeWindow: '1 minute',
+          },
+        },
+        schema: { response: { 200: okResponseSchema } },
+      },
       async (request) => {
         const session = requireSession(request);
         if (!deps.queue || !deps.vapidPublicKey) throw new HttpError(503, 'push_not_configured');

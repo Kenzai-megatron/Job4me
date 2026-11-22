@@ -7,6 +7,8 @@ Application web (PWA) de recherche d'emploi pour un seul utilisateur, sur le mar
 - Plan de la phase en cours : [`docs/plans/phase-0.md`](docs/plans/phase-0.md)
 - Décisions d'architecture : [`docs/adr`](docs/adr/README.md)
 - Installation sur la machine de la maison : [`docs/guide/installation.md`](docs/guide/installation.md)
+- Démonstration de la phase 0 : [`docs/guide/demonstration-phase-0.md`](docs/guide/demonstration-phase-0.md)
+- Sécurité : [modèle de menaces](docs/security/threat-model.md) et [revue de la phase 0](docs/security/review-phase-0.md)
 - Règles de travail : [`CLAUDE.md`](CLAUDE.md)
 
 ## Prérequis
@@ -44,6 +46,7 @@ pnpm job4me user:create --email mehdi@example.org --name Mehdi
 | `pnpm test:integration`  | tests d'intégration sur un vrai PostgreSQL (après `pnpm dev`)                                                        |
 | `pnpm test:e2e`          | tests de bout en bout Playwright sur l'interface construite et l'API                                                 |
 | `pnpm format`            | formatage Prettier                                                                                                   |
+| `pnpm check:compose`     | contrôle de Compose : ports sur `127.0.0.1`, conteneurs durcis, images épinglées                                     |
 
 ## Pile en conteneurs (machine de la maison, CI)
 

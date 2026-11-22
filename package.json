@@ -16,6 +16,7 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check:compose": "tsx scripts/check-compose.ts",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration --concurrency=1",
     "test:e2e": "pnpm --filter @job4me/web build && pnpm --filter @job4me/e2e test:e2e",

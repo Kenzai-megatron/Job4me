@@ -90,6 +90,7 @@ export const settingsSchema = z
       vapidSubject: z
         .string()
         .regex(/^(mailto:\S+@\S+|https:\/\/\S+)$/, 'must be a mailto: or https: address'),
+      testRequestsPerMinute: z.number().int().min(1).max(60),
     }),
     worker: z.object({
       purgeCron: z.string().min(9),

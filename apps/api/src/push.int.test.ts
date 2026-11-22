@@ -96,4 +96,15 @@ describe('push API', () => {
     expect((await browser.post('/api/push/test')).statusCode).toBe(200);
     expect(sent.at(-1)).toMatchObject({ name: 'push_test', data: { userId: user.id } });
   });
+
+  it('caps test notifications per minute (configuration)', async () => {
+    const { browser } = await signedInBrowser();
+    // The previous test already used one request of this minute's budget for the test route.
+    const budget = ctx.deps.config.settings.push.testRequestsPerMinute;
+    const statuses: number[] = [];
+    for (let request = 0; request <= budget; request++) {
+      statuses.push((await browser.post('/api/push/test')).statusCode);
+    }
+    expect(statuses.at(-1)).toBe(429);
+  });
 });
