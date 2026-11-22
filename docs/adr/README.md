@@ -12,3 +12,7 @@ Chaque décision structurante de Job4me tient dans une fiche courte : contexte, 
 | [0006](0006-isolation-par-utilisateur.md) | Isolation par utilisateur | Acceptée le 20/11/2026 |
 | [0007](0007-acces-distant-tailscale.md) | Accès distant par Tailscale | Acceptée le 20/11/2026 |
 | [0008](0008-ci-flux-git-et-dependances.md) | Chaîne CI, flux Git et sécurité des dépendances | Acceptée le 20/11/2026, modifiée le 21/11/2026 |
+| [0009](0009-ia-donnees-envoyees-et-plafonds.md) | IA : données envoyées, plafonds et journal | Acceptée le 22/11/2026 |
+| [0010](0010-fichiers-importes-et-extraction-isolee.md) | Fichiers importés et extraction isolée | Acceptée le 22/11/2026 |
+| [0011](0011-rls-donnees-du-profil.md) | Row Level Security sur les données du profil | Acceptée le 22/11/2026 |
+| [0012](0012-sauvegardes-chiffrees.md) | Sauvegardes chiffrées | Acceptée le 22/11/2026 |

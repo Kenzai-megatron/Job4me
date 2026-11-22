@@ -1,6 +1,6 @@
 # Phase 1 : profil et imports, plan détaillé
 
-Proposition du 22/11/2026, **en attente de la validation de Mehdi**. Aucune ligne de code de la phase 1 n'est écrite avant cette validation (`CLAUDE.md`, méthode).
+Proposition du 22/11/2026, **validée par Mehdi le 22/11/2026** avec les options recommandées de la section 12. À sa demande, la démonstration de la phase 0 est sautée pour gagner du temps : les vérifications sur iPhone (Face ID, installation, notifications) se feront à sa première installation.
 
 ## 1. Résumé
 
@@ -166,24 +166,24 @@ Chaque lot est une branche et une pull request ; la règle de fusion de la phase
 - **Sauvegardes dès la phase 1** : la feuille de route ne les place dans aucune phase, mais la section 11 les exige, et c'est en phase 1 que de vraies données arrivent.
 - **Données réelles** : ton vrai CV et ton archive ne passent jamais par l'environnement de développement ni par la CI ; tout se teste avec des CV fictifs. Pour fabriquer une archive LinkedIn fictive fidèle, j'aurai besoin de la liste des fichiers et des en-têtes de colonnes de la tienne, sans leur contenu.
 
-## 12. Décisions à prendre
+## 12. Décisions prises le 22/11/2026
 
-Les valeurs marquées « Hypothèse » s'appliquent tant qu'une décision n'est pas prise.
+Mehdi a demandé d'aller au plus vite : les options recommandées s'appliquent, et chacune reste modifiable.
 
-| # | Décision | Proposition |
+| # | Décision | Choix appliqué |
 | --- | --- | --- |
-| P1 | Métiers cibles (1 à 3) et premiers mots-clés | à fournir au début de la phase 1 (spécification, section 16) |
-| P2 | Clé d'API Claude | compte sur la console d'Anthropic, clé avec plafond mensuel, gardée sur la machine de la maison seulement |
-| P3 | Envoi du texte du CV, sans l'identité, à l'API d'Anthropic | oui, après lecture de ses conditions de conservation des données (section 12) ; sinon, saisie manuelle et import LinkedIn seulement |
-| P4 | Plafonds de dépense IA de la phase | 2 $ par semaine et 10 $ au total (Hypothèse) |
-| P5 | Destination des sauvegardes | disque USB, NAS ou dossier synchronisé dans le cloud ; chiffrement avec `age` |
-| P6 | Modèle des mots-clés | Sonnet 5.5 (recommandé) ou Haiku 5.5 |
-| P7 | Archive LinkedIn | la demander dès maintenant dans les paramètres LinkedIn : l'archive complète peut prendre jusqu'à 24 heures |
-| P8 | Fusion des pull requests | Claude fusionne après une CI verte, comme en phase 0, ou Mehdi relit chaque lot |
+| P1 | Métiers cibles et premiers mots-clés | saisis plus tard par Mehdi dans l'application (Profil) ; la proposition de mots-clés en dépend |
+| P2 | Clé d'API Claude | créée par Mehdi à l'installation, gardée sur la machine de la maison seulement ; sans clé, l'IA est désactivée et tout le reste fonctionne |
+| P3 | Envoi du texte du CV, sans l'identité, à l'API d'Anthropic | oui, comme le prévoit la spécification (section 4), après caviardage local |
+| P4 | Plafonds de dépense IA | 2 $ par semaine et 10 $ au total (Hypothèse), dans la configuration |
+| P5 | Destination des sauvegardes | un dossier local configurable, que Mehdi copie où il veut ; chiffrement avec `age` |
+| P6 | Modèle des mots-clés | Claude Sonnet 5.5 |
+| P7 | Archive LinkedIn | plus tard ; en attendant, fichiers fictifs reproduisant la structure de l'export |
+| P8 | Fusion des pull requests | Claude fusionne après une CI verte, comme en phase 0 |
 
-Rappel de la phase 0 : le dépôt GitHub privé reste à créer (décision D1) pour que la CI tourne.
+Gardé aussi : 7 jours avant d'adopter une version de dépendance fraîchement publiée (au lieu des 3 du plan de la phase 0).
 
-## 13. ADR à rédiger au lot 0
+## 13. ADR rédigées au lot 0
 
 - **0009** IA : modèles, données envoyées, caviardage, plafonds et journal.
 - **0010** Fichiers importés : contrôles, stockage chiffré, extraction isolée.
