@@ -28,6 +28,12 @@ export const importErrorCodes = [
   'no_text',
   'extraction_failed',
   'extraction_timeout',
+  // Structuring: the import still reaches review, with what was found without the AI.
+  'ai_disabled',
+  'ai_cap_reached',
+  'ai_refused',
+  'ai_invalid_output',
+  'ai_failed',
 ] as const;
 export type ImportErrorCode = (typeof importErrorCodes)[number];
 
@@ -36,6 +42,9 @@ export const importStatsSchema = z.object({
   pages: z.number().int().min(0).optional(),
   characters: z.number().int().min(0).optional(),
   rows: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** Proposals waiting for Mehdi's decision, and those dropped for lack of evidence. */
+  proposals: z.number().int().min(0).optional(),
+  dropped: z.number().int().min(0).optional(),
 });
 export type ImportStats = z.infer<typeof importStatsSchema>;
 

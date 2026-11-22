@@ -59,9 +59,15 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
   await send.click();
   await expect(imports.getByText('Fichier reçu : la lecture commence.')).toBeVisible();
   await expect(imports.getByText('CV en PDF')).toBeVisible();
-  // On the containers the isolated extractor reads it; the test server alone has no extractor.
-  const expected = process.env.E2E_BASE_URL ? 'Texte lu' : 'En attente de lecture';
-  await expect(imports.getByText(expected)).toBeVisible({ timeout: 30_000 });
+  // On the containers the extractor reads it and the worker, without a Claude key, proposes the
+  // contact details only; the test server alone has neither.
+  const stack = Boolean(process.env.E2E_BASE_URL);
+  // The badge, not the line "1 proposition à relire".
+  const step = imports.getByText(stack ? 'À relire' : 'En attente de lecture', { exact: true });
+  await expect(step).toBeVisible({ timeout: 30_000 });
+  if (stack) {
+    await expect(imports.getByText("L'IA n'est pas configurée sur ce serveur")).toBeVisible();
+  }
 
   await file.setInputFiles({
     name: 'cv.pdf',
@@ -70,6 +76,34 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
   });
   await send.click();
   await expect(imports.getByRole('alert')).toContainText("Ce fichier n'est pas accepté");
+  await expectAccessible(page);
+
+  // Keywords from the AI: a target job first, then one request queued for the worker.
+  const targets = page.locator('#rubric-target-jobs');
+  await targets.getByRole('button', { name: 'Ajouter' }).click();
+  await targets.getByLabel('Intitulé').fill('Analyste de données');
+  await targets.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(
+    targets.getByRole('listitem').filter({ hasText: 'Analyste de données' }),
+  ).toBeVisible();
+  const keywords = page.locator('#rubric-keywords');
+  await keywords.getByRole('button', { name: "Proposer avec l'IA" }).click();
+  if (stack) {
+    await expect(keywords.getByRole('alert')).toContainText("L'IA n'est pas configurée", {
+      timeout: 30_000,
+    });
+  } else {
+    await expect(keywords.getByRole('status')).toHaveText('Demande transmise…');
+  }
+
+  // Settings > AI: the spending against the caps, never the content of the calls.
+  await page.getByRole('link', { name: 'Paramètres' }).first().click();
+  await page
+    .getByRole('navigation', { name: 'Pages des paramètres' })
+    .getByRole('link', { name: 'IA' })
+    .click();
+  await expect(page.getByRole('heading', { name: 'IA', level: 1 })).toBeVisible();
+  await expect(page.getByText(/Sur 7 jours : 0 \$ sur un plafond de 2 \$/)).toBeVisible();
   await expectAccessible(page);
   expect(problems).toEqual([]);
 });

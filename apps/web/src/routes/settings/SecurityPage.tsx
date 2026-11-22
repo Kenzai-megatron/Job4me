@@ -10,6 +10,7 @@ import { errorMessage } from '../../components/errors';
 import { NotificationsSection } from '../../components/NotificationsSection';
 import { useWithReauth } from '../../components/ReauthProvider';
 import { RecoveryCodes } from '../../components/RecoveryCodes';
+import { SettingsTabs } from './SettingsTabs';
 
 function Section({
   title,
@@ -72,6 +73,7 @@ export function SecurityPage() {
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{t('security.title')}</h1>
         <p className="text-muted">{t('security.intro')}</p>
       </div>
+      <SettingsTabs />
       {security.isError ? <Alert tone="error">{errorMessage(t, security.error)}</Alert> : null}
       {security.data ? (
         <>

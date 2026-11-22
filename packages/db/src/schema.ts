@@ -255,3 +255,6 @@ export * from './profile-schema';
 
 // Phase 1 imports: uploaded files and their extraction (ADR 0010).
 export * from './import-schema';
+
+// Phase 1 AI: call log, import proposals, keyword runs (ADR 0009).
+export * from './ai-schema';

@@ -127,9 +127,14 @@ services:
     command: [node, worker/index.js]
     environment:
       <<: *app-env
+      # Structuring of imported CVs and Claude API (ADR 0009, 0010): the worker only.
+      JOB4ME_IMPORT_KEY_FILE: /run/secrets/import_key
+      JOB4ME_ANTHROPIC_API_KEY_FILE: /run/secrets/anthropic_api_key
     secrets:
       - db_app_password
       - master_key
+      - import_key
+      - anthropic_api_key
       - vapid_public_key
       - vapid_private_key
     networks:
@@ -181,6 +186,9 @@ secrets:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/master_key
   import_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/import_key
+  # Empty until the key is written on the home machine: the AI then stays off.
+  anthropic_api_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/anthropic_api_key
   vapid_public_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/vapid_public_key
   vapid_private_key:

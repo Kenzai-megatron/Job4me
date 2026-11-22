@@ -110,6 +110,42 @@ imports:
     # A run still in extraction after this long is taken again (the extractor stopped).
     staleAfterMs: 300000
 
+# Claude API (plan, section 5; ADR 0009). The key is secrets/anthropic_api_key on the home
+# machine only: empty or absent, the AI is off and everything else keeps working.
+ai:
+  # Hypothèse (plan, decision P4): checked before every call, from the ai_call log.
+  caps:
+    weeklyUsd: 2 # rolling 7 days
+    totalUsd: 10 # the whole of phase 1
+  timeoutMs: 120000
+  maxRetries: 2
+  # Cautious estimate of a request before it is sent (French text: about 3.5 characters a token).
+  charsPerToken: 3
+  cvStructuring:
+    model: claude-haiku-5-5
+    maxTokens: 16000
+    effort: medium
+  keywords:
+    model: claude-sonnet-5-5
+    maxTokens: 8000
+    effort: high
+    # Server-side fallback when Claude Sonnet 5.5 declines (Anthropic chooses the model).
+    fallbacks: true
+    requestsPerHour: 10
+    # A request still pending after this long no longer blocks a new one.
+    staleAfterMs: 600000
+  structuring:
+    pollIntervalMs: 3000
+    # A structuring still running after this long is taken again (the worker stopped).
+    staleAfterMs: 600000
+  # USD per million tokens, Anthropic price list of 3/11/2026 (check before relying on them).
+  # Cache reads are 0.1x the input price, 5-minute cache writes 1.25x.
+  prices:
+    claude-haiku-5-5: { input: 0.10, output: 0.50, cacheRead: 0.01, cacheWrite: 0.125 }
+    claude-sonnet-5-5: { input: 2, output: 10, cacheRead: 0.10, cacheWrite: 2.5 }
+  # A fallback model is not known in advance: priced like an Opus-class model, to stay cautious.
+  unknownModelPrice: { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 }
+
 worker:
   purgeCron: '17 * * * *' # every hour
   expiredSessionRetentionDays: 30

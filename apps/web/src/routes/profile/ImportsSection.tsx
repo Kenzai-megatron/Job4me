@@ -111,8 +111,16 @@ export function ImportsSection() {
                 {run.status === 'failed' && run.errorCode ? (
                   <p className="text-sm text-danger">{t(`imports.failures.${run.errorCode}`)}</p>
                 ) : null}
-                {run.status === 'extracted' ? (
-                  <p className="text-sm text-muted">{t('imports.nextStep')}</p>
+                {run.status === 'review' ? (
+                  <>
+                    <p className="text-sm">
+                      {t('imports.proposals', { count: run.stats?.proposals ?? 0 })}
+                    </p>
+                    {run.errorCode ? (
+                      <p className="text-sm text-muted">{t(`imports.aiNotes.${run.errorCode}`)}</p>
+                    ) : null}
+                    <p className="text-sm text-muted">{t('imports.nextStep')}</p>
+                  </>
                 ) : null}
               </li>
             ))}

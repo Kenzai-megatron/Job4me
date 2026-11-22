@@ -37,6 +37,8 @@ function ensureSecrets(): Record<string, string> {
     // Isolated extractor (ADR 0010): its own database role and a key apart from the master key.
     db_extractor_password: () => randomBytes(24).toString('base64url'),
     import_key: () => randomBytes(32).toString('base64'),
+    // Left empty: the Claude API key is written by hand on the home machine (ADR 0009).
+    anthropic_api_key: () => '',
     vapid_public_key: () => vapid.publicKey,
     vapid_private_key: () => vapid.privateKey,
   };
@@ -44,8 +46,9 @@ function ensureSecrets(): Record<string, string> {
   for (const [name, generate] of Object.entries(values)) {
     const file = join(SECRETS_DIR, name);
     if (!existsSync(file)) {
-      writeFileSync(file, `${generate()}\n`, { mode: 0o600 });
-      console.log(`secrets/${name} created.`);
+      const value = generate();
+      writeFileSync(file, value === '' ? '' : `${value}\n`, { mode: 0o600 });
+      console.log(`secrets/${name} created${value === '' ? ' (empty)' : ''}.`);
     }
     paths[name] = file;
   }
@@ -92,6 +95,7 @@ const lines = [
   `JOB4ME_DB_EXTRACTOR_PASSWORD_FILE=${secrets.db_extractor_password}`,
   `JOB4ME_MASTER_KEY_FILE=${secrets.master_key}`,
   `JOB4ME_IMPORT_KEY_FILE=${secrets.import_key}`,
+  `JOB4ME_ANTHROPIC_API_KEY_FILE=${secrets.anthropic_api_key}`,
   `JOB4ME_FILES_DIR=${FILES_DIR}`,
   `JOB4ME_VAPID_PUBLIC_KEY_FILE=${secrets.vapid_public_key}`,
   `JOB4ME_VAPID_PRIVATE_KEY_FILE=${secrets.vapid_private_key}`,

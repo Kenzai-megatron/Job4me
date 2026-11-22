@@ -15,6 +15,7 @@ import { LoginPage } from './routes/LoginPage';
 import { PlaceholderPage } from './routes/PlaceholderPage';
 import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
+import { AiPage } from './routes/settings/AiPage';
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -79,6 +80,11 @@ const securityRoute = createRoute({
   path: '/settings/security',
   component: SecurityPage,
 });
+const aiRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/settings/ai',
+  component: AiPage,
+});
 
 const devRoutes = import.meta.env.DEV
   ? [
@@ -100,6 +106,7 @@ const routeTree = rootRoute.addChildren([
     documentsRoute,
     profileRoute,
     securityRoute,
+    aiRoute,
   ]),
   ...devRoutes,
 ]);

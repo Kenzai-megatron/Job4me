@@ -70,6 +70,8 @@ async function applyGrants(client: pg.Client): Promise<void> {
     `REVOKE CREATE ON SCHEMA public FROM ${role}`,
     `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${role}`,
     `REVOKE UPDATE, DELETE, TRUNCATE ON "audit_log" FROM ${role}`,
+    // The AI call log feeds the spending caps (ADR 0009): written once, never rewritten.
+    `REVOKE UPDATE, DELETE, TRUNCATE ON "ai_call" FROM ${role}`,
     `GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${role}`,
     // Readiness check: the runtime role may count applied migrations, nothing more.
     `GRANT USAGE ON SCHEMA drizzle TO ${role}`,

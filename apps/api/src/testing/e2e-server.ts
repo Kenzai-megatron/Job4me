@@ -60,6 +60,8 @@ async function main() {
     keys: deriveKeys(masterKey),
     // Throwaway key and folder: no extractor runs in these tests, uploads stay queued.
     imports: { key: randomBytes(32), filesDir: mkdtempSync(join(tmpdir(), 'job4me-e2e-files-')) },
+    // No worker either: queued jobs (keyword proposals) simply wait.
+    queue: { send: async () => null },
     logger: createLogger({ name: 'e2e', level: 'warn' }),
     webDistDir: process.env.JOB4ME_WEB_DIST,
   });
