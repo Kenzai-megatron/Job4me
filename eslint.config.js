@@ -55,6 +55,8 @@ export default defineConfig(
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/only-throw-error': 'error',
+      // Fastify plugins are async functions that often have nothing to await.
+      '@typescript-eslint/require-await': 'off',
     },
   },
   {

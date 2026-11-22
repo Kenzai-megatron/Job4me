@@ -1,0 +1,38 @@
+import type { Config } from '@job4me/config';
+import type { Database } from '@job4me/db';
+import type { Logger } from '@job4me/logger';
+import { deriveKey, parseMasterKey } from '@job4me/security';
+
+/** Keys derived from the master key, one per purpose (ADR 0004). */
+export interface Keys {
+  totp: Buffer;
+  recovery: Buffer;
+  csrf: Buffer;
+}
+
+export function deriveKeys(masterKeyBase64: string): Keys {
+  const master = parseMasterKey(masterKeyBase64);
+  return {
+    totp: deriveKey(master, 'totp'),
+    recovery: deriveKey(master, 'recovery'),
+    csrf: deriveKey(master, 'csrf'),
+  };
+}
+
+/** Background jobs the API asks the worker to run (pg-boss). */
+export interface JobQueue {
+  send(name: string, data: Record<string, unknown>): Promise<string | null>;
+}
+
+export interface AppDeps {
+  config: Config;
+  db: Database;
+  keys: Keys;
+  logger: Logger;
+  queue?: JobQueue;
+  vapidPublicKey?: string;
+  /** Built interface to serve (apps/web/dist); omitted in development. */
+  webDistDir?: string;
+  /** Injectable clock for tests. */
+  now?: () => Date;
+}
