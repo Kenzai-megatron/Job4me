@@ -1,0 +1,21 @@
+{
+  "name": "@job4me/security",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cryptography, passwords, TOTP and recovery codes (ADR 0003, ADR 0004)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "2.2.2",
+    "otpauth": "9.6.0"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*"
+  }
+}

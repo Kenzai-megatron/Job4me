@@ -1,0 +1,20 @@
+{
+  "name": "@job4me/logger",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Structured logging with secret masking",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "pino": "10.4.0"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*"
+  }
+}

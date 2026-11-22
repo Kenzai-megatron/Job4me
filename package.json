@@ -11,7 +11,7 @@
     "dev": "tsx scripts/dev.ts",
     "setup:dev": "tsx scripts/setup-dev.ts",
     "build": "turbo run build",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck && tsc -p tsconfig.json",
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
