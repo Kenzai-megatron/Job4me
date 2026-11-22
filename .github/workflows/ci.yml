@@ -173,7 +173,11 @@ jobs:
       - name: Build the image and start the stack as on the home machine
         run: pnpm stack:up
       - name: Install Chromium for Playwright
-        run: pnpm --filter @job4me/e2e exec playwright install --with-deps chromium
+        # The runner image already holds Chromium's system libraries; when its package mirrors
+        # fail, install the browser alone instead of failing the run.
+        run: |
+          pnpm --filter @job4me/e2e exec playwright install --with-deps chromium \
+            || pnpm --filter @job4me/e2e exec playwright install chromium
       - name: Specs against the containers (production mode)
         run: pnpm test:e2e:stack
       - name: Container logs
