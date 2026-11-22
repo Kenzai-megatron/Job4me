@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { completenessQuery } from '../../api/profile';
 import { IdentitySection, MotivationsSection, PracticalSection } from './DocumentSections';
+import { ImportsSection } from './ImportsSection';
 import { rubricSections } from './fields';
 import { ListSection } from './ListSection';
 
@@ -85,6 +86,7 @@ export function ProfilePage() {
         <p className="text-muted">{t('profile.intro')}</p>
       </div>
       <CompletenessCard />
+      <ImportsSection />
       <IdentitySection />
       <PracticalSection />
       <MotivationsSection />

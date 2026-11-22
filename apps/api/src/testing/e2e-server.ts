@@ -1,5 +1,7 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { randomBytes } from 'node:crypto';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { loadConfig, loadSecrets } from '@job4me/config';
 import { connect } from '@job4me/db';
 import { recreateDatabase } from '@job4me/db/testing';
@@ -56,6 +58,8 @@ async function main() {
     config,
     db: database.db,
     keys: deriveKeys(masterKey),
+    // Throwaway key and folder: no extractor runs in these tests, uploads stay queued.
+    imports: { key: randomBytes(32), filesDir: mkdtempSync(join(tmpdir(), 'job4me-e2e-files-')) },
     logger: createLogger({ name: 'e2e', level: 'warn' }),
     webDistDir: process.env.JOB4ME_WEB_DIST,
   });

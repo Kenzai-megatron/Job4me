@@ -1,0 +1,29 @@
+{
+  "name": "@job4me/imports",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Imported files: real type, bounded archive reading, PDF, DOCX and LinkedIn extraction (ADR 0010)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./extract": "./src/extract.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@job4me/contracts": "workspace:*",
+    "@job4me/security": "workspace:*",
+    "csv-parse": "7.0.3",
+    "mammoth": "1.13.0",
+    "pdfjs-dist": "6.5.438",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*",
+    "@types/yauzl": "3.4.0",
+    "fflate": "0.8.3"
+  }
+}

@@ -8,7 +8,11 @@ async function main(): Promise<void> {
   if (!secrets.databaseOwnerUrl) {
     throw new Error('JOB4ME_DATABASE_OWNER_URL is required to apply migrations');
   }
-  await runMigrations({ ownerUrl: secrets.databaseOwnerUrl, appUrl: secrets.databaseUrl });
+  await runMigrations({
+    ownerUrl: secrets.databaseOwnerUrl,
+    appUrl: secrets.databaseUrl,
+    extractorUrl: secrets.databaseExtractorUrl,
+  });
   console.log('Migrations applied.');
 }
 

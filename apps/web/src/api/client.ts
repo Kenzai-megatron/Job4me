@@ -21,6 +21,7 @@ export function setCsrfToken(token: string) {
 }
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const form = body instanceof FormData;
   let response: Response;
   try {
     response = await fetch(path, {
@@ -28,11 +29,11 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
       credentials: 'same-origin',
       headers: {
         accept: 'application/json',
-        ...(method === 'GET'
-          ? {}
-          : { 'content-type': 'application/json', 'x-csrf-token': csrfToken }),
+        ...(method === 'GET' ? {} : { 'x-csrf-token': csrfToken }),
+        // A form sets its own multipart content type, with the boundary.
+        ...(method === 'GET' || form ? {} : { 'content-type': 'application/json' }),
       },
-      ...(method === 'GET' ? {} : { body: JSON.stringify(body ?? {}) }),
+      ...(method === 'GET' ? {} : { body: form ? body : JSON.stringify(body ?? {}) }),
     });
   } catch {
     throw new ApiError(0, 'network');
@@ -53,4 +54,10 @@ export const api = {
   put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
   patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body),
   delete: <T>(path: string) => request<T>('DELETE', path),
+  /** One file in a multipart form, field `file`. */
+  upload: <T>(path: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<T>('POST', path, form);
+  },
 };

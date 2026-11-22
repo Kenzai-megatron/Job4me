@@ -18,3 +18,13 @@ Mehdi importe son CV (PDF ou DOCX) et son archive LinkedIn (ZIP). Ces fichiers p
 
 - Une faille d'un lecteur de documents ne donne ni Internet, ni les secrets TOTP, ni le reste de la base.
 - Un secret de plus à générer (`import_key`, mot de passe du rôle d'extraction) : `pnpm setup:dev` et `setup:home` les ajoutent sans toucher aux secrets existants.
+
+## Mise en œuvre (lot 3, 22/11/2026)
+
+- **Paquet `@job4me/imports`** : détection du type réel et bornes des archives (utilisées par l'API au téléversement), lecteurs PDF, DOCX et LinkedIn dans `@job4me/imports/extract` (utilisés par l'extracteur seul). L'API ne charge jamais pdf.js ni mammoth.
+- **Fichier stocké** : `var/files/imports/<32 octets aléatoires en base64url>`, chiffré sous `secrets/import_key`, données associées `upload:file:<id>`. Le dossier est un montage du disque de la machine, propriété de l'utilisateur des conteneurs, plutôt qu'un volume Docker (dont le propriétaire ne suivrait pas `JOB4ME_UID`). Il est exclu de Git et du contexte de construction de l'image.
+- **Extracteur** : conteneur `extract`, `node worker/extractor.js`. Il interroge `import_run` toutes les 2 s (configuration), réclame un import avec `FOR UPDATE SKIP LOCKED`, reprend une extraction restée en plan au-delà de `staleAfterMs` et abandonne après `maxAttempts` essais. Il n'a pas accès à la file pg-boss : un extracteur compromis ne peut donc pas commander d'autres tâches.
+- **Fil de lecture** : chaque fichier est lu dans un `worker_thread` avec un budget de mémoire et de durée (configuration), sans variable d'environnement ; sa sortie standard est jetée ; sa réponse est validée par les schémas Zod et les bornes avant d'être chiffrée (`import_run:extracted:<id>`).
+- **Rôle `job4me_extractor`** : créé par la migration (sans connexion possible tant que son mot de passe n'est pas fourni), droits remis à zéro puis accordés colonne par colonne à chaque migration ; politiques RLS : lecture des deux tables, mise à jour d'un import en attente ou en extraction vers « extraction », « extrait » ou « échec » seulement.
+- **pdf.js 6** n'a plus de chemin `eval` ; son module natif de dessin (`@napi-rs/canvas`), inutile pour lire du texte, n'est pas installé (`ignoredOptionalDependencies`).
+- **Archive LinkedIn** : liste blanche de fichiers et de colonnes dans `packages/imports/src/linkedin-files.ts`, établie d'après le format d'export connu de LinkedIn ; à confronter à la vraie archive de Mehdi (lot 5).

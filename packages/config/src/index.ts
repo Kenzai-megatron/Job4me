@@ -3,6 +3,7 @@ export {
   findConfigDir,
   loadConfig,
   loadDotEnv,
+  loadExtractorSecrets,
   loadSecrets,
   readSecret,
   type LoadOptions,
@@ -12,6 +13,7 @@ export {
   settingsSchema,
   type Config,
   type Environment,
+  type ExtractorSecrets,
   type Secrets,
   type Settings,
 } from './schema';

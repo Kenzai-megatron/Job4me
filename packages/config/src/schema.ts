@@ -119,6 +119,36 @@ export const settingsSchema = z
         z.object({ weight: z.number().int().min(0).max(100), min: z.number().int().min(1) }),
       ),
     }),
+    files: z.object({
+      /** Directory of the files volume; imported files go under imports/ (ADR 0010). */
+      dir: z.string().min(1),
+    }),
+    imports: z.object({
+      maxFileBytes: z
+        .number()
+        .int()
+        .min(1024)
+        .max(50 * 1024 * 1024),
+      uploadsPerHour: z.number().int().min(1).max(1000),
+      listLimit: z.number().int().min(1).max(200),
+      archive: z.object({
+        maxEntries: z.number().int().min(1).max(100_000),
+        maxTotalUncompressedBytes: z.number().int().min(1024),
+        maxEntryUncompressedBytes: z.number().int().min(1024),
+        maxCompressionRatio: z.number().min(1).max(1100),
+        minRatioCheckBytes: z.number().int().min(0),
+      }),
+      maxPdfPages: z.number().int().min(1).max(1000),
+      maxExtractedChars: z.number().int().min(1000),
+      maxLinkedinRows: z.number().int().min(1),
+      extractor: z.object({
+        pollIntervalMs: z.number().int().min(100).max(60_000),
+        timeoutMs: z.number().int().min(1000).max(600_000),
+        memoryMb: z.number().int().min(32).max(4096),
+        maxAttempts: z.number().int().min(1).max(10),
+        staleAfterMs: z.number().int().min(1000),
+      }),
+    }),
     worker: z.object({
       purgeCron: z.string().min(9),
       expiredSessionRetentionDays: z.number().int().min(1).max(365),
@@ -135,6 +165,14 @@ export const settingsSchema = z
         code: 'custom',
         path: ['profile', 'completeness'],
         message: `weights must add up to 100, not ${weights}`,
+      });
+    }
+    const { extractor } = settings.imports;
+    if (extractor.staleAfterMs <= extractor.timeoutMs) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['imports', 'extractor', 'staleAfterMs'],
+        message: 'must be greater than timeoutMs, or a running extraction would be started twice',
       });
     }
     if (settings.auth.lockout.maxDelaySeconds < settings.auth.lockout.baseDelaySeconds) {
@@ -163,8 +201,18 @@ export interface Secrets {
   databaseOwnerUrl: string | undefined;
   /** 32-byte master key, base64. */
   masterKey: string;
+  /** Isolated extractor's connection string (job4me_extractor role), for migrations and tests. */
+  databaseExtractorUrl: string | undefined;
+  /** 32-byte key of imported files and extracted texts, base64 (ADR 0010), apart from the master key. */
+  importKey: string | undefined;
   vapidPublicKey: string | undefined;
   vapidPrivateKey: string | undefined;
+}
+
+/** What the isolated extractor receives (ADR 0010): never the master key. */
+export interface ExtractorSecrets {
+  databaseUrl: string;
+  importKey: string;
 }
 
 export interface Config {

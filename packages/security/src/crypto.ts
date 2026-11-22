@@ -19,13 +19,18 @@ export class CryptoError extends Error {
   override name = 'CryptoError';
 }
 
-/** Decodes the base64 master key and checks it holds 32 bytes. */
-export function parseMasterKey(base64: string): Buffer {
+/** Decodes a base64 key and checks it holds 32 bytes. */
+export function parseKey(base64: string, name = 'key'): Buffer {
   const key = Buffer.from(base64, 'base64');
   if (key.length !== 32) {
-    throw new CryptoError('the master key must be 32 random bytes encoded in base64');
+    throw new CryptoError(`the ${name} must be 32 random bytes encoded in base64`);
   }
   return key;
+}
+
+/** Decodes the base64 master key and checks it holds 32 bytes. */
+export function parseMasterKey(base64: string): Buffer {
+  return parseKey(base64, 'master key');
 }
 
 /** Derives a 32-byte key for one purpose with HKDF-SHA-256. */

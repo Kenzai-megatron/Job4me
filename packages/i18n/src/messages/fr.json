@@ -233,7 +233,12 @@
     "internal_error": "Une erreur est survenue. Réessayez dans un instant.",
     "network": "Connexion impossible avec le serveur. Vérifiez votre accès réseau.",
     "duplicate": "Cette entrée existe déjà.",
-    "limit_reached": "Le nombre maximal est atteint."
+    "limit_reached": "Le nombre maximal est atteint.",
+    "unsupported_file": "Ce fichier n'est pas accepté : choisissez un CV en PDF ou en DOCX, ou l'archive ZIP de LinkedIn.",
+    "file_too_large": "Ce fichier est trop volumineux : 5 Mo au plus.",
+    "file_too_complex": "Ce fichier est trop complexe à lire (trop de pages, d'entrées ou de texte).",
+    "file_protected": "Ce fichier est protégé par un mot de passe : enregistrez-en une copie sans protection.",
+    "file_macros": "Les documents Word à macros ne sont pas acceptés : enregistrez-le en .docx."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",
@@ -423,5 +428,47 @@
     "yearsValue_one": "{{count}} an",
     "yearsValue_other": "{{count}} ans",
     "keywordsAdvice": "{{count}} validés ; il en faut au moins {{min}}."
+  },
+  "imports": {
+    "title": "Importer un CV ou LinkedIn",
+    "intro": "Votre CV (PDF ou DOCX) ou l'archive de vos données LinkedIn (ZIP). Le fichier est chiffré, lu à part, sans accès à Internet, et rien n'entre dans le profil sans votre accord.",
+    "file": "Fichier",
+    "fileHint": "PDF, DOCX ou ZIP de LinkedIn, 5 Mo au plus.",
+    "send": "Importer",
+    "sent": "Fichier reçu : la lecture commence.",
+    "empty": "Aucun import pour le moment.",
+    "history": "Imports récents",
+    "when": "Importé le {{date}}",
+    "size": "{{size}} Ko",
+    "pages_one": "{{count}} page",
+    "pages_other": "{{count}} pages",
+    "characters": "{{count}} caractères lus",
+    "rows_one": "{{count}} ligne lue",
+    "rows_other": "{{count}} lignes lues",
+    "nextStep": "La relecture champ par champ arrive à l'étape suivante.",
+    "kinds": {
+      "cv_pdf": "CV en PDF",
+      "cv_docx": "CV en DOCX",
+      "linkedin_zip": "Archive LinkedIn"
+    },
+    "statuses": {
+      "queued": "En attente de lecture",
+      "extracting": "Lecture en cours",
+      "extracted": "Texte lu",
+      "structuring": "Analyse en cours",
+      "review": "À relire",
+      "applied": "Ajouté au profil",
+      "failed": "Échec"
+    },
+    "failures": {
+      "unsupported_file": "Ce fichier n'a pas pu être lu comme un CV ou une archive LinkedIn.",
+      "file_too_large": "Le fichier est trop volumineux.",
+      "file_too_complex": "Le fichier est trop complexe à lire (trop de pages, d'entrées ou de texte).",
+      "file_protected": "Le fichier est protégé par un mot de passe.",
+      "file_macros": "Le document contient des macros.",
+      "no_text": "Aucun texte trouvé : s'il s'agit d'un scan, exportez votre CV en PDF depuis Word ou Google Docs.",
+      "extraction_failed": "La lecture a échoué. Réessayez avec un autre export du fichier.",
+      "extraction_timeout": "La lecture a pris trop de temps. Réessayez avec un fichier plus simple."
+    }
   }
 }

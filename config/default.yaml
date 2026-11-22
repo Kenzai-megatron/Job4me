@@ -80,6 +80,36 @@ profile:
     languages: { weight: 5, min: 1 }
     education: { weight: 5, min: 1 }
 
+files:
+  # Files volume. Containers mount it here; outside a container set JOB4ME_FILES_DIR
+  # (pnpm setup:dev writes <repository>/var/files into .env).
+  dir: /var/lib/job4me/files
+
+# Imported CVs and LinkedIn archive (plan, section 4; ADR 0010).
+imports:
+  maxFileBytes: 5242880 # 5 MB
+  uploadsPerHour: 20
+  listLimit: 20
+  # Archives (DOCX, LinkedIn ZIP): checked on the central directory before anything is inflated.
+  archive:
+    maxEntries: 1000
+    maxTotalUncompressedBytes: 52428800 # 50 MB
+    maxEntryUncompressedBytes: 20971520 # 20 MB
+    maxCompressionRatio: 100
+    # Small entries compress oddly without being bombs: the ratio is checked from 1 MB.
+    minRatioCheckBytes: 1048576
+  maxPdfPages: 30
+  maxExtractedChars: 200000
+  maxLinkedinRows: 5000
+  # Isolated extractor: one file at a time, in a thread with its own memory and time budget.
+  extractor:
+    pollIntervalMs: 2000
+    timeoutMs: 60000
+    memoryMb: 256
+    maxAttempts: 3
+    # A run still in extraction after this long is taken again (the extractor stopped).
+    staleAfterMs: 300000
+
 worker:
   purgeCron: '17 * * * *' # every hour
   expiredSessionRetentionDays: 30

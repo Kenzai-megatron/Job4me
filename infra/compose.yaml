@@ -62,9 +62,12 @@ services:
     environment:
       <<: *app-env
       JOB4ME_DB_OWNER_PASSWORD_FILE: /run/secrets/db_owner_password
+      # Sets the password of the extractor's role (ADR 0010).
+      JOB4ME_DB_EXTRACTOR_PASSWORD_FILE: /run/secrets/db_extractor_password
     secrets:
       - db_owner_password
       - db_app_password
+      - db_extractor_password
       - master_key
       - vapid_public_key
       - vapid_private_key
@@ -85,13 +88,17 @@ services:
     environment:
       <<: *app-env
       JOB4ME_LISTEN_HOST: 0.0.0.0
+      JOB4ME_IMPORT_KEY_FILE: /run/secrets/import_key
+      JOB4ME_FILES_DIR: /var/lib/job4me/files
     secrets:
       - db_app_password
       - master_key
+      - import_key
       - vapid_public_key
       - vapid_private_key
     volumes:
-      - files:/var/lib/job4me/files
+      # Imported files, encrypted (ADR 0010): a folder of this machine, owned by JOB4ME_UID.
+      - ${JOB4ME_FILES_DIR:-../var/files}:/var/lib/job4me/files
     ports:
       # Only this machine: Tailscale (`tailscale serve`) brings it to your devices over HTTPS.
       - 127.0.0.1:${JOB4ME_HTTP_PORT:-3000}:3000
@@ -125,8 +132,6 @@ services:
       - master_key
       - vapid_public_key
       - vapid_private_key
-    volumes:
-      - files:/var/lib/job4me/files
     networks:
       # Needs the Internet for push services today, job sources and APIs later.
       - internal
@@ -137,13 +142,45 @@ services:
     restart: unless-stopped
     <<: *hardening
 
+  # Isolated extractor (ADR 0010): reads imported files with document libraries, so it gets no
+  # Internet, no master key, a database role limited to the import tables and the files read-only.
+  extract:
+    profiles: [app]
+    image: job4me:local
+    pull_policy: never
+    command: [node, worker/extractor.js]
+    environment:
+      JOB4ME_ENV: production
+      JOB4ME_DB_HOST: postgres
+      JOB4ME_DB_EXTRACTOR_PASSWORD_FILE: /run/secrets/db_extractor_password
+      JOB4ME_IMPORT_KEY_FILE: /run/secrets/import_key
+      JOB4ME_FILES_DIR: /var/lib/job4me/files
+    secrets:
+      - db_extractor_password
+      - import_key
+    volumes:
+      - ${JOB4ME_FILES_DIR:-../var/files}:/var/lib/job4me/files:ro
+    networks:
+      - internal
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    mem_limit: 512m
+    pids_limit: 64
+    restart: unless-stopped
+    <<: *hardening
+
 secrets:
   db_owner_password:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/db_owner_password
   db_app_password:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/db_app_password
+  db_extractor_password:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/db_extractor_password
   master_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/master_key
+  import_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/import_key
   vapid_public_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/vapid_public_key
   vapid_private_key:
@@ -157,5 +194,3 @@ networks:
 
 volumes:
   pgdata:
-  # Generated documents (CVs, letters) from a later phase; empty in phase 0.
-  files:

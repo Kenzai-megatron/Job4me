@@ -4,7 +4,8 @@ import { ROOT } from './lib';
 
 // `pnpm check:compose` (CI security job, threat model rows 14 and 16): every published port stays
 // on this machine, the application containers are hardened, the database stays on the internal
-// network, and third-party images are pinned by digest. Reads Compose's own resolved model.
+// network, and third-party images are pinned by digest. The isolated extractor (ADR 0010) gets
+// no Internet, no master key, read-only files and bounded resources. Reads Compose's own model.
 
 interface Service {
   image?: string;
@@ -16,15 +17,19 @@ interface Service {
   network_mode?: string;
   pid?: string;
   ports?: { host_ip?: string; published?: string; target: number }[];
-  volumes?: { source?: string; target: string }[];
+  volumes?: { source?: string; target: string; read_only?: boolean }[];
   networks?: Record<string, unknown>;
+  secrets?: { source: string }[];
+  mem_limit?: string | number;
+  pids_limit?: number;
 }
 interface Model {
   services: Record<string, Service>;
   networks?: Record<string, { internal?: boolean }>;
 }
 
-const APP_SERVICES = ['migrate', 'api', 'worker'];
+const APP_SERVICES = ['migrate', 'api', 'worker', 'extract'];
+const EXTRACTOR_SECRETS = ['db_extractor_password', 'import_key'];
 const LOCAL_HOSTS = new Set(['127.0.0.1', '::1']);
 
 function resolve(files: string[], profiles: string[]): Promise<Model> {
@@ -77,10 +82,38 @@ function check(name: string, model: Model): string[] {
   return problems;
 }
 
+function checkExtractor(name: string, model: Model): string[] {
+  const spec = model.services.extract;
+  if (!spec) return [`${name}: no extract service`];
+  const where = `${name}/extract`;
+  const problems: string[] = [];
+  if (Object.keys(spec.networks ?? {}).join() !== 'internal') {
+    problems.push(`${where}: must only join the internal network (no Internet)`);
+  }
+  if ((spec.ports ?? []).length > 0) problems.push(`${where}: publishes a port`);
+  const secrets = (spec.secrets ?? []).map((secret) => secret.source).sort();
+  if (secrets.join() !== EXTRACTOR_SECRETS.join()) {
+    problems.push(
+      `${where}: secrets must be ${EXTRACTOR_SECRETS.join(' and ')}, not ${secrets.join(', ')}`,
+    );
+  }
+  if ((spec.volumes ?? []).some((volume) => volume.read_only !== true)) {
+    problems.push(`${where}: every mount must be read-only`);
+  }
+  if (!spec.mem_limit) problems.push(`${where}: no memory limit`);
+  if (!spec.pids_limit) problems.push(`${where}: no process limit`);
+  return problems;
+}
+
 async function main(): Promise<void> {
   const home = await resolve(['compose.yaml'], ['app']);
   const dev = await resolve(['compose.yaml', 'compose.dev.yaml'], ['app']);
-  const problems = [...check('home', home), ...check('dev', dev)];
+  const problems = [
+    ...check('home', home),
+    ...check('dev', dev),
+    ...checkExtractor('home', home),
+    ...checkExtractor('dev', dev),
+  ];
   const postgres = home.services.postgres;
   if (!postgres) problems.push('home: no postgres service');
   else if (Object.keys(postgres.networks ?? {}).join() !== 'internal') {

@@ -6,6 +6,7 @@ export {
   deriveKey,
   encrypt,
   hmacSha256,
+  parseKey,
   parseMasterKey,
   randomToken,
   safeEqual,

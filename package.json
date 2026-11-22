@@ -35,9 +35,9 @@
     "globals": "17.14.0",
     "prettier": "3.10.1",
     "tsx": "4.23.15",
-    "turbo": "2.11.13",
+    "turbo": "2.11.11",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.73.0",
-    "vitest": "5.1.1"
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.1.0"
   }
 }
