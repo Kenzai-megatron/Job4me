@@ -26,6 +26,7 @@ import { healthRoutes } from './routes/health';
 import { accountRoutes } from './modules/auth/routes-account';
 import { signInRoutes } from './modules/auth/routes-sign-in';
 import { registerSessionHook } from './modules/auth/session-hook';
+import { pushRoutes } from './modules/push/routes';
 
 export interface BuildOptions {
   /** Extra routes registered after the standard ones (tests only). */
@@ -72,6 +73,7 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
   await app.register(healthRoutes(deps));
   await app.register(signInRoutes(deps));
   await app.register(accountRoutes(deps));
+  await app.register(pushRoutes(deps));
   if (!production) {
     app.get('/api/openapi.json', { schema: { hide: true } }, () => app.swagger());
   }

@@ -84,6 +84,7 @@ export const settingsSchema = z
     mail: z.object({
       smtpHost: z.string().min(1),
       smtpPort: port,
+      from: z.string().min(3).max(320),
     }),
     push: z.object({
       vapidSubject: z

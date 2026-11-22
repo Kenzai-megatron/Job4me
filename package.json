@@ -9,7 +9,8 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks || true",
     "dev": "tsx scripts/dev.ts",
-    "setup:dev": "tsx scripts/setup-dev.ts",
+    "setup:dev": "tsx scripts/setup.ts dev",
+    "setup:home": "tsx scripts/setup.ts home",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck && tsc -p tsconfig.json",
     "lint": "eslint . --max-warnings=0",
@@ -17,10 +18,13 @@
     "format:check": "prettier --check .",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration --concurrency=1",
+    "test:e2e": "pnpm --filter @job4me/web build && pnpm --filter @job4me/e2e test:e2e",
+    "test:e2e:stack": "tsx scripts/e2e-stack.ts",
     "job4me": "pnpm --filter @job4me/api run cli",
-    "stack:up": "docker compose -f infra/compose.yaml --profile app up -d --build --wait",
-    "stack:down": "docker compose -f infra/compose.yaml --profile app down",
-    "test:e2e": "pnpm --filter @job4me/web build && pnpm --filter @job4me/e2e test:e2e"
+    "stack:up": "tsx scripts/stack.ts up",
+    "stack:down": "tsx scripts/stack.ts down",
+    "stack:logs": "tsx scripts/stack.ts logs",
+    "stack:cli": "tsx scripts/stack.ts cli"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

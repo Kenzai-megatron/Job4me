@@ -5,7 +5,7 @@ import { schema } from '@job4me/db';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { recordAudit } from './modules/audit/audit';
+import { recordAudit } from '@job4me/db';
 import { createTestApp, TestBrowser } from './testing/app';
 
 // Test-only routes to exercise the shared plumbing (CSRF, validation, errors).

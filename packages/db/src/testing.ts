@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { loadConfig, readSecret } from '@job4me/config';
+import { loadConfig, loadSecrets } from '@job4me/config';
 import pg from 'pg';
 import { runMigrations } from './migrate';
 
@@ -43,11 +43,10 @@ export async function recreateDatabase(
 export async function createTestDatabase(prefix: string): Promise<TestDatabase> {
   process.env.JOB4ME_ENV ??= 'test';
   loadConfig();
-  const ownerServerUrl = readSecret('JOB4ME_DATABASE_OWNER_URL');
-  const appServerUrl = readSecret('JOB4ME_DATABASE_URL');
-  if (!ownerServerUrl || !appServerUrl) {
-    throw new Error('integration tests need JOB4ME_DATABASE_OWNER_URL and JOB4ME_DATABASE_URL');
-  }
+  const secrets = loadSecrets();
+  const ownerServerUrl = secrets.databaseOwnerUrl;
+  const appServerUrl = secrets.databaseUrl;
+  if (!ownerServerUrl) throw new Error('integration tests need the database owner credentials');
   const name = `job4me_test_${prefix}_${randomBytes(4).toString('hex')}`;
   const admin = new pg.Client({ connectionString: withDatabase(ownerServerUrl, 'postgres') });
   await admin.connect();

@@ -1,12 +1,12 @@
 # Job4me configuration (ADR 0005).
 # Every threshold, duration, quota, cap and price lives here, never in the code.
 # Machine-specific values go in config/local.yaml (not committed).
-# Secrets never go in these files: see .env.example.
+# Secrets never go in these files: they are files in secrets/ (pnpm setup:dev, setup:home).
 
 app:
   # Address the browser uses. On the home machine: https://job4me.<tailnet>.ts.net
   publicOrigin: http://localhost:5173
-  # Extra origins accepted on state-changing requests (e.g. the API port during local tests).
+  # Extra origins accepted on state-changing requests outside production (the API port in dev).
   extraOrigins:
     - http://localhost:3000
   # WebAuthn relying party: the host name of publicOrigin.
@@ -50,6 +50,7 @@ mail:
   # Development and tests only accept Mailpit (CLAUDE.md).
   smtpHost: 127.0.0.1
   smtpPort: 1025
+  from: Job4me <job4me@example.invalid>
 
 push:
   # VAPID contact: set your own mailto: or https: address in config/local.yaml.

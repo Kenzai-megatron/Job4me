@@ -24,6 +24,12 @@ const queryClient = new QueryClient({
 
 const router = createAppRouter(queryClient);
 
+// The service worker serves the offline page and receives push notifications (production only:
+// in development, Vite's live reload and a cached shell do not mix).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('/sw.js', { scope: '/' });
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

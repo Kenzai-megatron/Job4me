@@ -1,0 +1,29 @@
+{
+  "name": "@job4me/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@job4me/config": "workspace:*",
+    "@job4me/contracts": "workspace:*",
+    "@job4me/db": "workspace:*",
+    "@job4me/i18n": "workspace:*",
+    "@job4me/logger": "workspace:*",
+    "pg-boss": "12.38.2",
+    "web-push": "4.0.0"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*",
+    "@types/web-push": "3.6.4",
+    "tsup": "9.0.0",
+    "vitest": "5.1.1"
+  }
+}

@@ -232,5 +232,9 @@
     "migrations_pending": "Le serveur est en cours de mise à jour.",
     "internal_error": "Une erreur est survenue. Réessayez dans un instant.",
     "network": "Connexion impossible avec le serveur. Vérifiez votre accès réseau."
+  },
+  "mail": {
+    "testSubject": "Job4me : mail de test",
+    "testBody": "Ce message vérifie le chemin des mails de Job4me. En développement, il n'arrive que dans Mailpit. Aucune action n'est nécessaire."
   }
 }

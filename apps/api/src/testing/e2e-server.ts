@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { loadConfig, readSecret } from '@job4me/config';
+import { loadConfig, loadSecrets } from '@job4me/config';
 import { connect } from '@job4me/db';
 import { recreateDatabase } from '@job4me/db/testing';
 import { createLogger } from '@job4me/logger';
@@ -18,12 +18,13 @@ export const E2E_PASSWORD = 'phrase de passe des tests e2e'; // gitleaks:allow (
 async function main() {
   process.env.JOB4ME_ENV = 'test';
   const config = loadConfig();
-  const ownerUrl = readSecret('JOB4ME_DATABASE_OWNER_URL');
-  const appUrl = readSecret('JOB4ME_DATABASE_URL');
-  const masterKey = readSecret('JOB4ME_MASTER_KEY');
+  const secrets = loadSecrets();
+  const ownerUrl = secrets.databaseOwnerUrl;
+  const appUrl = secrets.databaseUrl;
+  const masterKey = secrets.masterKey;
   const stateFile = process.env.E2E_STATE_FILE;
-  if (!ownerUrl || !appUrl || !masterKey || !stateFile) {
-    throw new Error('e2e server needs database URLs, a master key and E2E_STATE_FILE');
+  if (!ownerUrl || !stateFile) {
+    throw new Error('e2e server needs the database owner credentials and E2E_STATE_FILE');
   }
 
   const { appUrl: e2eAppUrl } = await recreateDatabase(ownerUrl, appUrl, DATABASE);

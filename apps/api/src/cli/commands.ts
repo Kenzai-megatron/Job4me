@@ -1,6 +1,6 @@
 import type { Config } from '@job4me/config';
 import { desc, type Executor, schema } from '@job4me/db';
-import { recordAudit } from '../modules/audit/audit';
+import { recordAudit } from '@job4me/db';
 import { revokeOtherSessions } from '../modules/auth/sessions';
 import {
   createUser,

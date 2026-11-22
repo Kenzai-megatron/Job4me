@@ -146,9 +146,11 @@ export function loadConfig(options: LoadOptions = {}): Config {
   }
   checkEnvironmentRules(environment, result.data);
 
-  const allowedOrigins = [
-    ...new Set([result.data.app.publicOrigin, ...result.data.app.extraOrigins]),
-  ];
+  // extraOrigins serve development (Vite and the API on two ports); production has one origin.
+  const allowedOrigins =
+    environment === 'production'
+      ? [result.data.app.publicOrigin]
+      : [...new Set([result.data.app.publicOrigin, ...result.data.app.extraOrigins])];
   return { env: environment, settings: result.data, allowedOrigins };
 }
 
@@ -171,11 +173,34 @@ function requireSecret(name: string, env: Env): string {
   return value;
 }
 
+/**
+ * A connection string from its parts, so containers only receive the password as a file:
+ * JOB4ME_DB_HOST (+ JOB4ME_DB_PORT, JOB4ME_DB_NAME) and the role's password (or *_FILE).
+ */
+function composedDatabaseUrl(env: Env, user: string, passwordName: string): string | undefined {
+  const host = env.JOB4ME_DB_HOST;
+  const password = readSecret(passwordName, env);
+  if (!host || !password) return undefined;
+  const port = env.JOB4ME_DB_PORT ?? '5432';
+  const name = env.JOB4ME_DB_NAME ?? 'job4me';
+  return `postgres://${user}:${encodeURIComponent(password)}@${host}:${port}/${name}`;
+}
+
 /** Reads the secrets the application needs. Values are never logged. */
 export function loadSecrets(env: Env = process.env): Secrets {
+  const databaseUrl =
+    readSecret('JOB4ME_DATABASE_URL', env) ??
+    composedDatabaseUrl(env, 'job4me_app', 'JOB4ME_DB_APP_PASSWORD');
+  if (!databaseUrl) {
+    throw new ConfigError(
+      'missing database settings: JOB4ME_DATABASE_URL, or JOB4ME_DB_HOST with JOB4ME_DB_APP_PASSWORD(_FILE); run pnpm setup:dev',
+    );
+  }
   return {
-    databaseUrl: requireSecret('JOB4ME_DATABASE_URL', env),
-    databaseOwnerUrl: readSecret('JOB4ME_DATABASE_OWNER_URL', env),
+    databaseUrl,
+    databaseOwnerUrl:
+      readSecret('JOB4ME_DATABASE_OWNER_URL', env) ??
+      composedDatabaseUrl(env, 'job4me_owner', 'JOB4ME_DB_OWNER_PASSWORD'),
     masterKey: requireSecret('JOB4ME_MASTER_KEY', env),
     vapidPublicKey: readSecret('JOB4ME_VAPID_PUBLIC_KEY', env),
     vapidPrivateKey: readSecret('JOB4ME_VAPID_PRIVATE_KEY', env),

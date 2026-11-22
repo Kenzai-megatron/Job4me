@@ -2,7 +2,7 @@ import { csrfToken } from '@job4me/security';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { AppDeps } from '../../context';
 import { csrfBinding } from '../../plugins/csrf';
-import { type AuditEvent, recordAudit } from '../audit/audit';
+import { type AuditEvent, recordAudit } from '@job4me/db';
 import { authDurations, clock } from './clock';
 import { type AuthMethod, createSession, setSessionCookie } from './sessions';
 import { userAgentLabel } from './user-agent';
