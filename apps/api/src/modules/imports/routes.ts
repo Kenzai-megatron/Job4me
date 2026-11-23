@@ -9,6 +9,7 @@ import {
   type ImportRun,
   importRunSchema,
   importStatsSchema,
+  okResponseSchema,
 } from '@job4me/contracts';
 import {
   and,
@@ -172,6 +173,48 @@ export function importRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           selectRuns(tx, userId).orderBy(desc(schema.importRuns.createdAt)).limit(limits.listLimit),
         );
         return { items: rows.map(toRun) };
+      },
+    );
+
+    // Deleting an import (phase 1 review, finding 14): its file, its extracted text and its
+    // proposals go; what Mehdi accepted lives on in the profile. Never while it is being read.
+    app.delete(
+      '/api/imports/:id',
+      { schema: { params: importIdParamsSchema, response: { 200: okResponseSchema } } },
+      async (request) => {
+        const { userId } = requireSession(request);
+        const runs = schema.importRuns;
+        const files = schema.uploads;
+        const removed = await withUser(deps.db, userId, async (tx) => {
+          const [row] = await tx
+            .select({ id: runs.id, status: runs.status, uploadId: files.id, key: files.storageKey })
+            .from(runs)
+            .innerJoin(files, eq(files.id, runs.uploadId))
+            .where(and(eq(runs.id, request.params.id), eq(runs.userId, userId)));
+          if (!row) throw new HttpError(404, 'not_found');
+          if (row.status === 'extracting' || row.status === 'structuring') {
+            throw new HttpError(409, 'import_in_progress');
+          }
+          // The upload takes its import run and the proposals with it (foreign keys).
+          await tx.delete(files).where(and(eq(files.id, row.uploadId), eq(files.userId, userId)));
+          await recordAudit(tx, {
+            actorType: 'user',
+            actorUserId: userId,
+            action: 'import.deleted',
+            outcome: 'success',
+            targetType: 'import_run',
+            targetId: row.id,
+            requestId: request.id,
+          });
+          return row;
+        });
+        // The rows are gone first: a file left behind is unreadable without them.
+        await unlink(storagePath(deps.imports.filesDir, removed.key)).catch((error: unknown) => {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+            request.log.warn({ importRunId: removed.id }, 'imported file not deleted');
+          }
+        });
+        return { ok: true as const };
       },
     );
 

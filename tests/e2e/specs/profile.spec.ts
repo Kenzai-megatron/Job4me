@@ -92,6 +92,14 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
     await expect(identity.getByLabel('Nom complet')).toHaveValue('Alex Exemple');
   }
 
+  // Deleting the import (phase 1 review, finding 14): its file and text go, the profile keeps
+  // what was accepted.
+  const imported = imports.getByRole('listitem').filter({ hasText: 'CV en PDF' });
+  await imported.getByRole('button', { name: 'Supprimer', exact: true }).click();
+  await imported.getByRole('button', { name: 'Supprimer définitivement' }).click();
+  await expect(imports.getByText('Aucun import pour le moment.')).toBeVisible();
+  if (stack) await expect(identity.getByLabel('Nom complet')).toHaveValue('Alex Exemple');
+
   // Keywords from the AI: a target job first, then one request queued for the worker.
   const targets = page.locator('#rubric-target-jobs');
   await targets.getByRole('button', { name: 'Ajouter' }).click();

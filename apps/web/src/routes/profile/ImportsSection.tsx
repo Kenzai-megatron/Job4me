@@ -27,6 +27,47 @@ function RunDetails({ run }: { run: ImportRun }) {
   return <span className="text-sm text-muted">{parts.join(' · ')}</span>;
 }
 
+/** Deletes an import after a second click: the file, its text and its pending proposals go. */
+function DeleteImport({ run }: { run: ImportRun }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [armed, setArmed] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  if (run.status === 'extracting' || run.status === 'structuring') return null;
+  const remove = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await api.delete(`/api/imports/${run.id}`);
+      await queryClient.invalidateQueries({ queryKey: ['imports'] });
+    } catch (caught) {
+      setError(errorMessage(t, caught));
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="flex flex-col gap-1">
+      {armed ? <p className="text-sm text-muted">{t('imports.deleteHint')}</p> : null}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={armed ? 'danger' : 'ghost'}
+          loading={busy}
+          onClick={() => (armed ? void remove() : setArmed(true))}
+        >
+          {armed ? t('imports.deleteConfirm') : t('imports.delete')}
+        </Button>
+        {armed && !busy ? (
+          <Button variant="ghost" onClick={() => setArmed(false)}>
+            {t('common.cancel')}
+          </Button>
+        ) : null}
+      </div>
+      {error ? <Alert tone="error">{error}</Alert> : null}
+    </div>
+  );
+}
+
 /** Upload of a CV or of the LinkedIn archive, and the state of the recent imports. */
 export function ImportsSection() {
   const { t } = useTranslation();
@@ -129,6 +170,7 @@ export function ImportsSection() {
                     </Link>
                   </>
                 ) : null}
+                <DeleteImport run={run} />
               </li>
             ))}
           </ul>
