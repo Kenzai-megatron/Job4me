@@ -32,7 +32,8 @@ export async function proposeKeywords(deps: KeywordDeps, job: KeywordsProposeJob
   );
   if (!started) return;
 
-  // Only what the task needs (data minimisation): no identity, no motivations, no employer.
+  // What the validated plan names, nothing more (data minimisation): target jobs, skills,
+  // sectors and languages; never the identity, the motivations or the work history.
   const profile = await withUser(deps.db, userId, async (tx) => ({
     targetJobs: (
       await tx
@@ -40,12 +41,6 @@ export async function proposeKeywords(deps: KeywordDeps, job: KeywordsProposeJob
         .from(schema.targetJobs)
         .where(eq(schema.targetJobs.userId, userId))
         .orderBy(asc(schema.targetJobs.position))
-    ).map((row) => row.title),
-    experiences: (
-      await tx
-        .select({ title: schema.experiences.title })
-        .from(schema.experiences)
-        .where(eq(schema.experiences.userId, userId))
     ).map((row) => row.title),
     skills: await tx
       .select({ name: schema.skills.name, level: schema.skills.level })
