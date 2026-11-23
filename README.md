@@ -7,8 +7,8 @@ Application web (PWA) de recherche d'emploi pour un seul utilisateur, sur le mar
 - Plans : [phase 0](docs/plans/phase-0.md), [phase 1](docs/plans/phase-1.md), [phase 2](docs/plans/phase-2.md)
 - Décisions d'architecture : [`docs/adr`](docs/adr/README.md)
 - Installation sur la machine de la maison : [`docs/guide/installation.md`](docs/guide/installation.md)
-- Démonstrations : [phase 0](docs/guide/demonstration-phase-0.md), [phase 1](docs/guide/demonstration-phase-1.md)
-- Sécurité : [modèle de menaces](docs/security/threat-model.md), revues des [phase 0](docs/security/review-phase-0.md) et [phase 1](docs/security/review-phase-1.md)
+- Démonstrations : [phase 0](docs/guide/demonstration-phase-0.md), [phase 1](docs/guide/demonstration-phase-1.md), [phase 2](docs/guide/demonstration-phase-2.md)
+- Sécurité : [modèle de menaces](docs/security/threat-model.md), revues des [phase 0](docs/security/review-phase-0.md), [phase 1](docs/security/review-phase-1.md) et [phase 2](docs/security/review-phase-2.md)
 - Règles de travail : [`CLAUDE.md`](CLAUDE.md)
 
 ## Prérequis

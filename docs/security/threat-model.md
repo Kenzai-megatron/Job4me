@@ -88,6 +88,15 @@ Détail et raisons dans la [revue de sécurité de la phase 1](review-phase-1.md
 - **Extracteur compromis** : il pourrait marquer un import en échec ou écrire un faux texte extrait ; tout passe par la relecture.
 - **Caviardage imparfait** : un nom de tiers cité hors de la rubrique « Références » peut partir chez Anthropic.
 
+## Risques acceptés pour la phase 2
+
+Détail et raisons dans la [revue de sécurité de la phase 2](review-phase-2.md), constats 6, 8 et 13 à 15.
+
+- **En-têtes d'un navigateur ordinaire** : choix documenté (`docs/SOURCES.md`, section 0), sans cookie, rotation d'adresse, navigateur sans tête ni captcha ; arrêt au premier 403 ou 429.
+- **Données de tiers dans les annonces** (nom d'un recruteur) : 90 jours au plus après la dernière vue, rien ne quitte la machine en phase 2.
+- **Liens chiffrés de Jobijoba** jamais décodés : ses annonces sponsorisées sont lues, pas gardées.
+- **Limites des sites** (ODWB par adresse, Akamai devant StepStone) : un refus arrête la source pour le passage, sans insister, et se voit au journal.
+
 ## Phase 2 (collecte), en cours
 
 Le [plan de la phase 2](../plans/phase-2.md), section 9, détaille menaces, contrôles et tests ; les lignes 31 à 38 couvrent le socle (lot 1) et les pages publiques (lot 3), la ligne 39 le quota de SerpApi (lot 2), la ligne 40 l'alerte « source muette » (lot 5). Restent à faire :
