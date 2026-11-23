@@ -1,13 +1,14 @@
 # Phase 3 : dédoublonnage, géographie et notation, plan détaillé
 
-Proposition du 23/11/2026, **à valider par Mehdi** (section 13). Sources : spécification, sections 4, 5, 10, 12 et 14 ; `docs/SOURCES.md`, sections 1.5 à 1.9. Préparée pendant que LinkedIn (phase 2, lot 4) attend le sondage depuis la maison, avec l'accord de Mehdi du 23/11/2026 ; aucune ligne de code de la phase 3 avant cette validation.
+Proposition du 23/11/2026, **validée par Mehdi le 23/11/2026** avec les options recommandées, sauf les plafonds (décision D5 : **gratuit pendant la phase de test**) ; voir la section 15. Sources : spécification, sections 4, 5, 10, 12 et 14 ; `docs/SOURCES.md`, sections 1.5 à 1.9. Préparée pendant que LinkedIn (phase 2, lot 4) attend le sondage depuis la maison, avec l'accord de Mehdi.
 
 ## 1. Résumé
 
 - **Une annonce, une seule offre** : la même annonce vue par trois sources n'apparaît plus qu'une fois, avec ses trois liens. Clé de contenu (intitulé et employeur normalisés, jamais l'URL), fusion prudente des republications, comparaison avec les trois dernières semaines.
 - **Géographie** : localités belges de GeoNames sous leurs deux noms, repli par code postal, distance à vol d'oiseau × 1,25 depuis la **ville de base du profil**, qui remplace le centre fixe (Bruxelles) de la phase 2. Un lieu inconnu est gardé, le télétravail aussi.
 - **Filtre déterministe**, sans coût : employeurs exclus, annonces de plus de 60 jours, distance au-delà du rayon, critères éliminatoires certains (langue ou contrat donnés par la source).
-- **Notation rapide** par Claude Haiku 5.5, par lots de 25 : un score sur 100 et une raison courte par offre, sortie au schéma JSON. Puis **analyse détaillée** des offres de 70 ou plus : sous-scores de la grille, points forts, écarts, éléments bloquants.
+- **Notation sans IA par défaut** (décision D5, gratuit pendant la phase de test) : un score sur 100 et sa raison, calculés à partir du profil (métiers cibles, mots-clés, compétences, langues, distance, contrat, fraîcheur), gratuits et explicables.
+- **Notation par Claude, prête mais coupée** : notation rapide par Claude Haiku 5.5 par lots de 25, puis analyse détaillée des offres de 70 ou plus par Claude Sonnet 5.5 ; elle s'active d'un réglage, avec un plafond de 2 $ par semaine, quand Mehdi le décide.
 - **Jeu de référence** : tu notes 30 vraies offres dans Job4me ; une commande de la machine de la maison mesure l'écart moyen avec Claude et le coût par offre.
 - **Écrans** : offres classées par score, filtres, fiche détaillée ; pertinence par source sur l'écran Sources ; nouvelles offres à 80 ou plus sur l'accueil et en notification.
 
@@ -68,7 +69,14 @@ Gratuit et sans IA, **large à l'inclusion, net au rejet** (`docs/SOURCES.md`, s
 
 Une offre écartée garde sa raison ; la liste peut montrer les écartées (« pourquoi je ne la vois pas »).
 
-## 7. Notation rapide (Claude Haiku 5.5)
+## 7. Notation sans IA (par défaut pendant la phase de test)
+
+- **Gratuite et déterministe** (décision D5) : c'est le « tri par mots-clés » de la spécification, promu au rang de notation par défaut tant que l'IA reste coupée.
+- **Ce qui compte**, poids dans la configuration : proximité de l'intitulé avec les métiers cibles et les mots-clés (les prioritaires pèsent plus), compétences du profil citées dans l'annonce, langues exigées par rapport aux niveaux du profil, distance, contrat et régime souhaités, fraîcheur ; secteurs exclus et mots du rejet font baisser le score.
+- **Toujours expliquée** : « intitulé proche de « Comptable », 12 km, CDI, néerlandais demandé (B1 au profil) ». Confiance basse : un tel score ne déclenchera jamais d'envoi automatique (phase 5).
+- Mesurée comme l'autre par le jeu de référence (section 9) : si l'écart avec tes notes dépasse le seuil, passer à la notation par Claude est la voie proposée.
+
+## 7 bis. Notation rapide par Claude Haiku 5.5 (coupée par défaut)
 
 - **Par lots de 25**, sortie au schéma : exactement autant d'éléments `{id, score, raison}` que d'offres envoyées, score de 0 à 100, raison de 200 caractères au plus ; puis validation Zod, identifiants vérifiés un à un. Un second essai par lot ; si l'API est indisponible, un **tri provisoire par mots-clés** marqué comme tel.
 - **Barème** de la spécification : 80 à 100 postuler aujourd'hui, 60 à 79 pertinent, 40 à 59 faute de mieux, 0 à 39 hors sujet.
@@ -78,9 +86,9 @@ Une offre écartée garde sa raison ; la liste peut montrer les écartées (« p
 - **Plafond d'offres notées par passage**, réparti à tour de rôle entre les sources ; le surplus attend le passage suivant.
 - **Coût estimé** (prix d'Anthropic du 3/11/2026, à mesurer) : environ 0,1 centime par lot de 25, soit quelques centimes par mois pour quelques centaines d'offres par semaine.
 
-## 8. Analyse détaillée (offres de 70 ou plus)
+## 8. Analyse détaillée par Claude Sonnet 5.5 (offres de 70 ou plus, coupée par défaut)
 
-- **Seuil de 70** (Hypothèse de la spécification), une offre à la fois, avec sa description complète (1 200 caractères au plus) ; modèle selon la décision D3.
+- **Seuil de 70** (Hypothèse de la spécification), une offre à la fois, avec sa description complète (1 200 caractères au plus), par Claude Sonnet 5.5 (décision D3), quand la notation par Claude est activée.
 - **Sortie** : sous-scores de la grille, points forts, écarts, éléments bloquants, mots-clés à reprendre dans le dossier ; elle remplace le score rapide.
 - **Grille**, poids modifiables par Mehdi dans le profil : compétences techniques 30, expérience et fonction 20, langues 15, critères pratiques 15, secteur 10, motivations 10.
 - **Coût estimé** : environ 2 centimes par offre avec Claude Sonnet 5.5, 0,1 centime avec Claude Haiku 5.5 ; une vingtaine d'offres par semaine.
@@ -123,8 +131,8 @@ Exigé par `CLAUDE.md` avant tout agent d'IA ; il complétera le [modèle de men
 1. **Annonce unique** : table `offer`, clé de contenu, fusion, historique, journal des fusions ; liste des offres par annonce, avec ses parutions.
 2. **Géographie** : localités, ville de base du profil, distances, télétravail ; Forem autour de la ville de base.
 3. **Filtre déterministe** et consignes de notation du profil.
-4. **Notation rapide** par lots (Claude Haiku 5.5), repli par mots-clés, plafond par passage ; tri par score ; pertinence par source.
-5. **Analyse détaillée** des offres de 70 ou plus, fiche détaillée, grille modifiable.
+4. **Notation sans IA** (par défaut), tri par score, fiche détaillée ; pertinence par source.
+5. **Notation par Claude**, coupée par défaut : notation rapide par lots (Claude Haiku 5.5), analyse détaillée des offres de 70 ou plus (Claude Sonnet 5.5), grille modifiable, plafond par passage ; tout testé sur un transport simulé, sans aucun appel réel.
 6. **Jeu de référence**, mesure depuis la maison, notification des offres à 80 ou plus.
 7. **Clôture** : revue de sécurité, modèle de menaces complété, démonstration sur la machine de la maison.
 
@@ -149,3 +157,18 @@ Exigé par `CLAUDE.md` avant tout agent d'IA ; il complétera le [modèle de men
 2. **API Batch** : la spécification la prévoit pour la notation de nuit ; les passages ayant lieu à 7 h 10, une réponse jusqu'à 24 heures plus tard retarderait les scores de la journée. Je propose des appels directs tant que le coût reste de quelques centimes (décision D4).
 3. **Annonce unique propre à chaque compte** : la spécification voit les offres communes à tous les comptes ; la phase 2 les a rendues propres à chaque compte (plan validé), et l'annonce unique suit la même règle.
 4. **Critères éliminatoires** : seuls ceux que la source donne en champ sont appliqués sans IA ; ceux d'un texte libre vont à la notation, qui peut les nuancer (« néerlandais : un atout » n'est pas « néerlandais exigé »).
+
+## 15. Décisions prises le 23/11/2026
+
+| # | Décision |
+| --- | --- |
+| D1 | Tes 30 notes saisies dans Job4me ; la mesure tourne par une commande sur la machine de la maison ; la CI vérifie la chaîne sur des offres fictives |
+| D2 | Vers Anthropic, quand l'IA sera activée : profil sans identité, et pour chaque offre intitulé, employeur, lieu, distance et 500 caractères de description sans e-mail ni téléphone |
+| D3 | Analyse détaillée par Claude Sonnet 5.5 |
+| D4 | Appels directs plutôt que l'API Batch |
+| D5 | **Gratuit pendant la phase de test** : la notation se fait sans IA ; la notation par Claude est écrite et testée mais coupée, et s'active, si nécessaire, avec un plafond de 2 $ par semaine |
+| D6 | Localités GeoNames versionnées dans le dépôt, régénérables par un script |
+| D7 | Une notification après un passage s'il y a de nouvelles offres à 80 ou plus |
+| D8 | Claude fusionne chaque pull request après une CI verte |
+
+**Conséquence de D5 à signaler** : le critère de fin « écart moyen sous 10 points » se mesurera d'abord sur la notation sans IA. Si elle reste au-dessus du seuil, la mesure le montrera chiffres à l'appui, et l'activation de Claude (2 $ par semaine au plus) sera la décision à prendre.

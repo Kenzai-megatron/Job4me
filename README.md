@@ -4,7 +4,7 @@ Application web (PWA) de recherche d'emploi pour un seul utilisateur, sur le mar
 
 - Spécification : [`docs/SPEC.md`](docs/SPEC.md)
 - Notes sur les sources d'offres : [`docs/SOURCES.md`](docs/SOURCES.md)
-- Plans : [phase 0](docs/plans/phase-0.md), [phase 1](docs/plans/phase-1.md), [phase 2](docs/plans/phase-2.md), [phase 3](docs/plans/phase-3.md) (proposition)
+- Plans : [phase 0](docs/plans/phase-0.md), [phase 1](docs/plans/phase-1.md), [phase 2](docs/plans/phase-2.md), [phase 3](docs/plans/phase-3.md)
 - Décisions d'architecture : [`docs/adr`](docs/adr/README.md)
 - Installation sur la machine de la maison : [`docs/guide/installation.md`](docs/guide/installation.md)
 - Démonstrations : [phase 0](docs/guide/demonstration-phase-0.md), [phase 1](docs/guide/demonstration-phase-1.md), [phase 2](docs/guide/demonstration-phase-2.md)
