@@ -82,7 +82,8 @@ async function main(): Promise<void> {
 
   let entries = 0;
   try {
-    const listing = await output('sh', [
+    // bash, not sh: dash (sh on Debian and Ubuntu) has no pipefail.
+    const listing = await output('bash', [
       '-c',
       'set -o pipefail; age -d -i "$1" "$2" | tar -tf -',
       'restore-test',
