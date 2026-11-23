@@ -137,6 +137,55 @@ describe('import runs', () => {
     expect(theirs.items).toEqual([]);
   });
 
+  it('deletes an import with its file and proposals, for its own account only (finding 14)', async () => {
+    const alice = await signedInBrowser(ctx, 'delete-alice');
+    const bob = await signedInBrowser(ctx, 'delete-bob');
+    const run = (await alice.browser.upload('/api/imports', file(cv))).json<ImportRun>();
+    const db = await rawConnection(ctx.database.ownerUrl);
+    try {
+      const { rows } = await db.query<{ storage_key: string; upload_id: string }>(
+        'select u.storage_key, u.id as upload_id from import_run r join upload u on u.id = r.upload_id where r.id = $1',
+        [run.id],
+      );
+      const path = storagePath(ctx.deps.imports.filesDir, rows[0]!.storage_key);
+      expect(existsSync(path)).toBe(true);
+      await db.query(
+        "insert into import_proposal (user_id, import_run_id, rubric, source, content) values ($1, $2, 'skills', 'ai', '\\x00')",
+        [alice.userId, run.id],
+      );
+
+      expect((await bob.browser.send('DELETE', `/api/imports/${run.id}`)).statusCode).toBe(404);
+      expect(existsSync(path)).toBe(true);
+
+      // Never while the extractor or the structuring works on it.
+      await db.query("update import_run set status = 'extracting' where id = $1", [run.id]);
+      const busy = await alice.browser.send('DELETE', `/api/imports/${run.id}`);
+      expect(busy.statusCode).toBe(409);
+      expect(busy.json()).toMatchObject({ error: 'import_in_progress' });
+      await db.query("update import_run set status = 'review' where id = $1", [run.id]);
+
+      const deleted = await alice.browser.send('DELETE', `/api/imports/${run.id}`);
+      expect(deleted.statusCode).toBe(200);
+      expect(existsSync(path)).toBe(false);
+      for (const [table, column, value] of [
+        ['import_run', 'id', run.id],
+        ['upload', 'id', rows[0]!.upload_id],
+        ['import_proposal', 'import_run_id', run.id],
+      ] as const) {
+        const left = await db.query(`select 1 from ${table} where ${column} = $1`, [value]);
+        expect(left.rowCount, table).toBe(0);
+      }
+      const audit = await db.query(
+        "select 1 from audit_log where action = 'import.deleted' and target_id = $1",
+        [run.id],
+      );
+      expect(audit.rowCount).toBe(1);
+      expect((await alice.browser.send('DELETE', `/api/imports/${run.id}`)).statusCode).toBe(404);
+    } finally {
+      await db.end();
+    }
+  });
+
   it('never serves the stored file', async () => {
     const { browser } = await signedInBrowser(ctx, 'serve');
     const run = (await browser.upload('/api/imports', file(cv))).json<ImportRun>();

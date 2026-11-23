@@ -246,7 +246,8 @@
     "keywords_need_target_job": "Ajoutez d'abord au moins un métier visé.",
     "already_decided": "Cette proposition a déjà été traitée.",
     "source_unknown": "Cette source n'existe pas sur ce serveur.",
-    "source_commercial_mode": "En mode commercial, les sources réservées à l'usage personnel restent coupées."
+    "source_commercial_mode": "En mode commercial, les sources réservées à l'usage personnel restent coupées.",
+    "import_in_progress": "Cet import est en cours de lecture : réessayez dans un instant."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",
@@ -506,7 +507,11 @@
       "ai_invalid_output": "La réponse de l'IA était inexploitable, deux fois : seules les coordonnées trouvées sont proposées.",
       "ai_failed": "L'IA n'a pas répondu : seules les coordonnées trouvées sont proposées."
     },
-    "review": "Relire les propositions"
+    "review": "Relire les propositions",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer définitivement",
+    "deleteHint": "Le fichier, son texte extrait et les propositions non relues disparaissent ; ce que vous avez gardé reste dans le profil.",
+    "deleted": "Import supprimé."
   },
   "settings": {
     "tabs": "Pages des paramètres",
