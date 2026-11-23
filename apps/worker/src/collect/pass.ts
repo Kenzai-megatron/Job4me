@@ -12,6 +12,7 @@ import {
   PoliteClient,
   type RawOffer,
   type Sleep,
+  SourceSkipped,
   sourceSettings,
 } from '@job4me/collect';
 import type { CollectPassJob, PassTrigger, RunStatus, SkipReason } from '@job4me/contracts';
@@ -241,6 +242,7 @@ async function runSource(
   const warnings: CollectError[] = [];
   let readCount = 0;
   let open = true;
+  let quota: number | null = null;
   const context: ConnectorContext = {
     trigger: pass.trigger,
     keywords,
@@ -250,6 +252,9 @@ async function runSource(
     maxPages: pass.trigger === 'test' ? 1 : config.maxPages,
     http,
     secrets: Object.fromEntries(connector.secrets.map((name) => [name, deps.secrets[name]!])),
+    area: deps.settings.collect.area,
+    maxAgeDays: config.maxAgeDays ?? null,
+    params: config.params ?? {},
     now,
     timeZone: deps.settings.collect.schedule.timeZone,
     signal,
@@ -262,18 +267,53 @@ async function runSource(
     warn(error) {
       if (open) warnings.push(error);
     },
+    reportQuota(remaining) {
+      quota = remaining;
+    },
   };
 
   let failure: CollectError | null = null;
+  let skipped: SkipReason | null = null;
   try {
     await withinBudget(connector.run(context), signal);
   } catch (error) {
-    failure =
-      error instanceof CollectError || !signal.aborted
-        ? asCollectError(error)
-        : new CollectError('budget_exceeded');
+    if (error instanceof SourceSkipped) skipped = error.reason;
+    else {
+      failure =
+        error instanceof CollectError || !signal.aborted
+          ? asCollectError(error)
+          : new CollectError('budget_exceeded');
+    }
   } finally {
     open = false;
+  }
+  if (quota !== null) await storeQuota(deps, userId, connector.name, quota);
+  if (skipped !== null) {
+    // Found by the connector before its first search (a quota under its reserve).
+    const at = deps.now?.() ?? new Date();
+    await withUser(deps.db, userId, (tx) =>
+      tx
+        .update(runs)
+        .set({
+          status: 'skipped',
+          skipReason: skipped,
+          requestCount: http.requestCount,
+          durationMs: Date.now() - started,
+          finishedAt: at,
+          updatedAt: at,
+        })
+        .where(and(eq(runs.id, run!.id), eq(runs.userId, userId))),
+    );
+    log.info({ skipped, requests: http.requestCount }, 'source run');
+    return {
+      source: connector.name,
+      status: 'skipped',
+      skipReason: skipped,
+      errorCode: null,
+      readCount: 0,
+      keptCount: 0,
+      newCount: 0,
+    };
   }
 
   // Common format, exact duplicates of the source merged, then the title filter.
@@ -412,6 +452,21 @@ async function runSource(
     keptCount: kept.length,
     newCount,
   };
+}
+
+/** The searches left on a rationed source, as its account told just now. */
+async function storeQuota(deps: CollectDeps, userId: string, source: string, remaining: number) {
+  const at = deps.now?.() ?? new Date();
+  const settings = schema.sourceSettings;
+  await withUser(deps.db, userId, (tx) =>
+    tx
+      .insert(settings)
+      .values({ userId, source, quotaRemaining: remaining, quotaCheckedAt: at })
+      .onConflictDoUpdate({
+        target: [settings.userId, settings.source],
+        set: { quotaRemaining: remaining, quotaCheckedAt: at, updatedAt: at },
+      }),
+  );
 }
 
 /** Passes left running by a worker that stopped are closed, with their running sources. */

@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Writable } from 'node:stream';
-import { availableConnectors, type Connector, eachKeyword } from '@job4me/collect';
+import { availableConnectors, type Connector, eachKeyword, SourceSkipped } from '@job4me/collect';
 import { loadConfig, type Settings } from '@job4me/config';
 import { connect, type DatabaseHandle, eq, schema, withUser } from '@job4me/db';
 import { createTestDatabase, type TestDatabase } from '@job4me/db/testing';
@@ -326,6 +326,52 @@ describe('a collection pass', () => {
     expect(JSON.stringify(run)).not.toContain('k3y-v4lue');
     expect(lines.join('')).not.toContain('k3y-v4lue');
     expect(lines.join('')).toContain('app_key=[redacted]');
+  });
+
+  it('stores the quota a rationed source reports, and skips it under its reserve', async () => {
+    const userId = await account();
+    const rationed = connector({
+      name: 'keyed',
+      async run(context) {
+        await context.http.getText('https://api.example.org/account.json');
+        context.reportQuota(5);
+        throw new SourceSkipped('quota');
+      },
+    });
+    const id = await pass(userId, ['keyed']);
+    const fetch = () => Promise.resolve(new Response('{}'));
+    const [outcome] = await runPass(deps([rationed], { fetch }), { userId, passId: id });
+    expect(outcome).toMatchObject({ status: 'skipped', skipReason: 'quota' });
+    expect((await runsOf(userId, id))[0]).toMatchObject({
+      status: 'skipped',
+      skipReason: 'quota',
+      requestCount: 1,
+      readCount: 0,
+    });
+    const [setting] = await withUser(handle.db, userId, (tx) =>
+      tx.select().from(schema.sourceSettings).where(eq(schema.sourceSettings.userId, userId)),
+    );
+    expect(setting).toMatchObject({ source: 'keyed', quotaRemaining: 5 });
+    expect(setting!.quotaCheckedAt).not.toBeNull();
+  });
+
+  it('hands a source its age limit, its own parameters and the search centre', async () => {
+    const userId = await account();
+    const seen: unknown[] = [];
+    const spy = connector({
+      name: 'beta',
+      run(context) {
+        seen.push({ maxAgeDays: context.maxAgeDays, params: context.params, area: context.area });
+        return Promise.resolve();
+      },
+    });
+    const custom = structuredClone(settings);
+    custom.collect.sources.beta = { ...source, maxAgeDays: 30, params: { pageSize: 10 } };
+    const id = await pass(userId, ['beta']);
+    await runPass(deps([spy], { settings: custom }), { userId, passId: id });
+    expect(seen).toEqual([
+      { maxAgeDays: 30, params: { pageSize: 10 }, area: settings.collect.area },
+    ]);
   });
 
   it('keeps what a source read before failing, and isolates a broken or malformed one', async () => {

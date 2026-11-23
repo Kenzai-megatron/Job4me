@@ -59,6 +59,10 @@ const sourceSettingsSchema = z.object({
     .min(0)
     .max(24 * 30),
   enabledByDefault: z.boolean(),
+  /** Older ads are neither asked for nor kept (Actiris: 60 days, docs/SOURCES.md). */
+  maxAgeDays: z.number().int().min(1).max(365).optional(),
+  /** Values of this source only (page size, place name, quota reserve), checked by its connector. */
+  params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
 });
 export type SourceSettings = z.infer<typeof sourceSettingsSchema>;
 
@@ -258,8 +262,17 @@ export const settingsSchema = z
         addsPerHour: z.number().int().min(1).max(500),
       }),
       test: z.object({ requestsPerHour: z.number().int().min(1).max(60) }),
-      /** Development and tests only: a source that makes offers up, without any request. */
+      /** Development and tests: the demo source (no request at all) replaces the real ones. */
       demoSource: z.boolean(),
+      /**
+       * Centre of the searches around a point (Forem), with the profile's radius. Hypothèse:
+       * Brussels, until the geography of phase 3 places the profile's base city.
+       */
+      area: z.object({
+        name: z.string().min(1).max(100),
+        lat: z.number().min(49).max(52),
+        lon: z.number().min(2).max(7),
+      }),
       sources: z.record(z.string().regex(/^[a-z][a-z0-9_]{1,31}$/), sourceSettingsSchema),
     }),
     backups: z.object({
@@ -332,6 +345,8 @@ export interface Secrets {
   importKey: string | undefined;
   /** Claude API key (ADR 0009): on the home machine only; empty or absent, the AI is off. */
   anthropicApiKey: string | undefined;
+  /** Keys of the job sources that need one (ADR 0014): empty or absent, the source is skipped. */
+  sourceKeys: Record<string, string | undefined>;
   vapidPublicKey: string | undefined;
   vapidPrivateKey: string | undefined;
 }

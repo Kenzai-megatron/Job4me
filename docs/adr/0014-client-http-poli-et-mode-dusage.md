@@ -29,3 +29,9 @@ Statut : acceptée le 23/11/2026.
 - Corps lu en flux et coupé au-delà de `maxResponseBytes`, mesuré après décompression ; délai par requête ; budget de la source qui interrompt aussi les pauses.
 - Mode commercial : l'API refuse d'activer une source à usage personnel (`source_commercial_mode`), l'orchestrateur la saute (« commercial_mode ») quel que soit son interrupteur.
 - Clés : remises au seul connecteur qui les déclare, absentes = « sautée, clé absente » ; `maskUrl` masque aussi `app_id`.
+
+## Mise en œuvre (lot 2, 23/11/2026)
+
+- Pauses de la configuration : 2 s entre deux requêtes d'Actiris (API d'un site), 0,3 s pour le Forem (open data), 1 s pour Adzuna et SerpApi ; deux nouveaux essais pour ces API robustes, budget de 120 à 180 s par source.
+- **Google Jobs le lundi, le mercredi et le vendredi, et non chaque jour** (écart signalé à la décision D3) : dix mots-clés prioritaires chaque jour feraient 300 recherches par mois, au-delà des 250 du plan gratuit ; trois jours par semaine en font environ 130 et laissent la place aux tests. Le compte est consulté avant chaque passage, sans dépenser de recherche ; sous la réserve (20), la source est sautée.
+- Clés d'Adzuna et de SerpApi : fichiers `secrets/adzuna_app_id`, `secrets/adzuna_app_key` et `secrets/serpapi_key`, vides par défaut, remis au seul conteneur `worker` (contrôlé par `pnpm check:compose`) ; elles voyagent dans l'URL et sont masquées dans chaque ligne de journal.

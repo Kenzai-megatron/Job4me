@@ -1,0 +1,33 @@
+{
+  "search_metadata": { "id": "000000000000000000000000", "status": "Success" },
+  "search_parameters": { "engine": "google_jobs", "q": "comptable", "hl": "fr", "gl": "be" },
+  "jobs_results": [
+    {
+      "title": "Comptable (H/F/X)",
+      "company_name": "Exemple SA",
+      "location": "Bruxelles, Belgique",
+      "via": "LinkedIn",
+      "share_link": "https://www.google.com/search?ibp=htl;jobs&q=comptable#htidocid=example1",
+      "description": "Nous recherchons un comptable pour notre équipe à Bruxelles.",
+      "detected_extensions": { "posted_at": "il y a 3 jours", "schedule_type": "Temps plein" },
+      "apply_options": [
+        { "title": "LinkedIn", "link": "https://www.linkedin.com/jobs/view/0000000001" }
+      ],
+      "job_id": "eyJqb2JfdGl0bGUiOiJDb21wdGFibGUifQ=="
+    },
+    {
+      "title": "Boekhouder",
+      "company_name": "Voorbeeld NV",
+      "location": "Brussel, België",
+      "via": "Jobat",
+      "share_link": "https://www.google.com/search?ibp=htl;jobs&q=boekhouder#htidocid=example2",
+      "description": "Wij zoeken een boekhouder.",
+      "detected_extensions": {
+        "posted_at": "il y a 30+ jours",
+        "salary": "3 000–3 500 € par mois"
+      },
+      "apply_options": [{ "title": "Jobat", "link": "javascript:void(0)" }],
+      "job_id": "eyJqb2JfdGl0bGUiOiJCb2VraG91ZGVyIn0="
+    }
+  ]
+}

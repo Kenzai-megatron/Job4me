@@ -82,15 +82,17 @@ function check(name: string, model: Model): string[] {
   return problems;
 }
 
-/** The Claude API key reaches the worker and nothing else (ADR 0009). */
+/** Keys that reach the worker and nothing else: Claude (ADR 0009), the job sources (ADR 0014). */
+const WORKER_KEYS = ['anthropic_api_key', 'adzuna_app_id', 'adzuna_app_key', 'serpapi_key'];
+
 function checkAiKey(name: string, model: Model): string[] {
-  return Object.entries(model.services)
-    .filter(
-      ([service, spec]) =>
-        service !== 'worker' &&
-        (spec.secrets ?? []).some((secret) => secret.source === 'anthropic_api_key'),
-    )
-    .map(([service]) => `${name}/${service}: must not receive the Claude API key`);
+  return Object.entries(model.services).flatMap(([service, spec]) =>
+    service === 'worker'
+      ? []
+      : (spec.secrets ?? [])
+          .filter((secret) => WORKER_KEYS.includes(secret.source))
+          .map((secret) => `${name}/${service}: must not receive ${secret.source}`),
+  );
 }
 
 function checkExtractor(name: string, model: Model): string[] {

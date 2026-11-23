@@ -72,6 +72,36 @@ pnpm stack:up
 
 Paramètres > IA montre ensuite la dépense de la semaine, le total et les derniers appels, sans leur contenu.
 
+### Activer Adzuna et Google Jobs (facultatif)
+
+Sans clé, ces deux sources sont « sautées, clé absente » ; les autres collectent normalement. Les deux clés sont gratuites, à ton nom (décision D2 : quand tu veux).
+
+1. **Adzuna** : crée un compte sur [developer.adzuna.com](https://developer.adzuna.com) ; il donne un identifiant d'application (`app_id`) et une clé (`app_key`).
+2. **Google Jobs** : crée un compte gratuit sur [serpapi.com](https://serpapi.com) (250 recherches par mois) et copie la clé d'API. Job4me consulte le compte avant chaque passage, sans dépenser de recherche, et garde une réserve de 20 recherches (configuration, `collect.sources.google_jobs.params.quotaReserve`).
+3. Écris chaque valeur dans son fichier secret, sans qu'elle passe par l'historique du terminal :
+
+```bash
+read -rs ID && printf '%s' "$ID" > secrets/adzuna_app_id && unset ID
+```
+
+```bash
+read -rs CLE && printf '%s' "$CLE" > secrets/adzuna_app_key && unset CLE
+```
+
+```bash
+read -rs CLE && printf '%s' "$CLE" > secrets/serpapi_key && unset CLE
+```
+
+4. Redémarre (le worker est le seul conteneur à recevoir ces clés), puis teste les deux sources :
+
+```bash
+pnpm stack:up
+```
+
+```bash
+pnpm stack:cli sources:test --source adzuna --source google_jobs
+```
+
 ## 4. Démarrer
 
 ```bash

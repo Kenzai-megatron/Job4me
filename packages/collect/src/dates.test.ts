@@ -62,6 +62,8 @@ describe('normalizeDate', () => {
     expect(date('il y a 3 jours')).toBe('2026-11-20');
     expect(date('Publiée il y a 2 semaines')).toBe('2026-11-09');
     expect(date('il y a plus de 30 jours')).toBe('2026-10-24');
+    expect(date('il y a 30+ jours')).toBe('2026-10-24');
+    expect(date('30+ dagen geleden')).toBe('2026-10-24');
     expect(date('il y a 5 h')).toBe('2026-11-23');
     expect(date('3 dagen geleden')).toBe('2026-11-20');
     expect(date('gisteren')).toBe('2026-11-22');

@@ -1,4 +1,4 @@
-import type { CollectErrorCode } from '@job4me/contracts';
+import type { CollectErrorCode, SkipReason } from '@job4me/contracts';
 
 /** These stop the whole source for the pass: no other keyword, no retry (ADR 0014). */
 const FATAL = new Set<CollectErrorCode>(['blocked', 'host_not_allowed', 'budget_exceeded']);
@@ -26,4 +26,16 @@ export class CollectError extends Error {
 /** Anything else a connector throws (a bug, a page that no longer parses) is its own error. */
 export function asCollectError(error: unknown): CollectError {
   return error instanceof CollectError ? error : new CollectError('connector_error');
+}
+
+/**
+ * Thrown by a connector that finds, before its first search, that it must not run: a quota
+ * under its reserve. The run is then "skipped" with this reason, never "0 offers".
+ */
+export class SourceSkipped extends Error {
+  override name = 'SourceSkipped';
+
+  constructor(readonly reason: SkipReason) {
+    super(`skipped: ${reason}`);
+  }
 }

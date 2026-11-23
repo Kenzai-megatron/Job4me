@@ -182,10 +182,60 @@ collect:
     addsPerHour: 30
   test:
     requestsPerHour: 6
-  # Development and end-to-end tests only (JOB4ME_COLLECT_DEMO_SOURCE): offers made up, no request.
+  # Development and tests only (JOB4ME_COLLECT_DEMO_SOURCE, written by pnpm setup:dev): the demo
+  # source, offers made up without any request, replaces every real source.
   demoSource: false
-  # One entry per connector. weekdays: 1 = Monday; pauses and budgets of docs/SOURCES.md.
+  # Hypothèse: the searches around a point (Forem) start from Brussels, with the profile's
+  # radius, until the geography of phase 3 places the profile's base city.
+  area:
+    name: Bruxelles
+    lat: 50.8467
+    lon: 4.3517
+  # One entry per connector, in calling order. weekdays: 1 = Monday. Pauses and budgets of
+  # docs/SOURCES.md; maxAgeDays: older ads are neither asked for nor kept; params: the source's own.
   sources:
+    actiris:
+      weekdays: [1, 2, 3, 4, 5, 6, 7]
+      pauseMs: 2000
+      budgetMs: 180000
+      retries: 2
+      maxPages: 3
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      maxAgeDays: 60
+      params: { pageSize: 100 }
+    forem:
+      weekdays: [1, 2, 3, 4, 5, 6, 7]
+      pauseMs: 300
+      budgetMs: 120000
+      retries: 2
+      maxPages: 2
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      maxAgeDays: 60
+      params: { pageSize: 100 }
+    adzuna:
+      weekdays: [1, 2, 3, 4, 5, 6, 7]
+      pauseMs: 1000
+      budgetMs: 120000
+      retries: 2
+      maxPages: 2
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      maxAgeDays: 60
+      # Only "Bruxelles" and "Brussel" are understood, never "Brussels" (docs/SOURCES.md).
+      params: { where: Bruxelles, pageSize: 50 }
+    # 250 searches a month on the free plan: three days a week with the priority keywords
+    # (about 130 searches), and a reserve kept for the tests. Checked before every pass.
+    google_jobs:
+      weekdays: [1, 3, 5]
+      pauseMs: 1000
+      budgetMs: 120000
+      retries: 1
+      maxPages: 1
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      params: { location: 'Brussels, Belgium', language: fr, country: be, quotaReserve: 20 }
     demo:
       weekdays: [1, 2, 3, 4, 5, 6, 7]
       pauseMs: 0

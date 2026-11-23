@@ -1,0 +1,41 @@
+{
+  "__CLASS__": "Adzuna::API::Response::JobSearchResults",
+  "count": 2,
+  "mean": 39000,
+  "results": [
+    {
+      "__CLASS__": "Adzuna::API::Response::Job",
+      "id": "4100000001",
+      "adref": "eyJhbGciOiJIUzI1NiJ9.example",
+      "title": "Comptable <strong>junior</strong>",
+      "company": { "__CLASS__": "Adzuna::API::Response::Company", "display_name": "Exemple SA" },
+      "location": {
+        "__CLASS__": "Adzuna::API::Response::Location",
+        "display_name": "Bruxelles, Région de Bruxelles-Capitale",
+        "area": ["Belgique", "Région de Bruxelles-Capitale", "Bruxelles"]
+      },
+      "category": { "label": "Emplois Comptabilité", "tag": "accounting-finance-jobs" },
+      "redirect_url": "https://www.adzuna.be/land/ad/4100000001?se=example&utm_medium=api&v=0",
+      "created": "2026-11-20T09:15:00Z",
+      "salary_min": 35000,
+      "salary_max": 42000,
+      "salary_is_predicted": "1",
+      "contract_type": "permanent",
+      "contract_time": "full_time",
+      "latitude": 50.8467,
+      "longitude": 4.3517,
+      "description": "Pour notre client, nous recherchons un comptable&nbsp;junior &amp; motivé…"
+    },
+    {
+      "__CLASS__": "Adzuna::API::Response::Job",
+      "id": "4100000002",
+      "title": "Boekhouder",
+      "company": { "__CLASS__": "Adzuna::API::Response::Company" },
+      "location": { "__CLASS__": "Adzuna::API::Response::Location", "display_name": "Mechelen" },
+      "redirect_url": "https://www.adzuna.be/land/ad/4100000002?se=example&v=0",
+      "created": "2026-11-18T08:00:00Z",
+      "salary_is_predicted": "0",
+      "description": "Voor een klant zoeken we een boekhouder."
+    }
+  ]
+}
