@@ -16,3 +16,6 @@ Chaque décision structurante de Job4me tient dans une fiche courte : contexte, 
 | [0010](0010-fichiers-importes-et-extraction-isolee.md) | Fichiers importés et extraction isolée | Acceptée le 22/11/2026 |
 | [0011](0011-rls-donnees-du-profil.md) | Row Level Security sur les données du profil | Acceptée le 22/11/2026 |
 | [0012](0012-sauvegardes-chiffrees.md) | Sauvegardes chiffrées | Acceptée le 22/11/2026 |
+| [0013](0013-architecture-de-la-collecte.md) | Architecture de la collecte | Acceptée le 23/11/2026 |
+| [0014](0014-client-http-poli-et-mode-dusage.md) | Client HTTP poli et mode d'usage | Acceptée le 23/11/2026 |
+| [0015](0015-conservation-des-offres.md) | Conservation des offres collectées et des journaux | Acceptée le 23/11/2026 |

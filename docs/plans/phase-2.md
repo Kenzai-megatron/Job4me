@@ -1,6 +1,6 @@
 # Phase 2 : collecte, plan détaillé
 
-Proposition du 23/11/2026, **à valider par Mehdi** (décisions de la section 12). Rien n'est codé avant sa validation. Sources : spécification, sections 3, 5, 10 et 14 ; notes `docs/SOURCES.md`, sections 0 à 6.
+Proposition du 23/11/2026, **validée par Mehdi le 23/11/2026** avec les options recommandées, sauf les clés d'API (décision D2 : plus tard) ; voir la section 14. Sources : spécification, sections 3, 5, 10 et 14 ; notes `docs/SOURCES.md`, sections 0 à 6.
 
 ## 1. Résumé
 
@@ -131,3 +131,14 @@ Exigé par `CLAUDE.md` avant toute fonction de collecte ; il complétera le [mod
 - 0013 Architecture de la collecte : contrat de connecteur, orchestrateur, isolement par source, lecture sans JavaScript.
 - 0014 Client HTTP poli et mode d'usage : hôtes autorisés, cadence, arrêt au 403 et 429, coupure en mode commercial.
 - 0015 Conservation des offres collectées et des journaux de passage.
+
+## 14. Décisions prises le 23/11/2026
+
+| # | Décision |
+| --- | --- |
+| D1 | Sondage depuis l'environnement de Claude, avec l'accord de Mehdi pour chaque hôte ajouté à sa liste autorisée ; LinkedIn depuis la connexion de la maison |
+| D2 | Clés Adzuna et SerpApi **plus tard** : les deux connecteurs s'écrivent et se testent sur leurs jeux de test, puis restent « sautés, clé absente » jusqu'à ce que Mehdi pose les clés sur la machine de la maison |
+| D3 | API et open data chaque jour ; pages publiques et LinkedIn le mardi et le vendredi à 7 h 10 |
+| D4 | Alerte « source muette » par notification sur le téléphone et bandeau sur l'écran Sources |
+| D5 | Offres supprimées 90 jours après leur dernière vue |
+| D6 | Claude fusionne chaque pull request après une CI verte |
