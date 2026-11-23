@@ -10,3 +10,5 @@ CLAUDE.md
 secrets
 tests/e2e/.state
 .semgrep/job4me.ts
+# Answers of the job sites, anonymized: kept as the sites serve them
+packages/collect/src/sources/fixtures
