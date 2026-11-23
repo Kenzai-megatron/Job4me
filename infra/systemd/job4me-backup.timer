@@ -1,0 +1,11 @@
+# Runs job4me-backup.service every night; a night missed (machine off) runs at the next start.
+[Unit]
+Description=Job4me : sauvegarde chiffrée chaque nuit
+
+[Timer]
+OnCalendar=*-*-* 03:17
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

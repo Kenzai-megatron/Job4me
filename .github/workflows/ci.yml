@@ -78,6 +78,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      - run: pnpm test:scripts
 
   integration:
     name: Integration tests (PostgreSQL 18)
@@ -183,6 +184,15 @@ jobs:
             || pnpm --filter @job4me/e2e exec playwright install chromium
       - name: Specs against the containers (production mode)
         run: pnpm test:e2e:stack
+      - name: Encrypted backup, then its restore test (ADR 0012)
+        # A throwaway age key: the backup of the test data is restored into a scratch database.
+        run: |
+          command -v age >/dev/null || sudo apt-get install -y age \
+            || (sudo apt-get update && sudo apt-get install -y age)
+          age-keygen -o "$RUNNER_TEMP/backup-key.txt"
+          echo "JOB4ME_BACKUP_RECIPIENT=$(age-keygen -y "$RUNNER_TEMP/backup-key.txt")" >> .env
+          pnpm stack:backup
+          JOB4ME_BACKUP_IDENTITY_FILE="$RUNNER_TEMP/backup-key.txt" pnpm stack:restore-test
       - name: Container logs
         if: failure()
         run: pnpm stack:logs

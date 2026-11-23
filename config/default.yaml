@@ -148,6 +148,11 @@ ai:
   # A fallback model is not known in advance: priced like an Opus-class model, to stay cautious.
   unknownModelPrice: { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 }
 
+# Encrypted backups (plan, section 9; ADR 0012): pnpm stack:backup, pnpm stack:restore-test.
+backups:
+  keepDaily: 14
+  keepWeekly: 8
+
 worker:
   purgeCron: '17 * * * *' # every hour
   expiredSessionRetentionDays: 30

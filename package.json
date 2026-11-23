@@ -25,10 +25,14 @@
     "stack:up": "tsx scripts/stack.ts up",
     "stack:down": "tsx scripts/stack.ts down",
     "stack:logs": "tsx scripts/stack.ts logs",
-    "stack:cli": "tsx scripts/stack.ts cli"
+    "stack:cli": "tsx scripts/stack.ts cli",
+    "stack:backup": "tsx scripts/backup.ts",
+    "stack:restore-test": "tsx scripts/restore-test.ts",
+    "test:scripts": "vitest run --config scripts/vitest.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@job4me/config": "workspace:*",
     "@types/node": "26.6.6",
     "eslint": "10.15.0",
     "eslint-plugin-react-hooks": "7.1.1",

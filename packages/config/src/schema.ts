@@ -189,6 +189,11 @@ export const settingsSchema = z
       prices: z.record(z.string(), priceSchema),
       unknownModelPrice: priceSchema,
     }),
+    backups: z.object({
+      /** The most recent backups kept, then one a week for this many weeks (ADR 0012). */
+      keepDaily: z.number().int().min(1).max(365),
+      keepWeekly: z.number().int().min(0).max(520),
+    }),
     worker: z.object({
       purgeCron: z.string().min(9),
       expiredSessionRetentionDays: z.number().int().min(1).max(365),

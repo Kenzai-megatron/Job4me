@@ -1,0 +1,12 @@
+# Job4me nightly encrypted backup (ADR 0012), as a user service of the account that runs the stack.
+# Install: see docs/guide/installation.md, section « Sauvegardes ».
+[Unit]
+Description=Job4me : sauvegarde chiffrée de la base et des fichiers
+After=docker.service
+
+[Service]
+Type=oneshot
+# The repository folder; change it if Job4me lives elsewhere.
+WorkingDirectory=%h/job4me
+# A login shell finds node and pnpm wherever they were installed (fnm, nvm…).
+ExecStart=/bin/bash -lc 'pnpm stack:backup'
