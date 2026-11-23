@@ -57,6 +57,13 @@
       "when": 1795422685421,
       "tag": "0007_collect",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795453852139,
+      "tag": "0008_source_alert",
+      "breakpoints": true
     }
   ]
 }

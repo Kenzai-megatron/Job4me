@@ -1,6 +1,7 @@
 import {
   collectErrorCodes,
   errorCodes,
+  sourceAlertKinds,
   passTriggers,
   runStatuses,
   skipReasons,
@@ -32,6 +33,7 @@ describe('translation files', () => {
       ...sourceAccesses.map((value) => `sources.accesses.${value}`),
       ...passTriggers.map((value) => `sources.triggers.${value}`),
       ...[1, 2, 3, 4, 5, 6, 7].map((day) => `sources.weekdays.${day}`),
+      ...sourceAlertKinds.map((kind) => `sources.alerts.${kind}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

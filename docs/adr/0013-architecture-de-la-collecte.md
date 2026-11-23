@@ -48,3 +48,9 @@ La phase 2 collecte les offres de neuf sources du socle (spécification, section
 - **Jobijoba** : les annonces sponsorisées n'ont qu'un lien chiffré (ROT13) ; il n'est jamais décodé : ces annonces sont lues et comptées, jamais gardées.
 - **Gabarit changé** : une page StepStone sans total ni carte lève `invalid_response`, jamais « 0 offre » en silence ; pour les autres, la page vide se voit au journal (0 lue) et nourrira l'alerte « source muette » du lot 5.
 - Budget d'un passage porté à 30 minutes (`collect.passBudgetMs`) : le mardi et le vendredi, pages publiques et LinkedIn s'ajoutent aux API.
+
+## Mise en œuvre (lot 5, 23/11/2026)
+
+- **Source muette** (décision D4), jugée après chaque passage planifié ou manuel, jamais après un test : une source réussie qui n'a **rien lu** (`zero_read`), ou qui a lu moins du quart de son volume habituel (`collapse` : médiane des six passages précédents, dès trois passages et dix offres d'habitude ; valeurs dans `collect.mute`). Une source sautée ou en échec n'est pas muette : son statut le dit déjà.
+- L'alerte vit dans `source_setting` (début, offres lues, volume habituel) et s'efface dès que la source lit de nouveau. **Une notification par incident**, pas à chaque passage, vers les appareils du compte quand les clés de notification existent ; sinon le bandeau seul la porte. Bandeau sur l'écran Sources et sur l'accueil.
+- Écran Sources complet : alerte, dernier passage, chiffres des quatre dernières semaines (passages, lues, retenues, inédites, échecs ; tests à part ; `collect.runs.windowDays`), solde du quota de SerpApi, passages récents. La pertinence (part des offres notées 80 ou plus) arrive avec la notation de la phase 3.

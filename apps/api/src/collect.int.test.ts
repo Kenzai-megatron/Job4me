@@ -212,6 +212,55 @@ describe('sources', () => {
     expect(listed.sources.every((source) => source.runs.length === 0)).toBe(true);
   });
 
+  it('show the alert, the quota and four weeks of scheduled runs, tests apart', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'window');
+    const day = (count: number) => new Date(Date.now() - count * 86_400_000);
+    await withUser(ctx.deps.db, userId, async (tx) => {
+      await tx.insert(schema.sourceSettings).values({
+        userId,
+        source: 'alpha',
+        alert: 'collapse',
+        alertSince: day(1),
+        alertRead: 3,
+        alertUsual: 40,
+        quotaRemaining: 120,
+        quotaCheckedAt: day(1),
+      });
+      const [pass] = await tx
+        .insert(schema.collectionPasses)
+        .values({ userId, trigger: 'scheduled', status: 'done', sources: ['alpha'] })
+        .returning();
+      const run = (trigger: string, status: string, read: number, at: Date) => ({
+        userId,
+        passId: pass!.id,
+        source: 'alpha',
+        trigger,
+        status,
+        readCount: read,
+        keptCount: Math.floor(read / 2),
+        newCount: Math.floor(read / 4),
+        createdAt: at,
+      });
+      await tx.insert(schema.sourceRuns).values([
+        run('scheduled', 'succeeded', 40, day(10)),
+        run('manual', 'failed', 0, day(5)),
+        run('scheduled', 'succeeded', 3, day(1)),
+        // Outside the window, or a test: not counted.
+        run('scheduled', 'succeeded', 100, day(40)),
+        run('test', 'succeeded', 9, day(1)),
+        { ...run('scheduled', 'skipped', 0, day(2)), skipReason: 'disabled' },
+      ]);
+    });
+    const listed = (await browser.get('/api/sources')).json<SourcesResponse>();
+    const alpha = listed.sources.find((source) => source.name === 'alpha')!;
+    expect(alpha.alert).toMatchObject({ kind: 'collapse', read: 3, usual: 40 });
+    expect(alpha.quota).toMatchObject({ remaining: 120 });
+    expect(alpha.window).toEqual({ days: 28, runs: 3, failed: 1, read: 43, kept: 21, fresh: 10 });
+    const other = listed.sources.find((source) => source.name === 'pages')!;
+    expect(other).toMatchObject({ alert: null, quota: null });
+    expect(other.window.runs).toBe(0);
+  });
+
   it('need a session', async () => {
     const response = await ctx.app.inject({ method: 'GET', url: '/api/sources' });
     expect(response.statusCode).toBe(401);

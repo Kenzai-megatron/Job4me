@@ -1,5 +1,5 @@
 import type { CollectionPass, SourceSummary } from '@job4me/contracts';
-import { formatDateTime, localeFor } from '@job4me/i18n';
+import { formatDate, formatDateTime, formatNumber, localeFor } from '@job4me/i18n';
 import { Alert, Button, Card, CheckboxField } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
@@ -87,11 +87,61 @@ function SourceCard({ source }: { source: SourceSummary }) {
             {t('sources.cooldown', { date: formatDateTime(source.cooldownUntil) })}
           </p>
         ) : null}
+        {source.alert ? (
+          <p className="text-sm font-semibold text-danger">
+            {t(`sources.alerts.${source.alert.kind}`, {
+              date: formatDate(source.alert.since),
+              read: formatNumber(source.alert.read ?? 0),
+              usual: formatNumber(source.alert.usual ?? 0),
+            })}
+          </p>
+        ) : null}
         {latest ? (
           <RunSummary run={latest} />
         ) : (
           <p className="text-sm text-muted">{t('sources.never')}</p>
         )}
+        <p className="text-sm text-muted">
+          {source.window.runs === 0
+            ? t('sources.windowEmpty', { days: source.window.days })
+            : [
+                t('sources.window', {
+                  days: source.window.days,
+                  runs: formatNumber(source.window.runs),
+                  read: formatNumber(source.window.read),
+                  kept: formatNumber(source.window.kept),
+                  fresh: formatNumber(source.window.fresh),
+                }),
+                source.window.failed > 0
+                  ? t('sources.windowFailed', { count: source.window.failed })
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(', ')}
+        </p>
+        {source.quota ? (
+          <p className="text-sm text-muted">
+            {t('sources.quota', {
+              remaining: formatNumber(source.quota.remaining),
+              date: formatDate(source.quota.checkedAt),
+            })}
+          </p>
+        ) : null}
+        <p className="text-sm text-muted">{t('sources.relevance')}</p>
+        {source.runs.length > 1 ? (
+          <details className="text-sm">
+            <summary className="cursor-pointer font-semibold text-accent">
+              {t('sources.history')}
+            </summary>
+            <ul className="mt-2 flex flex-col divide-y divide-line">
+              {source.runs.slice(1).map((run) => (
+                <li key={run.id} className="py-2">
+                  <RunSummary run={run} />
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : null}
         {error ? <Alert tone="error">{error}</Alert> : null}
       </div>
     </Card>
@@ -169,6 +219,24 @@ export function SourcesPage() {
       </div>
       {sources.isError ? <Alert tone="error">{errorMessage(t, sources.error)}</Alert> : null}
       {data?.usageMode === 'commercial' ? <Alert>{t('sources.usageCommercial')}</Alert> : null}
+      {data && data.sources.some((source) => source.alert) ? (
+        <Alert tone="error" title={t('sources.alertBanner')}>
+          <ul className="flex list-disc flex-col gap-1 pl-5">
+            {data.sources.map((source) =>
+              source.alert ? (
+                <li key={source.name}>
+                  {t(`sources.names.${source.name}`, { defaultValue: source.name })} :{' '}
+                  {t(`sources.alerts.${source.alert.kind}`, {
+                    date: formatDate(source.alert.since),
+                    read: formatNumber(source.alert.read ?? 0),
+                    usual: formatNumber(source.alert.usual ?? 0),
+                  })}
+                </li>
+              ) : null,
+            )}
+          </ul>
+        </Alert>
+      ) : null}
 
       <Card aria-labelledby="sources-test-title">
         <div className="flex flex-col gap-3">

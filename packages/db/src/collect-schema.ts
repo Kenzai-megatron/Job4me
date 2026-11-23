@@ -28,9 +28,21 @@ export const sourceSettings = pgTable(
     cooldownUntil: at('cooldown_until'),
     quotaRemaining: integer('quota_remaining'),
     quotaCheckedAt: at('quota_checked_at'),
+    /** Silent source (decision D4): nothing read without an error, or far less than usual. */
+    alert: text('alert'),
+    alertSince: at('alert_since'),
+    /** What the run read, against the usual volume of the previous runs. */
+    alertRead: integer('alert_read'),
+    alertUsual: integer('alert_usual'),
+    /** The phone was told once per incident, not at every pass. */
+    alertNotifiedAt: at('alert_notified_at'),
   },
   (t) => [
     uniqueIndex('source_setting_user_source_idx').on(t.userId, t.source),
+    check(
+      'source_setting_alert_check',
+      sql`${t.alert} is null or ${t.alert} in ('zero_read', 'collapse')`,
+    ),
     check('source_setting_source_check', sql`${t.source} ~ '^[a-z][a-z0-9_]{1,31}$'`),
     ownerPolicy('source_setting'),
   ],

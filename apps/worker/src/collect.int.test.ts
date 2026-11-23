@@ -7,6 +7,7 @@ import { createTestDatabase, type TestDatabase } from '@job4me/db/testing';
 import { createLogger } from '@job4me/logger';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
+import { judgeRun } from './collect/alerts';
 import { closeStalePasses, type CollectDeps, keywordsFor, runPass } from './collect/pass';
 import { dueSources, isoWeekday, purgeCollection, schedulePasses } from './collect/schedule';
 
@@ -534,6 +535,109 @@ describe('a collection pass', () => {
       status: 'failed',
       errorCode: 'interrupted',
     });
+  });
+});
+
+describe('silent sources (decision D4)', () => {
+  /** A source reading as many ads as the test asks, all of them kept. */
+  function counted(name: string) {
+    const state = { read: 0 };
+    const source = connector({
+      name,
+      run(context) {
+        const offers = Array.from({ length: state.read }, (_, index) => ({
+          externalId: `${name}-${index}`,
+          title: 'Comptable',
+          url: `https://jobs.example.org/${name}/${index}`,
+        }));
+        context.add(offers, state.read);
+        return Promise.resolve();
+      },
+    });
+    return { source, state };
+  }
+
+  async function settingOf(userId: string, source: string) {
+    const [row] = await withUser(handle.db, userId, (tx) =>
+      tx.select().from(schema.sourceSettings).where(eq(schema.sourceSettings.source, source)),
+    );
+    return row;
+  }
+
+  it('raise an alert on nothing read without an error, tell the phone once, then clear it', async () => {
+    const userId = await account();
+    const { source, state } = counted('alpha');
+    const sent: Array<{ userId: string; title: string; body: string; url: string }> = [];
+    const notify = (to: string, message: { title: string; body: string; url: string }) => {
+      sent.push({ userId: to, ...message });
+      return Promise.resolve();
+    };
+    state.read = 0;
+    await runPass(deps([source], { notify }), { userId, passId: await pass(userId, ['alpha']) });
+    expect(await settingOf(userId, 'alpha')).toMatchObject({ alert: 'zero_read', alertRead: 0 });
+    expect(sent).toEqual([
+      expect.objectContaining({ userId, title: 'Source muette', url: '/sources' }),
+    ]);
+    expect(sent[0]!.body).toContain('alpha');
+
+    // Still silent: the same incident, no second notice.
+    const since = (await settingOf(userId, 'alpha'))!.alertSince;
+    await runPass(deps([source], { notify }), { userId, passId: await pass(userId, ['alpha']) });
+    expect(sent).toHaveLength(1);
+    expect((await settingOf(userId, 'alpha'))!.alertSince).toEqual(since);
+
+    // It reads again: the alert goes.
+    state.read = 12;
+    await runPass(deps([source], { notify }), { userId, passId: await pass(userId, ['alpha']) });
+    expect(await settingOf(userId, 'alpha')).toMatchObject({ alert: null, alertSince: null });
+  });
+
+  it('raise an alert when the volume collapses against the previous runs', async () => {
+    const userId = await account();
+    const { source, state } = counted('beta');
+    state.read = 40;
+    for (let index = 0; index < 4; index += 1) {
+      await runPass(deps([source]), { userId, passId: await pass(userId, ['beta']) });
+    }
+    expect((await settingOf(userId, 'beta'))?.alert ?? null).toBeNull();
+    state.read = 3;
+    await runPass(deps([source]), { userId, passId: await pass(userId, ['beta']) });
+    expect(await settingOf(userId, 'beta')).toMatchObject({
+      alert: 'collapse',
+      alertRead: 3,
+      alertUsual: 40,
+    });
+    // Without push keys, the banner alone tells: the incident counts as told.
+    expect((await settingOf(userId, 'beta'))!.alertNotifiedAt).not.toBeNull();
+  });
+
+  it('never judge a test pass, a skipped source or a failed one', async () => {
+    const userId = await account();
+    const { source, state } = counted('gamma');
+    state.read = 0;
+    await runPass(deps([source]), { userId, passId: await pass(userId, ['gamma'], 'test') });
+    expect((await settingOf(userId, 'gamma'))?.alert ?? null).toBeNull();
+    const failing = connector({
+      name: 'pages',
+      run: () => Promise.reject(new Error('the page changed')),
+    });
+    await runPass(deps([failing]), { userId, passId: await pass(userId, ['pages']) });
+    expect((await settingOf(userId, 'pages'))?.alert ?? null).toBeNull();
+  });
+
+  it('judge a run against the median of the previous ones, from three of them', () => {
+    const mute = { history: 6, minUsual: 10, collapseRatio: 0.25 };
+    expect(judgeRun({ status: 'succeeded', readCount: 0 }, [], mute).kind).toBe('zero_read');
+    // A partial run that read nothing failed somewhere: it is in error, not silent.
+    expect(judgeRun({ status: 'partial', readCount: 0 }, [], mute).kind).toBeNull();
+    expect(judgeRun({ status: 'succeeded', readCount: 2 }, [40, 38], mute).kind).toBeNull();
+    expect(judgeRun({ status: 'succeeded', readCount: 9 }, [40, 38, 41], mute)).toEqual({
+      kind: 'collapse',
+      usual: 40,
+    });
+    expect(judgeRun({ status: 'succeeded', readCount: 11 }, [40, 38, 41], mute).kind).toBeNull();
+    // A small source that reads little is not judged on a drop.
+    expect(judgeRun({ status: 'succeeded', readCount: 1 }, [6, 8, 7], mute).kind).toBeNull();
   });
 });
 

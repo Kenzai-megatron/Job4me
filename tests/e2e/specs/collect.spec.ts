@@ -62,6 +62,8 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   const demo = page.getByRole('article').filter({ hasText: 'Démonstration' });
   await expect(demo).toContainText('démonstration, sans requête · chaque jour');
   await expect(demo).toContainText('Pas encore interrogée.');
+  await expect(demo).toContainText('Aucun passage planifié ou manuel sur les 28 derniers jours.');
+  await expect(demo).toContainText('Pertinence (part des offres notées 80 ou plus)');
   await expectAccessible(page);
 
   // The switch holds across a reload.
