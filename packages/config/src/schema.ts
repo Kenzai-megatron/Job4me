@@ -154,6 +154,8 @@ export const settingsSchema = z
       maxPdfPages: z.number().int().min(1).max(1000),
       maxExtractedChars: z.number().int().min(1000),
       maxLinkedinRows: z.number().int().min(1),
+      /** Extracted text and decided proposals are erased this long after the review. */
+      extractedRetentionDays: z.number().int().min(1).max(365),
       extractor: z.object({
         pollIntervalMs: z.number().int().min(100).max(60_000),
         timeoutMs: z.number().int().min(1000).max(600_000),

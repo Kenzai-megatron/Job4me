@@ -63,6 +63,7 @@ export type ImportRun = z.infer<typeof importRunSchema>;
 export const importListSchema = z.object({ items: z.array(importRunSchema) });
 
 export const importIdParamsSchema = z.object({ id: z.uuid() });
+export const proposalParamsSchema = z.object({ id: z.uuid(), proposalId: z.uuid() });
 
 /** One row of a LinkedIn CSV file: allow-listed columns only. */
 export const linkedinRowSchema = z.record(z.string(), z.string());

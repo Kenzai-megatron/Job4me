@@ -111,13 +111,18 @@ async function setIdentity(userId: string, identity: Record<string, unknown>) {
 }
 
 /** An import the extractor has read, as it leaves it. */
-async function extracted(userId: string, text: string): Promise<string> {
+async function extracted(
+  userId: string,
+  text: string,
+  document: Record<string, unknown> = { kind: 'text', text, pages: 1 },
+  kind: 'cv_pdf' | 'linkedin_zip' = 'cv_pdf',
+): Promise<string> {
   return withUser(handle.db, userId, async (tx) => {
     const [upload] = await tx
       .insert(schema.uploads)
       .values({
         userId,
-        kind: 'cv_pdf',
+        kind,
         sizeBytes: 1,
         sha256: '0'.repeat(64),
         storageKey: randomToken(32),
@@ -127,7 +132,6 @@ async function extracted(userId: string, text: string): Promise<string> {
       .insert(schema.importRuns)
       .values({ userId, uploadId: upload!.id })
       .returning({ id: schema.importRuns.id });
-    const document = { kind: 'text', text, pages: 1 };
     await tx
       .update(schema.importRuns)
       .set({
@@ -564,5 +568,51 @@ describe('keyword proposal', () => {
       (1000 * 2 + 10 * 10 + 1000 * unknown.input + 100 * unknown.output) / 1e6,
       6,
     );
+  });
+});
+
+describe('LinkedIn archive and purge', () => {
+  it('maps a LinkedIn archive to proposals without calling the AI', async () => {
+    const userId = await newUser('linkedin');
+    const files = {
+      positions: [{ 'Company Name': 'Démo SA', Title: 'Analyste', 'Started On': 'Mar 2022' }],
+      skills: [{ Name: 'SQL' }],
+    };
+    const runId = await extracted(userId, '', { kind: 'linkedin', files }, 'linkedin_zip');
+    const claude = fakeClaude([]);
+    expect(await structurePending(deps(claude))).toBe(1);
+    expect(claude.sent).toHaveLength(0);
+    expect(await callsOf(userId)).toEqual([]);
+    expect(await runOf(userId, runId)).toMatchObject({ status: 'review', errorCode: null });
+    const proposals = await proposalsOf(userId, runId);
+    expect(proposals.map((proposal) => `${proposal.source}:${proposal.rubric}`)).toEqual([
+      'linkedin:experiences',
+      'linkedin:skills',
+    ]);
+    expect(proposals[0]!.content).toMatchObject({ startMonth: '2022-03', current: true });
+  });
+
+  it('erases the extracted text and the decided proposals after the retention', async () => {
+    const userId = await newUser('purge');
+    const runId = await extracted(userId, 'texte du CV');
+    await structurePending(deps(null));
+    await withUser(handle.db, userId, async (tx) => {
+      await tx
+        .update(schema.importProposals)
+        .set({ decision: 'ignored' })
+        .where(eq(schema.importProposals.importRunId, runId));
+      await tx
+        .update(schema.importRuns)
+        .set({ status: 'applied' })
+        .where(eq(schema.importRuns.id, runId));
+    });
+    const { purgeImports } = await import('./jobs/purge');
+    // Not yet: the retention has not passed.
+    expect(await purgeImports(handle.db, base)).toEqual({ imports: 0 });
+    const later = new Date(Date.now() + (base.imports.extractedRetentionDays + 1) * 86_400_000);
+    expect(await purgeImports(handle.db, base, later)).toEqual({ imports: 1 });
+    const run = await runOf(userId, runId);
+    expect(run.extracted).toBeNull();
+    expect(await proposalsOf(userId, runId)).toEqual([]);
   });
 });

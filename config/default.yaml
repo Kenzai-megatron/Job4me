@@ -101,6 +101,8 @@ imports:
   maxPdfPages: 30
   maxExtractedChars: 200000
   maxLinkedinRows: 5000
+  # Extracted text and decided proposals erased this long after the review (ADR 0010).
+  extractedRetentionDays: 30
   # Isolated extractor: one file at a time, in a thread with its own memory and time budget.
   extractor:
     pollIntervalMs: 2000

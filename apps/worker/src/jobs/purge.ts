@@ -1,5 +1,5 @@
 import type { Settings } from '@job4me/config';
-import { and, type Database, isNotNull, lt, or, schema } from '@job4me/db';
+import { and, type Database, eq, isNotNull, lt, ne, or, schema, withUser } from '@job4me/db';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -44,4 +44,35 @@ export async function purgeExpired(db: Database, settings: Settings, now: Date =
     .returning({ id: schema.sessions.id });
 
   return { challenges: challenges.length, tokens: tokens.length, sessions: sessions.length };
+}
+
+/**
+ * Imports reviewed (or failed) longer ago than the retention of the configuration: their
+ * extracted text and their decided proposals are erased (ADR 0010). What Mehdi accepted lives on
+ * in the profile; the encrypted file stays until the import is deleted.
+ */
+export async function purgeImports(db: Database, settings: Settings, now: Date = new Date()) {
+  const cutoff = new Date(now.getTime() - settings.imports.extractedRetentionDays * DAY_MS);
+  const done = await db
+    .select({ id: schema.importRunsDone.id, userId: schema.importRunsDone.userId })
+    .from(schema.importRunsDone)
+    .where(lt(schema.importRunsDone.updatedAt, cutoff));
+  for (const run of done) {
+    await withUser(db, run.userId, async (tx) => {
+      await tx
+        .delete(schema.importProposals)
+        .where(
+          and(
+            eq(schema.importProposals.importRunId, run.id),
+            eq(schema.importProposals.userId, run.userId),
+            ne(schema.importProposals.decision, 'pending'),
+          ),
+        );
+      await tx
+        .update(schema.importRuns)
+        .set({ extracted: null, updatedAt: now })
+        .where(and(eq(schema.importRuns.id, run.id), eq(schema.importRuns.userId, run.userId)));
+    });
+  }
+  return { imports: done.length };
 }

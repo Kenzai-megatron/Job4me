@@ -47,16 +47,19 @@ function toBody(fields: FieldDef[], values: FormValues): Record<string, unknown>
   return body;
 }
 
-function EntryForm({
+/** The form of one entry; `onSave` replaces the profile route (the import review uses it). */
+export function EntryForm({
   section,
   item,
   experiences,
   onDone,
+  onSave,
 }: {
   section: RubricSection;
   item?: RubricItem;
   experiences: RubricItem[];
   onDone: () => void;
+  onSave?: (body: Record<string, unknown>) => Promise<unknown>;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -72,7 +75,8 @@ function EntryForm({
     setError(null);
     try {
       const body = toBody(section.fields, values);
-      if (item) await api.patch(`/api/profile/${section.slug}/${item.id}`, body);
+      if (onSave) await onSave(body);
+      else if (item) await api.patch(`/api/profile/${section.slug}/${item.id}`, body);
       else await api.post(`/api/profile/${section.slug}`, body);
       await queryClient.invalidateQueries({ queryKey: ['profile'] });
       onDone();

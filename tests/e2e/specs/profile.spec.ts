@@ -78,6 +78,20 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
   await expect(imports.getByRole('alert')).toContainText("Ce fichier n'est pas accepté");
   await expectAccessible(page);
 
+  // Review, on the containers: the name found in the CV, kept field by field.
+  if (stack) {
+    await imports.getByRole('link', { name: 'Relire les propositions' }).first().click();
+    await expect(
+      page.getByRole('heading', { name: "Relecture de l'import", level: 1 }),
+    ).toBeVisible();
+    await expect(page.getByText('Nom complet : Alex Exemple')).toBeVisible();
+    await expectAccessible(page);
+    await page.getByRole('button', { name: 'Garder' }).click();
+    await expect(page.getByText('Tout est relu : votre profil est à jour.')).toBeVisible();
+    await page.getByRole('link', { name: '← Retour au profil' }).click();
+    await expect(identity.getByLabel('Nom complet')).toHaveValue('Alex Exemple');
+  }
+
   // Keywords from the AI: a target job first, then one request queued for the worker.
   const targets = page.locator('#rubric-target-jobs');
   await targets.getByRole('button', { name: 'Ajouter' }).click();

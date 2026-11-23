@@ -16,6 +16,7 @@ import { PlaceholderPage } from './routes/PlaceholderPage';
 import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
 import { AiPage } from './routes/settings/AiPage';
+import { ImportReviewPage } from './routes/profile/ImportReviewPage';
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -75,6 +76,11 @@ const profileRoute = createRoute({
   path: '/profile',
   component: ProfilePage,
 });
+const importReviewRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/profile/imports/$importId',
+  component: ImportReviewPage,
+});
 const securityRoute = createRoute({
   getParentRoute: () => appRoute,
   path: '/settings/security',
@@ -105,6 +111,7 @@ const routeTree = rootRoute.addChildren([
     applicationsRoute,
     documentsRoute,
     profileRoute,
+    importReviewRoute,
     securityRoute,
     aiRoute,
   ]),

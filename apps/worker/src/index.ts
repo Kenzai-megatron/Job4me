@@ -6,7 +6,7 @@ import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
 import { proposeKeywords } from './jobs/keywords';
-import { purgeExpired } from './jobs/purge';
+import { purgeExpired, purgeImports } from './jobs/purge';
 import { sendTestNotification } from './jobs/push-test';
 import { startStructurer } from './jobs/structurer';
 
@@ -54,7 +54,8 @@ async function main(): Promise<void> {
 
   await boss.work(QUEUES.maintenancePurge, async () => {
     const result = await purgeExpired(database.db, config.settings);
-    logger.info(result, 'expired records purged');
+    const imports = await purgeImports(database.db, config.settings);
+    logger.info({ ...result, ...imports }, 'expired records purged');
   });
 
   // Claude API (ADR 0009): without a key, every AI step answers "not configured".

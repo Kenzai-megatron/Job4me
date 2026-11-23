@@ -57,6 +57,7 @@ Les tests cités tournent dans la CI : `unit`, `integration` (PostgreSQL 18), `e
 | 26 | Invention par l'IA | chaque proposition cite mot pour mot le CV ; sinon écartée et comptée ; mois et années contrôlés | `ai.int` : réalisation et compétence inventées absentes des propositions |
 | 27 | Dérive des coûts | plafonds hebdomadaire et total dans la configuration, pire cas vérifié avant l'envoi, repli compté au prix prudent ; une seule demande de mots-clés à la fois, limite de débit ; journal non modifiable par l'application ; plafond mensuel à régler aussi chez Anthropic | `ai.int` : « sends nothing once a cap would be crossed », « logs the fallback model and prices each part » ; `costs` ; `ai.int` (API) : une seule demande en file |
 | 28 | Fuite de la clé d'API | fichier secret de la machine de la maison, vide ailleurs ; remis au seul conteneur `worker` ; journaux du SDK coupés ; `x-api-key` et `authorization` masqués ; gitleaks | `pnpm check:compose` ; `logger` : masquage des en-têtes |
+| 29 | Écriture au profil sans décision de Mehdi | aucune écriture automatique : chaque proposition passe par une décision, une seule fois, et par la validation des rubriques ; appartenance vérifiée (RLS et filtre) ; texte extrait et propositions décidées purgés après le délai de la configuration | `review.int` : « applies each decision to its rubric », « decides once, and only on the signed-in user's own imports » ; `ai.int` : « erases the extracted text and the decided proposals after the retention » |
 
 ## Risques acceptés pour la phase 0
 

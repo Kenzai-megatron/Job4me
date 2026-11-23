@@ -279,7 +279,12 @@ export function IdentitySection() {
       title={t('profile.rubrics.identity')}
       intro={t('profile.intros.identity')}
     >
-      <Loading>{identity.data ? <IdentityForm initial={identity.data} /> : null}</Loading>
+      {/* Read again on arrival: a reviewed import may have changed it since the cache. */}
+      <Loading>
+        {identity.data && identity.isFetchedAfterMount ? (
+          <IdentityForm initial={identity.data} />
+        ) : null}
+      </Loading>
     </ProfileSection>
   );
 }
@@ -293,7 +298,11 @@ export function PracticalSection() {
       title={t('profile.rubrics.practical')}
       intro={t('profile.intros.practical')}
     >
-      <Loading>{profile.data ? <PracticalForm initial={profile.data} /> : null}</Loading>
+      <Loading>
+        {profile.data && profile.isFetchedAfterMount ? (
+          <PracticalForm initial={profile.data} />
+        ) : null}
+      </Loading>
     </ProfileSection>
   );
 }
@@ -307,7 +316,11 @@ export function MotivationsSection() {
       title={t('profile.rubrics.motivations')}
       intro={t('profile.intros.motivations')}
     >
-      <Loading>{profile.data ? <MotivationsForm initial={profile.data} /> : null}</Loading>
+      <Loading>
+        {profile.data && profile.isFetchedAfterMount ? (
+          <MotivationsForm initial={profile.data} />
+        ) : null}
+      </Loading>
     </ProfileSection>
   );
 }
