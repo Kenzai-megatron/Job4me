@@ -19,3 +19,6 @@ Chaque décision structurante de Job4me tient dans une fiche courte : contexte, 
 | [0013](0013-architecture-de-la-collecte.md) | Architecture de la collecte | Acceptée le 23/11/2026 |
 | [0014](0014-client-http-poli-et-mode-dusage.md) | Client HTTP poli et mode d'usage | Acceptée le 23/11/2026 |
 | [0015](0015-conservation-des-offres.md) | Conservation des offres collectées et des journaux | Acceptée le 23/11/2026 |
+| [0016](0016-annonce-unique-et-dedoublonnage.md) | Annonce unique et dédoublonnage | Acceptée le 23/11/2026 |
+| [0017](0017-geographie-geonames.md) | Géographie : localités GeoNames et distances | Acceptée le 23/11/2026 |
+| [0018](0018-notation-des-offres.md) | Notation des offres : sans IA par défaut, Claude en option | Acceptée le 23/11/2026 |
