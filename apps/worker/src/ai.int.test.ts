@@ -454,6 +454,9 @@ describe('keyword proposal', () => {
         .insert(schema.targetJobs)
         .values({ userId, title: 'Analyste de données', position: 0 });
       await tx.insert(schema.skills).values({ userId, name: 'SQL' });
+      await tx
+        .insert(schema.experiences)
+        .values({ userId, title: 'Gestionnaire de paie', employer: 'Ailleurs SA' });
       await tx.insert(schema.searchKeywords).values({
         userId,
         keyword: 'data analyst',
@@ -484,7 +487,10 @@ describe('keyword proposal', () => {
     const request = claude.sent[0]!;
     expect(request.body).toMatchObject({ model: 'claude-sonnet-5-5', fallbacks: 'default' });
     expect(request.headers['anthropic-beta']).toContain('server-side-fallback-2026-07-01');
-    expect(JSON.stringify(request.body)).not.toMatch(/Alex|alex@example/);
+    // Only target jobs, skills, sectors and languages: no identity, no work history.
+    expect(JSON.stringify(request.body)).not.toMatch(
+      /Alex|alex@example|Gestionnaire de paie|Ailleurs SA/,
+    );
 
     const keywords = await withUser(handle.db, userId, (tx) =>
       tx

@@ -4,11 +4,11 @@ Application web (PWA) de recherche d'emploi pour un seul utilisateur, sur le mar
 
 - Spécification : [`docs/SPEC.md`](docs/SPEC.md)
 - Notes sur les sources d'offres : [`docs/SOURCES.md`](docs/SOURCES.md)
-- Plan de la phase en cours : [`docs/plans/phase-0.md`](docs/plans/phase-0.md)
+- Plans : [phase 0](docs/plans/phase-0.md), [phase 1](docs/plans/phase-1.md), [phase 2, à valider](docs/plans/phase-2.md)
 - Décisions d'architecture : [`docs/adr`](docs/adr/README.md)
 - Installation sur la machine de la maison : [`docs/guide/installation.md`](docs/guide/installation.md)
-- Démonstration de la phase 0 : [`docs/guide/demonstration-phase-0.md`](docs/guide/demonstration-phase-0.md)
-- Sécurité : [modèle de menaces](docs/security/threat-model.md) et [revue de la phase 0](docs/security/review-phase-0.md)
+- Démonstrations : [phase 0](docs/guide/demonstration-phase-0.md), [phase 1](docs/guide/demonstration-phase-1.md)
+- Sécurité : [modèle de menaces](docs/security/threat-model.md), revues des [phase 0](docs/security/review-phase-0.md) et [phase 1](docs/security/review-phase-1.md)
 - Règles de travail : [`CLAUDE.md`](CLAUDE.md)
 
 ## Prérequis

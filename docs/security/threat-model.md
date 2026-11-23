@@ -68,9 +68,20 @@ Les tests cités tournent dans la CI : `unit`, `integration` (PostgreSQL 18), `e
 - **Abonnement push déplaçable** : un point de terminaison push passe au dernier compte qui l'enregistre. Il faut le connaître, et c'est un secret détenu par le navigateur.
 - **Avis modéré sur esbuild ≤ 0.24.2**, arrivé par `drizzle-kit` en développement seulement : il concerne le serveur de développement d'esbuild, que le projet n'utilise pas.
 
-## À compléter avant la phase 1 (collecte)
+## Risques acceptés pour la phase 1
 
-- **Contenu collecté non fiable** : texte des offres affiché comme texte, jamais comme HTML ; liens filtrés (`https:` seulement) ; aucune image distante sans proxy.
+Détail et raisons dans la [revue de sécurité de la phase 1](review-phase-1.md), constats 10 à 13.
+
+- **Plafonds de l'IA non atomiques** : deux appels simultanés d'un même compte pourraient chacun passer le contrôle ; une seule boucle de structuration et une seule demande de mots-clés à la fois bornent l'écart au pire cas d'un appel.
+- **Vues inter-comptes** `import_run_ready` et `import_run_done` : identifiants d'imports et de comptes seulement, sans contenu.
+- **Extracteur compromis** : il pourrait marquer un import en échec ou écrire un faux texte extrait ; tout passe par la relecture.
+- **Caviardage imparfait** : un nom de tiers cité hors de la rubrique « Références » peut partir chez Anthropic.
+
+## À compléter avant la phase 2 (collecte)
+
+Le [plan de la phase 2](../plans/phase-2.md), section 9, détaille menaces, contrôles et tests.
+
+- **Contenu collecté non fiable** : texte des offres affiché comme texte, jamais comme HTML ; liens filtrés (`http:` et `https:` seulement) ; aucune image distante sans proxy.
 - **Client de collecte unique** : cadence de particulier, pauses, arrêt net au premier 403 ou 429, interrupteur par source, aucune redirection hors de la liste des hôtes de la source. La règle Semgrep `job4me-no-direct-http` impose ce passage obligé.
 - **Données personnelles des offres** (noms et adresses de recruteurs) : durées de conservation dans la configuration.
-- **RLS PostgreSQL** sur les tables métier, en plus du filtre `user_id`.
+- **Suppression d'un import** et de son fichier chiffré (revue de la phase 1, constat 14).

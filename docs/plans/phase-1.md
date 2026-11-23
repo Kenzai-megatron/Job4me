@@ -1,6 +1,6 @@
 # Phase 1 : profil et imports, plan détaillé
 
-Proposition du 22/11/2026, **validée par Mehdi le 22/11/2026** avec les options recommandées de la section 12. À sa demande, la démonstration de la phase 0 est sautée pour gagner du temps : les vérifications sur iPhone (Face ID, installation, notifications) se feront à sa première installation.
+Proposition du 22/11/2026, **validée par Mehdi le 22/11/2026** avec les options recommandées de la section 12. **Code livré le 23/11/2026** (lots 0 à 7) ; reste la [démonstration](../guide/demonstration-phase-1.md) sur la machine de la maison, et la [revue de sécurité](../security/review-phase-1.md) liste ce qui y sera vérifié. À sa demande, la démonstration de la phase 0 est sautée pour gagner du temps : les vérifications sur iPhone (Face ID, installation, notifications) se feront à sa première installation.
 
 ## 1. Résumé
 
