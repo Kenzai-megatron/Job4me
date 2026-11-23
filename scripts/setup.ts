@@ -99,6 +99,8 @@ const lines = [
   `JOB4ME_FILES_DIR=${FILES_DIR}`,
   `JOB4ME_VAPID_PUBLIC_KEY_FILE=${secrets.vapid_public_key}`,
   `JOB4ME_VAPID_PRIVATE_KEY_FILE=${secrets.vapid_private_key}`,
+  // The demo source of the collection (no request at all): development only.
+  ...(mode === 'dev' ? ['JOB4ME_COLLECT_DEMO_SOURCE=true'] : []),
 ];
 
 const rewrite = !existsSync(ENV_FILE) || values.force;

@@ -1,10 +1,18 @@
+import { assertSourceSettings, availableConnectors } from '@job4me/collect';
 import { loadConfig, loadSecrets } from '@job4me/config';
-import { type KeywordsProposeJob, type PushTestJob, QUEUES } from '@job4me/contracts';
+import {
+  type CollectPassJob,
+  type KeywordsProposeJob,
+  type PushTestJob,
+  QUEUES,
+} from '@job4me/contracts';
 import { connect, queueOptions } from '@job4me/db';
 import { createLogger } from '@job4me/logger';
 import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
+import { runPass } from './collect/pass';
+import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
 import { sendTestNotification } from './jobs/push-test';
@@ -12,8 +20,13 @@ import { startStructurer } from './jobs/structurer';
 
 // The worker runs background jobs from the PostgreSQL queue (SPEC section 10).
 
-async function ensureQueue(boss: PgBoss, name: string) {
-  if (!(await boss.getQueue(name))) await boss.createQueue(name);
+async function ensureQueue(
+  boss: PgBoss,
+  name: string,
+  options?: { expireInSeconds: number; retryLimit: number },
+) {
+  if (!(await boss.getQueue(name))) await boss.createQueue(name, options);
+  else if (options) await boss.updateQueue(name, options);
 }
 
 async function main(): Promise<void> {
@@ -31,6 +44,39 @@ async function main(): Promise<void> {
   await boss.schedule(QUEUES.maintenancePurge, config.settings.worker.purgeCron, null, {
     tz: 'Europe/Brussels',
   });
+
+  // Collection (ADR 0013): a pass is never retried by the queue (a private person's pace), and
+  // may run as long as its budget before the queue considers it lost.
+  assertSourceSettings(config.settings);
+  const connectors = availableConnectors(config.settings);
+  const { collect } = config.settings;
+  await ensureQueue(boss, QUEUES.collectSchedule);
+  await ensureQueue(boss, QUEUES.collectPass, {
+    expireInSeconds: Math.ceil(collect.staleAfterMs / 1000),
+    retryLimit: 0,
+  });
+  await boss.schedule(QUEUES.collectSchedule, collect.schedule.cron, null, {
+    tz: collect.schedule.timeZone,
+  });
+  const collectDeps = {
+    db: database.db,
+    settings: config.settings,
+    logger,
+    connectors,
+    // Adzuna and SerpApi keys arrive with their connectors (phase 2, lot 2; decision D2).
+    secrets: {},
+  };
+  await boss.work(QUEUES.collectSchedule, async () => {
+    await schedulePasses({
+      ...collectDeps,
+      queue: { send: (name, data) => boss.send(name, data) },
+    });
+  });
+  // One pass at a time (localConcurrency 1): never two calls to the same site at once.
+  await boss.work<CollectPassJob>(QUEUES.collectPass, async (jobs) => {
+    for (const job of jobs) await runPass(collectDeps, job.data);
+  });
+  logger.info({ sources: connectors.map((connector) => connector.name) }, 'collection ready');
 
   const vapid =
     secrets.vapidPublicKey && secrets.vapidPrivateKey
@@ -55,7 +101,8 @@ async function main(): Promise<void> {
   await boss.work(QUEUES.maintenancePurge, async () => {
     const result = await purgeExpired(database.db, config.settings);
     const imports = await purgeImports(database.db, config.settings);
-    logger.info({ ...result, ...imports }, 'expired records purged');
+    const collected = await purgeCollection(database.db, config.settings);
+    logger.info({ ...result, ...imports, ...collected }, 'expired records purged');
   });
 
   // Claude API (ADR 0009): without a key, every AI step answers "not configured".

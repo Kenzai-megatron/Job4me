@@ -30,6 +30,8 @@ export const errorCodes = [
   'file_macros',
   'keywords_need_target_job',
   'already_decided',
+  'source_unknown',
+  'source_commercial_mode',
   'database_unavailable',
   'migrations_pending',
   'internal_error',

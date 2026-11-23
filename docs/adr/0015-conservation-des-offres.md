@@ -17,3 +17,8 @@ Les annonces collectées contiennent parfois des données de tiers (nom, e-mail 
 
 - Une offre encore publiée et revue garde sa date de première vue ; la purge ne touche que ce qui a disparu des sources.
 - La phase 3 rattachera aux offres des notes et des liens de candidature : leur durée de vie suivra celle de l'offre, ou sera fixée par une nouvelle ADR.
+
+## Mise en œuvre (lot 1, 23/11/2026)
+
+- La purge horaire du worker supprime, compte par compte sous RLS, les offres dont `last_seen_at` dépasse `collect.offers.retentionDays` (90) et les passages plus vieux que `collect.runs.retentionDays` (365), avec leurs journaux par source.
+- Une offre ajoutée à la main suit la même règle : 90 jours après son ajout. Les candidatures de la phase 5 garderont les offres qu'elles citent.

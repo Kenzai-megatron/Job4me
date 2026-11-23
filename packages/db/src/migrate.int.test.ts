@@ -32,6 +32,7 @@ describe('migrations', () => {
       'auth_challenge',
       'auth_throttle',
       'certification',
+      'collection_pass',
       'education',
       'elimination_rule',
       'excluded_company',
@@ -39,6 +40,7 @@ describe('migrations', () => {
       'fact',
       'import_proposal',
       'import_run',
+      'job_offer',
       'keyword_proposal_run',
       'language_level',
       'one_time_token',
@@ -53,6 +55,8 @@ describe('migrations', () => {
       'sector_preference',
       'session',
       'skill',
+      'source_run',
+      'source_setting',
       'target_job',
       'title_filter_rule',
       'totp_secret',
@@ -80,6 +84,10 @@ describe('migrations', () => {
       'keyword_proposal_run',
       'saved_offer',
       'past_application',
+      'source_setting',
+      'collection_pass',
+      'source_run',
+      'job_offer',
     ]) {
       expect(guarded).toContain(table);
     }

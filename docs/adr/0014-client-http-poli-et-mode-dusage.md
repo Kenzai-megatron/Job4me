@@ -20,3 +20,12 @@ Statut : acceptée le 23/11/2026.
 
 - Une source bloquée se voit au journal (« arrêtée sur 429 »), jamais comme une source vide.
 - Ouvrir un jour Job4me à d'autres coupe d'office LinkedIn « invité » et les pages publiques : il faudra des sources sous licence.
+
+## Mise en œuvre (lot 1, 23/11/2026)
+
+- `PoliteClient` (`packages/collect/src/http.ts`), seul fichier autorisé à appeler `fetch` par la règle Semgrep. HTTPS seulement, hôtes exacts, port par défaut, aucun identifiant dans l'URL ; redirections suivies à la main (3 au plus, configuration) et revérifiées une à une ; une redirection d'un POST devient un GET.
+- En-têtes : `User-Agent`, `Accept`, `Accept-Language` de la configuration ; un connecteur ne peut fixer ni `Authorization`, ni `Cookie`, ni `User-Agent`, ni `Accept-Language`.
+- Nouvel essai seulement après une erreur réseau, un délai dépassé ou un 5xx, avec attente doublée à chaque fois ; jamais après un 4xx. 403 et 429 lèvent `blocked` : la source s'arrête pour le passage ; `cooldownHoursAfterBlock` (24 pour LinkedIn) la saute ensuite avec la raison « cooldown ».
+- Corps lu en flux et coupé au-delà de `maxResponseBytes`, mesuré après décompression ; délai par requête ; budget de la source qui interrompt aussi les pauses.
+- Mode commercial : l'API refuse d'activer une source à usage personnel (`source_commercial_mode`), l'orchestrateur la saute (« commercial_mode ») quel que soit son interrupteur.
+- Clés : remises au seul connecteur qui les déclare, absentes = « sautée, clé absente » ; `maskUrl` masque aussi `app_id`.

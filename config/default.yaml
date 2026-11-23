@@ -148,6 +148,53 @@ ai:
   # A fallback model is not known in advance: priced like an Opus-class model, to stay cautious.
   unknownModelPrice: { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 }
 
+# Job offer collection (phase 2 plan; ADR 0013 to 0015). Rules of docs/SOURCES.md, section 0:
+# a private person's pace, pauses, a full stop at the first 403 or 429, one switch per source.
+collect:
+  # personal, or commercial: LinkedIn guest and the public pages then switch off (ADR 0014).
+  usageMode: personal
+  # One pass a day at 7:10 in Brussels; each source runs on its own days (decision D3).
+  schedule:
+    cron: '10 7 * * *'
+    timeZone: Europe/Brussels
+  passBudgetMs: 900000 # 15 minutes for the whole pass
+  # A pass still running after this long is marked interrupted (the worker stopped).
+  staleAfterMs: 1800000
+  http:
+    # Ordinary browser headers (docs/SOURCES.md, section 0): update the version now and then.
+    userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+    acceptLanguage: fr-BE,fr;q=0.9,nl;q=0.8,en;q=0.7
+    timeoutMs: 20000
+    maxResponseBytes: 5242880 # 5 MB
+    maxRedirects: 3
+    # Wait before the first retry of an API, doubled at each one.
+    retryBaseMs: 2000
+  offers:
+    maxDescriptionChars: 1200
+    # Decision D5 (ADR 0015): an offer not seen for 90 days is deleted.
+    retentionDays: 90
+    listLimit: 50
+  runs:
+    retentionDays: 365
+    perSource: 8
+  manual:
+    maxTextChars: 20000
+    addsPerHour: 30
+  test:
+    requestsPerHour: 6
+  # Development and end-to-end tests only (JOB4ME_COLLECT_DEMO_SOURCE): offers made up, no request.
+  demoSource: false
+  # One entry per connector. weekdays: 1 = Monday; pauses and budgets of docs/SOURCES.md.
+  sources:
+    demo:
+      weekdays: [1, 2, 3, 4, 5, 6, 7]
+      pauseMs: 0
+      budgetMs: 60000
+      retries: 0
+      maxPages: 1
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+
 # Encrypted backups (plan, section 9; ADR 0012): pnpm stack:backup, pnpm stack:restore-test.
 backups:
   keepDaily: 14

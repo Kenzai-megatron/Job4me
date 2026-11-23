@@ -1,3 +1,4 @@
+import { assertSourceSettings } from '@job4me/collect';
 import { ConfigError, loadConfig, loadSecrets } from '@job4me/config';
 import { connect, queueOptions } from '@job4me/db';
 import { PgBoss } from 'pg-boss';
@@ -8,6 +9,7 @@ import { deriveKeys } from './context';
 
 async function main(): Promise<void> {
   const config = loadConfig();
+  assertSourceSettings(config.settings);
   const secrets = loadSecrets();
   if (!secrets.importKey) {
     throw new ConfigError(

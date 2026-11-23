@@ -17,6 +17,8 @@ import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
 import { AiPage } from './routes/settings/AiPage';
 import { ImportReviewPage } from './routes/profile/ImportReviewPage';
+import { OffersPage } from './routes/offers/OffersPage';
+import { SourcesPage } from './routes/sources/SourcesPage';
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -59,7 +61,12 @@ const homeRoute = createRoute({ getParentRoute: () => appRoute, path: '/', compo
 const offersRoute = createRoute({
   getParentRoute: () => appRoute,
   path: '/offers',
-  component: () => <PlaceholderPage section="offers" phase={2} />,
+  component: OffersPage,
+});
+const sourcesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/sources',
+  component: SourcesPage,
 });
 const applicationsRoute = createRoute({
   getParentRoute: () => appRoute,
@@ -108,6 +115,7 @@ const routeTree = rootRoute.addChildren([
   appRoute.addChildren([
     homeRoute,
     offersRoute,
+    sourcesRoute,
     applicationsRoute,
     documentsRoute,
     profileRoute,

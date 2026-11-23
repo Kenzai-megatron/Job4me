@@ -28,6 +28,8 @@ export type {
   AiCall,
   AuditEntry,
   AuthChallenge,
+  CollectionPassRow,
+  JobOfferRow,
   ImportProposal,
   ImportRunRow,
   KeywordProposalRun,
@@ -35,6 +37,8 @@ export type {
   Profile,
   PushSubscription,
   Session,
+  SourceRunRow,
+  SourceSettingRow,
   Upload,
   User,
 } from './schema';

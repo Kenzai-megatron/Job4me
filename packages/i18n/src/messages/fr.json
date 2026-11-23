@@ -73,7 +73,6 @@
   "placeholder": {
     "comingInPhase": "Arrive en phase {{phase}}",
     "home": "Le résumé de la semaine : nouvelles offres à 80 ou plus, actions à faire, envois programmés et quotas.",
-    "offers": "Les offres collectées, notées sur 100 et classées, avec leur explication.",
     "applications": "Le suivi de chaque candidature, des relances aux entretiens.",
     "documents": "Vos CV maîtres et les dossiers adaptés à chaque offre, en PDF et en DOCX.",
     "profile": "Votre profil, vos mots-clés et l'import de votre CV et de votre archive LinkedIn."
@@ -240,7 +239,9 @@
     "file_protected": "Ce fichier est protégé par un mot de passe : enregistrez-en une copie sans protection.",
     "file_macros": "Les documents Word à macros ne sont pas acceptés : enregistrez-le en .docx.",
     "keywords_need_target_job": "Ajoutez d'abord au moins un métier visé.",
-    "already_decided": "Cette proposition a déjà été traitée."
+    "already_decided": "Cette proposition a déjà été traitée.",
+    "source_unknown": "Cette source n'existe pas sur ce serveur.",
+    "source_commercial_mode": "En mode commercial, les sources réservées à l'usage personnel restent coupées."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",
@@ -562,6 +563,116 @@
       "accepted": "Gardée",
       "corrected": "Corrigée",
       "ignored": "Écartée"
+    }
+  },
+  "sources": {
+    "title": "Sources",
+    "intro": "Chaque source est interrogée à un rythme de particulier, avec des pauses, et s'arrête net au premier refus du site.",
+    "usageCommercial": "Mode commercial : LinkedIn « invité » et les pages publiques sont coupés.",
+    "testTitle": "Tester les sources",
+    "test": "Tester les sources",
+    "testing": "Test en cours…",
+    "testHint": "Un mot-clé et une page par source : vérifie que chacune répond, sans enregistrer d'offre.",
+    "testWaiting": "En attente du worker…",
+    "testDone": "Dernier test : {{date}}",
+    "testInterrupted": "Le test s'est interrompu (le worker s'est arrêté). Relancez-le.",
+    "empty": "Aucune source n'est disponible sur ce serveur pour l'instant.",
+    "enabled": "Activée",
+    "locked": "Coupée en mode commercial",
+    "personalUse": "usage personnel seulement",
+    "everyDay": "chaque jour",
+    "days": "{{days}}",
+    "cooldown": "En pause jusqu'au {{date}}, après un refus du site.",
+    "never": "Pas encore interrogée.",
+    "counts": "{{read}} lues · {{kept}} retenues · {{fresh}} inédites",
+    "duration": "{{seconds}} s",
+    "httpStatus": "{{error}} (HTTP {{status}})",
+    "names": {
+      "demo": "Démonstration",
+      "forem": "Forem",
+      "actiris": "Actiris",
+      "adzuna": "Adzuna",
+      "google_jobs": "Google Jobs",
+      "stepstone": "StepStone",
+      "jobijoba": "Jobijoba",
+      "jobrapido": "Jobrapido",
+      "talent": "Talent.com",
+      "linkedin": "LinkedIn « invité »",
+      "manual": "Ajout manuel"
+    },
+    "accesses": {
+      "open_data": "open data",
+      "api": "API",
+      "public_page": "page publique",
+      "linkedin_guest": "page publique de LinkedIn",
+      "demo": "démonstration, sans requête"
+    },
+    "statuses": {
+      "running": "En cours",
+      "succeeded": "Réussie",
+      "partial": "Partielle",
+      "failed": "En échec",
+      "skipped": "Sautée"
+    },
+    "skipReasons": {
+      "disabled": "interrupteur coupé",
+      "commercial_mode": "coupée en mode commercial",
+      "cooldown": "en pause après un refus du site",
+      "missing_key": "clé absente",
+      "no_keywords": "aucun mot-clé validé",
+      "quota": "quota épuisé",
+      "pass_budget": "temps du passage épuisé"
+    },
+    "errorCodes": {
+      "blocked": "refusée par le site",
+      "http_error": "erreur du site",
+      "network_error": "site injoignable",
+      "timeout": "délai dépassé",
+      "too_large": "réponse trop volumineuse",
+      "invalid_response": "réponse inattendue (le site a peut-être changé)",
+      "host_not_allowed": "redirection vers un site non prévu",
+      "budget_exceeded": "temps de la source épuisé",
+      "connector_error": "page illisible (le site a peut-être changé)",
+      "interrupted": "interrompue"
+    },
+    "triggers": {
+      "scheduled": "passage planifié",
+      "manual": "passage manuel",
+      "test": "test"
+    },
+    "weekdays": {
+      "1": "lundi",
+      "2": "mardi",
+      "3": "mercredi",
+      "4": "jeudi",
+      "5": "vendredi",
+      "6": "samedi",
+      "7": "dimanche"
+    }
+  },
+  "offers": {
+    "title": "Offres",
+    "intro": "Les offres collectées, la plus récente d'abord. La notation et le tri par pertinence arrivent en phase 3.",
+    "sources": "Sources",
+    "list": "Offres collectées",
+    "filter": "Source",
+    "allSources": "Toutes les sources",
+    "empty": "Aucune offre pour l'instant : les passages planifiés en apporteront, ou ajoutez-en une.",
+    "more": "Afficher plus",
+    "open": "Voir l'annonce",
+    "posted": "publiée le {{date}}",
+    "seen": "vue le {{date}}",
+    "add": {
+      "open": "Ajouter une offre",
+      "title": "Ajouter une offre",
+      "hint": "Collez le lien et le texte de l'annonce. Job4me enregistre le lien sans jamais l'ouvrir.",
+      "titleField": "Intitulé",
+      "url": "Lien de l'annonce",
+      "company": "Employeur",
+      "location": "Lieu",
+      "text": "Texte de l'annonce",
+      "submit": "Ajouter",
+      "added": "Offre ajoutée."
     }
   }
 }

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.8.0",
+    "@job4me/collect": "workspace:*",
     "@job4me/config": "workspace:*",
     "@job4me/contracts": "workspace:*",
     "@job4me/db": "workspace:*",

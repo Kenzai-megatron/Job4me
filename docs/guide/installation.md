@@ -130,8 +130,13 @@ Pour te connecter aussi depuis ton PC : sur la page de connexion, choisis la pas
 | Sauvegarder tout de suite | `pnpm stack:backup` (chaque nuit sinon, section 8) |
 | Derniers événements de sécurité | `pnpm stack:cli audit:tail --limit 50` |
 | Fermer toutes les sessions | `pnpm stack:cli sessions:revoke-all --email <ton-adresse>` |
+| Tester les sources (un mot-clé, une page chacune, aucune offre enregistrée) | `pnpm stack:cli sources:test`, ou une seule : `pnpm stack:cli sources:test --source <nom>` ; aussi depuis l'écran **Sources** |
+| Lancer un passage de collecte sans attendre 7 h 10 | `pnpm stack:cli sources:run` |
+| Journal de la collecte (offres lues, retenues, inédites par source) | écran **Sources**, ou `pnpm stack:logs worker` (lignes `source run`) |
 
 Les conteneurs redémarrent seuls avec la machine (Docker démarré au boot). Tailscale garde sa configuration `serve`.
+
+La collecte tourne d'elle-même chaque matin à 7 h 10 : les API et l'open data chaque jour, les pages publiques et LinkedIn le mardi et le vendredi (configuration, `collect`). Une source coupée par son interrupteur, en pause après un refus du site ou sans clé apparaît « sautée » avec sa raison, jamais « 0 offre ». Les commandes `sources:*` choisissent seules le compte quand il n'y en a qu'un ; sinon, ajoute `--email <ton-adresse>`.
 
 ## 8. Sauvegardes
 

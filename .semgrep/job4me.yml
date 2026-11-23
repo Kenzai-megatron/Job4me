@@ -6,10 +6,18 @@ rules:
     severity: ERROR
     message: >-
       Outbound HTTP from the API, the worker and the packages must go through the polite
-      collection client (CLAUDE.md: personal pace, pauses, stop at the first 403 or 429, one
-      switch per source). Phase 0 has no outbound call besides Web Push.
+      collection client, PoliteClient in packages/collect/src/http.ts (CLAUDE.md, ADR 0014:
+      declared hosts, personal pace, pauses, stop at the first 403 or 429, one switch per
+      source). Web Push and the Claude SDK bring their own client.
     paths:
-      exclude: ['apps/web/**', 'tests/**', 'scripts/**', '**/*.test.ts', '**/testing/**']
+      exclude:
+        - 'apps/web/**'
+        - 'tests/**'
+        - 'scripts/**'
+        - '**/*.test.ts'
+        - '**/testing/**'
+        # The polite client itself: the only place allowed to call fetch.
+        - 'packages/collect/src/http.ts'
     pattern-either:
       - pattern: fetch(...)
       - pattern: globalThis.fetch(...)

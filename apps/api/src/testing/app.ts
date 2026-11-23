@@ -14,6 +14,7 @@ export interface TestAppOptions extends BuildOptions {
   webDistDir?: string;
   now?: () => Date;
   queue?: AppDeps['queue'];
+  connectors?: AppDeps['connectors'];
 }
 
 /** A fully wired API on a throwaway, migrated database (integration tests only). */
@@ -33,6 +34,7 @@ export async function createTestApp(options: TestAppOptions = {}) {
     ...(options.webDistDir ? { webDistDir: options.webDistDir } : {}),
     ...(options.now ? { now: options.now } : {}),
     ...(options.queue ? { queue: options.queue } : {}),
+    ...(options.connectors ? { connectors: options.connectors } : {}),
   };
   const app = await buildApp(deps, options);
   await app.ready();

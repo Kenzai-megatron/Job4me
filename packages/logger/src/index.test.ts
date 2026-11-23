@@ -6,7 +6,9 @@ describe('maskUrl', () => {
   it('masks API keys carried in query strings', () => {
     expect(
       maskUrl('https://api.adzuna.com/v1/api/jobs/be/search/1?app_id=1&app_key=abc&what=x'),
-    ).toBe('https://api.adzuna.com/v1/api/jobs/be/search/1?app_id=1&app_key=[redacted]&what=x');
+    ).toBe(
+      'https://api.adzuna.com/v1/api/jobs/be/search/1?app_id=[redacted]&app_key=[redacted]&what=x',
+    );
     expect(maskUrl('/search.json?engine=google_jobs&api_key=s3cr3t')).toBe(
       '/search.json?engine=google_jobs&api_key=[redacted]',
     );

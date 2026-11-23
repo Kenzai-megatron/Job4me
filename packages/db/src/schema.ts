@@ -258,3 +258,6 @@ export * from './import-schema';
 
 // Phase 1 AI: call log, import proposals, keyword runs (ADR 0009).
 export * from './ai-schema';
+
+// Phase 2 collection: sources, passes, runs and offers (ADR 0013 to 0015).
+export * from './collect-schema';

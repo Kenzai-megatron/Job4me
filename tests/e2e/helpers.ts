@@ -13,6 +13,8 @@ export interface State {
   password: string;
   /** A second account, enrolled by the profile specs. */
   profileLink: string;
+  /** A third one, enrolled by the collection specs. */
+  collectLink: string;
 }
 
 export const state = (): State => JSON.parse(readFileSync(STATE_FILE, 'utf8')) as State;

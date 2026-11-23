@@ -1,10 +1,12 @@
 import { parseArgs } from 'node:util';
 import { type Config, loadConfig, loadSecrets } from '@job4me/config';
-import { connect } from '@job4me/db';
+import { connect, queueOptions } from '@job4me/db';
+import { PgBoss } from 'pg-boss';
 import { parseMasterKey } from '@job4me/security';
 import { PasswordTooWeakError } from '../modules/auth/users';
 import { auditTail, CliError, sessionsRevokeAll, userCreate, userEnrollLink } from './commands';
 import { sendTestMail } from './mail';
+import { sourcesPass } from './sources';
 
 // `pnpm job4me <command>`: administration from the machine itself, the root of trust (ADR 0003).
 
@@ -16,6 +18,8 @@ const HELP = `Utilisation : pnpm job4me <commande> [options]
   audit:tail [--limit 20]                      derniers événements du journal d'audit
   config:check                                 vérifie la configuration et les secrets
   mail:test --to <adresse>                     envoie un mail de test (Mailpit en développement)
+  sources:test [--source <nom>]… [--email …]   teste les sources : un mot-clé, une page chacune
+  sources:run [--source <nom>]… [--email …]    lance un passage de collecte complet
 
 Le mot de passe est demandé sans écho ; hors terminal, il est lu sur l'entrée standard.`;
 
@@ -94,6 +98,7 @@ async function main(): Promise<void> {
       name: { type: 'string' },
       to: { type: 'string' },
       limit: { type: 'string', default: '20' },
+      source: { type: 'string', multiple: true },
     },
     allowPositionals: false,
   });
@@ -159,6 +164,29 @@ async function main(): Promise<void> {
           console.log(
             `${row.occurredAt.toISOString()}  ${row.outcome.padEnd(7)}  ${row.actorType.padEnd(6)}  ${row.action}  ${JSON.stringify(row.metadata)}`,
           );
+        }
+        break;
+      }
+      case 'sources:test':
+      case 'sources:run': {
+        // The worker runs the pass; the command line only queues it and follows it.
+        const boss = new PgBoss({
+          ...queueOptions(secrets.databaseUrl),
+          supervise: false,
+          schedule: false,
+          max: 1,
+        });
+        await boss.start();
+        try {
+          const pass = await sourcesPass(database.db, config, {
+            trigger: command === 'sources:test' ? 'test' : 'manual',
+            email: values.email,
+            sources: values.source,
+            queue: boss,
+          });
+          if (pass.runs.some((run) => run.status === 'failed')) process.exitCode = 2;
+        } finally {
+          await boss.stop({ graceful: false });
         }
         break;
       }

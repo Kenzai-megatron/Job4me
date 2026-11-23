@@ -5,6 +5,7 @@ export type { Logger } from 'pino';
 /** Query parameters whose values never reach a log (SPEC section 11, SOURCES section 0). */
 const SENSITIVE_PARAMS = new Set([
   'api_key',
+  'app_id',
   'app_key',
   'apikey',
   'key',

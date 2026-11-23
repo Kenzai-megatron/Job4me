@@ -1,4 +1,11 @@
-import { errorCodes } from '@job4me/contracts';
+import {
+  collectErrorCodes,
+  errorCodes,
+  passTriggers,
+  runStatuses,
+  skipReasons,
+  sourceAccesses,
+} from '@job4me/contracts';
 import { describe, expect, it } from 'vitest';
 import { formatDate, formatDateTime, formatEuros, formatNumber, resources } from './index';
 
@@ -15,6 +22,18 @@ const french = keys(resources.fr.translation);
 describe('translation files', () => {
   it('translate every error code the API can return', () => {
     for (const code of errorCodes) expect(french).toContain(`errors.${code}`);
+  });
+
+  it('name every status, skip reason, error and access of a source run', () => {
+    const expected = [
+      ...runStatuses.map((value) => `sources.statuses.${value}`),
+      ...skipReasons.map((value) => `sources.skipReasons.${value}`),
+      ...collectErrorCodes.map((value) => `sources.errorCodes.${value}`),
+      ...sourceAccesses.map((value) => `sources.accesses.${value}`),
+      ...passTriggers.map((value) => `sources.triggers.${value}`),
+      ...[1, 2, 3, 4, 5, 6, 7].map((day) => `sources.weekdays.${day}`),
+    ];
+    for (const key of expected) expect(french).toContain(key);
   });
 
   it('only hold keys that exist in French (nl and en fall back to French)', () => {
