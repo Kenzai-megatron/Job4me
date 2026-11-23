@@ -43,10 +43,12 @@ describe('migrations', () => {
       'language_level',
       'one_time_token',
       'passkey',
+      'past_application',
       'profile',
       'profile_identity',
       'push_subscription',
       'recovery_code',
+      'saved_offer',
       'search_keyword',
       'sector_preference',
       'session',
@@ -76,6 +78,8 @@ describe('migrations', () => {
       'import_proposal',
       'ai_call',
       'keyword_proposal_run',
+      'saved_offer',
+      'past_application',
     ]) {
       expect(guarded).toContain(table);
     }
@@ -107,6 +111,10 @@ describe('views', () => {
     );
     expect(rows.map((row) => row.column_name)).toEqual(['id', 'user_id', 'status', 'updated_at']);
     await expect(app.query('select count(*) from import_run_ready')).resolves.toBeTruthy();
+    const done = await owner.query<{ column_name: string }>(
+      "select column_name from information_schema.columns where table_name = 'import_run_done' order by ordinal_position",
+    );
+    expect(done.rows.map((row) => row.column_name)).toEqual(['id', 'user_id', 'updated_at']);
   });
 });
 

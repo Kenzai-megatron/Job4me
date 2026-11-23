@@ -2,6 +2,7 @@ import type { ImportRun } from '@job4me/contracts';
 import { formatDateTime, formatNumber } from '@job4me/i18n';
 import { Alert, Badge, Button } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { type FormEvent, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../api/client';
@@ -119,7 +120,13 @@ export function ImportsSection() {
                     {run.errorCode ? (
                       <p className="text-sm text-muted">{t(`imports.aiNotes.${run.errorCode}`)}</p>
                     ) : null}
-                    <p className="text-sm text-muted">{t('imports.nextStep')}</p>
+                    <Link
+                      to="/profile/imports/$importId"
+                      params={{ importId: run.id }}
+                      className="text-sm font-medium text-accent underline underline-offset-4"
+                    >
+                      {t('imports.review')}
+                    </Link>
                   </>
                 ) : null}
               </li>

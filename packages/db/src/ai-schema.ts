@@ -1,5 +1,16 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
-import { check, index, integer, numeric, pgTable, pgView, text, uuid } from 'drizzle-orm/pg-core';
+import { and, eq, inArray, isNotNull, sql } from 'drizzle-orm';
+import {
+  check,
+  date,
+  index,
+  integer,
+  numeric,
+  pgTable,
+  pgView,
+  text,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { importRuns, uploads } from './import-schema';
 import { at, bytea, common, ownerPolicy } from './profile-schema';
 
@@ -52,12 +63,14 @@ export const importProposals = pgTable(
     decision: text('decision').notNull().default('pending'),
     decidedAt: at('decided_at'),
     position: integer('position').notNull().default(0),
+    /** The profile entry an accepted proposal became (facts follow their experience). */
+    appliedEntryId: uuid('applied_entry_id'),
   },
   (t) => [
     index('import_proposal_run_idx').on(t.importRunId, t.position),
     check(
       'import_proposal_rubric_check',
-      sql`${t.rubric} in ('identity', 'target-jobs', 'experiences', 'facts', 'education', 'certifications', 'skills', 'languages')`,
+      sql`${t.rubric} in ('identity', 'target-jobs', 'experiences', 'facts', 'education', 'certifications', 'skills', 'languages', 'saved-offers', 'past-applications')`,
     ),
     check('import_proposal_source_check', sql`${t.source} in ('local', 'ai', 'linkedin')`),
     check(
@@ -109,11 +122,64 @@ export const importRunsReady = pgView('import_run_ready').as((qb) =>
     .where(
       and(
         inArray(importRuns.status, ['extracted', 'structuring']),
-        inArray(uploads.kind, ['cv_pdf', 'cv_docx']),
+        inArray(uploads.kind, ['cv_pdf', 'cv_docx', 'linkedin_zip']),
       ),
     ),
+);
+
+/**
+ * Reviewed (or failed) imports still holding their extracted text: the hourly purge erases it,
+ * with the decided proposals, once the retention of the configuration has passed (ADR 0010).
+ */
+export const importRunsDone = pgView('import_run_done').as((qb) =>
+  qb
+    .select({
+      id: importRuns.id,
+      userId: importRuns.userId,
+      updatedAt: importRuns.updatedAt,
+    })
+    .from(importRuns)
+    .where(and(inArray(importRuns.status, ['applied', 'failed']), isNotNull(importRuns.extracted))),
+);
+
+/** LinkedIn history (plan, section 3): offers once saved, kept for phase 3 as a benchmark. */
+export const savedOffers = pgTable(
+  'saved_offer',
+  {
+    ...common(),
+    title: text('title').notNull(),
+    company: text('company'),
+    url: text('url'),
+    savedOn: date('saved_on'),
+    source: text('source').notNull().default('linkedin'),
+  },
+  (t) => [
+    uniqueIndex('saved_offer_user_url_idx').on(t.userId, t.url),
+    check('saved_offer_source_check', sql`${t.source} in ('linkedin')`),
+    ownerPolicy('saved_offer'),
+  ],
+);
+
+/** LinkedIn history: past applications, so phase 5 never applies twice to the same offer. */
+export const pastApplications = pgTable(
+  'past_application',
+  {
+    ...common(),
+    title: text('title').notNull(),
+    company: text('company'),
+    url: text('url'),
+    appliedOn: date('applied_on'),
+    source: text('source').notNull().default('linkedin'),
+  },
+  (t) => [
+    uniqueIndex('past_application_user_url_idx').on(t.userId, t.url),
+    check('past_application_source_check', sql`${t.source} in ('linkedin')`),
+    ownerPolicy('past_application'),
+  ],
 );
 
 export type AiCall = typeof aiCalls.$inferSelect;
 export type ImportProposal = typeof importProposals.$inferSelect;
 export type KeywordProposalRun = typeof keywordProposalRuns.$inferSelect;
+export type SavedOffer = typeof savedOffers.$inferSelect;
+export type PastApplication = typeof pastApplications.$inferSelect;

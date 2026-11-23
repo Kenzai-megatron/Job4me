@@ -16,10 +16,12 @@ import { aadFor, decrypt, encrypt } from '@job4me/security';
 import { CV_STRUCTURING_PROMPT, wrap } from '../ai/prompts';
 import { redactCv } from '../ai/redact';
 import type { AiService } from '../ai/service';
+import { proposalsFromLinkedin } from './linkedin-map';
 
-// Structuring of an extracted CV (plan, section 4, step 4): identity found locally, the rest by
-// Claude Haiku on the redacted text. Nothing enters the profile here: every item becomes a
-// proposal, encrypted under the import key, for Mehdi to accept, correct or ignore (lot 5).
+// Structuring of an extracted import (plan, section 4, step 4). A CV: identity found locally,
+// the rest by Claude Haiku on the redacted text. A LinkedIn archive: a fixed mapping, no AI.
+// Nothing enters the profile here: every item becomes a proposal, encrypted under the import
+// key, for Mehdi to accept, correct or ignore.
 
 export interface StructureDeps {
   db: Database;
@@ -34,7 +36,7 @@ export interface StructureDeps {
 
 interface Proposal {
   rubric: ProposalRubric;
-  source: 'local' | 'ai';
+  source: 'local' | 'ai' | 'linkedin';
   content: Record<string, unknown>;
 }
 
@@ -158,6 +160,50 @@ async function knownIdentity(deps: StructureDeps, userId: string): Promise<Ident
   return identitySchema.parse(JSON.parse(plain.toString('utf8')));
 }
 
+interface Structured {
+  proposals: Proposal[];
+  dropped: number;
+  errorCode: ImportErrorCode | null;
+  redacted: Record<string, number>;
+}
+
+/** A CV: identity found locally, then Claude Haiku on the redacted text. */
+async function structureCv(
+  deps: StructureDeps,
+  userId: string,
+  text: string,
+  identity: Identity,
+): Promise<Structured> {
+  const redaction = redactCv(text, identity);
+  const proposals = identityProposals(redaction.found, identity);
+  const result = await deps.ai.run({
+    usage: 'cv_structuring',
+    userId,
+    model: deps.settings.ai.cvStructuring.model,
+    maxTokens: deps.settings.ai.cvStructuring.maxTokens,
+    effort: deps.settings.ai.cvStructuring.effort,
+    fallbacks: false,
+    system: CV_STRUCTURING_PROMPT,
+    user: wrap('cv', redaction.text),
+    schema: cvStructuringSchema,
+  });
+  if (!result.ok) {
+    return { proposals, dropped: 0, errorCode: result.error, redacted: redaction.counts };
+  }
+  const fromAi = proposalsFrom(result.value, redaction.text);
+  // Facts point at their experience by position: shift them past the identity proposals.
+  const offset = proposals.length;
+  for (const proposal of fromAi.proposals) {
+    const experience = proposal.content.experience;
+    proposals.push(
+      proposal.rubric === 'facts' && typeof experience === 'number'
+        ? { ...proposal, content: { ...proposal.content, experience: experience + offset } }
+        : proposal,
+    );
+  }
+  return { proposals, dropped: fromAi.dropped, errorCode: null, redacted: redaction.counts };
+}
+
 /** Structures one import; false when another worker already holds it. */
 export async function structureImport(
   deps: StructureDeps,
@@ -187,41 +233,22 @@ export async function structureImport(
   const document = extractedDocumentSchema.parse(
     JSON.parse(decrypt(deps.importKey, claimed.extracted, extractedAad(run.id)).toString('utf8')),
   );
-  if (document.kind !== 'text') throw new Error('only CV imports are structured here');
-
   const identity = await knownIdentity(deps, run.userId);
-  const redaction = redactCv(document.text, identity);
-  const proposals = identityProposals(redaction.found, identity);
-  let dropped = 0;
-  let errorCode: ImportErrorCode | null = null;
-
-  const result = await deps.ai.run({
-    usage: 'cv_structuring',
-    userId: run.userId,
-    model: deps.settings.ai.cvStructuring.model,
-    maxTokens: deps.settings.ai.cvStructuring.maxTokens,
-    effort: deps.settings.ai.cvStructuring.effort,
-    fallbacks: false,
-    system: CV_STRUCTURING_PROMPT,
-    user: wrap('cv', redaction.text),
-    schema: cvStructuringSchema,
-  });
-  if (result.ok) {
-    const fromAi = proposalsFrom(result.value, redaction.text);
-    // Facts point at their experience by position: shift them past the identity proposals.
-    const offset = proposals.length;
-    for (const proposal of fromAi.proposals) {
-      const experience = proposal.content.experience;
-      proposals.push(
-        proposal.rubric === 'facts' && typeof experience === 'number'
-          ? { ...proposal, content: { ...proposal.content, experience: experience + offset } }
-          : proposal,
-      );
-    }
-    dropped = fromAi.dropped;
-  } else {
-    errorCode = result.error;
-  }
+  const structured: Structured =
+    document.kind === 'linkedin'
+      ? {
+          // LinkedIn: a fixed mapping of the allow-listed columns, no AI (plan, section 4).
+          proposals: proposalsFromLinkedin(document.files).filter(
+            (proposal) =>
+              proposal.rubric !== 'identity' ||
+              normalise(String(proposal.content.value)) !== normalise(identity.fullName ?? ''),
+          ),
+          dropped: 0,
+          errorCode: null,
+          redacted: {},
+        }
+      : await structureCv(deps, run.userId, document.text, identity);
+  const { proposals, dropped, errorCode } = structured;
 
   await withUser(deps.db, run.userId, async (tx) => {
     if (proposals.length > 0) {
@@ -255,7 +282,13 @@ export async function structureImport(
       .where(and(eq(runs.id, run.id), eq(runs.userId, run.userId), eq(runs.status, 'structuring')));
   });
   log.info(
-    { proposals: proposals.length, dropped, redacted: redaction.counts, aiError: errorCode },
+    {
+      kind: document.kind,
+      proposals: proposals.length,
+      dropped,
+      redacted: structured.redacted,
+      aiError: errorCode,
+    },
     'import structured',
   );
   return true;

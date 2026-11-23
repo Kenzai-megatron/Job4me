@@ -57,7 +57,7 @@ const runColumns = {
 };
 
 /** Import runs of one user with their upload; `extra` narrows them down. */
-function selectRuns(tx: Transaction, userId: string, extra?: SQL) {
+export function selectRuns(tx: Transaction, userId: string, extra?: SQL) {
   const own = eq(schema.importRuns.userId, userId);
   return tx
     .select(runColumns)
@@ -68,7 +68,7 @@ function selectRuns(tx: Transaction, userId: string, extra?: SQL) {
 
 type RunRow = Awaited<ReturnType<typeof selectRuns>>[number];
 
-function toRun(row: RunRow): ImportRun {
+export function toRun(row: RunRow): ImportRun {
   return importRunSchema.parse({
     ...row,
     stats: row.stats ? importStatsSchema.parse(row.stats) : null,

@@ -28,3 +28,9 @@ Mehdi importe son CV (PDF ou DOCX) et son archive LinkedIn (ZIP). Ces fichiers p
 - **Rôle `job4me_extractor`** : créé par la migration (sans connexion possible tant que son mot de passe n'est pas fourni), droits remis à zéro puis accordés colonne par colonne à chaque migration ; politiques RLS : lecture des deux tables, mise à jour d'un import en attente ou en extraction vers « extraction », « extrait » ou « échec » seulement.
 - **pdf.js 6** n'a plus de chemin `eval` ; son module natif de dessin (`@napi-rs/canvas`), inutile pour lire du texte, n'est pas installé (`ignoredOptionalDependencies`).
 - **Archive LinkedIn** : liste blanche de fichiers et de colonnes dans `packages/imports/src/linkedin-files.ts`, établie d'après le format d'export connu de LinkedIn ; à confronter à la vraie archive de Mehdi (lot 5).
+
+## Relecture et purge (lot 5, 23/11/2026)
+
+- **Relecture** : chaque proposition (CV ou LinkedIn) est gardée, corrigée ou écartée par Mehdi, une à une ; une proposition gardée passe par la validation des écrans du profil, et chaque décision entre au journal d'audit (`import.proposal_decided`). Une réalisation se rattache à son expérience si celle-ci a été gardée. L'import passe à « ajouté au profil » quand plus rien n'attend.
+- **Archive LinkedIn** : correspondance fixe des colonnes de la liste blanche, sans IA (`apps/worker/src/jobs/linkedin-map.ts`) ; niveaux de langue LinkedIn convertis en niveaux CECR ; offres sauvegardées et candidatures importées d'un bloc, sur décision, dans `saved_offer` et `past_application` (phases 3 et 5).
+- **Purge** : une heure après l'autre, le worker efface le texte extrait et les propositions décidées des imports relus (ou en échec) depuis plus de `imports.extractedRetentionDays` jours (30 par défaut), grâce à la vue `import_run_done` (identifiants seulement). Le fichier chiffré reste jusqu'à la suppression de l'import.

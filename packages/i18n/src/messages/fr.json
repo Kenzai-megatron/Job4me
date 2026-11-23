@@ -239,7 +239,8 @@
     "file_too_complex": "Ce fichier est trop complexe à lire (trop de pages, d'entrées ou de texte).",
     "file_protected": "Ce fichier est protégé par un mot de passe : enregistrez-en une copie sans protection.",
     "file_macros": "Les documents Word à macros ne sont pas acceptés : enregistrez-le en .docx.",
-    "keywords_need_target_job": "Ajoutez d'abord au moins un métier visé."
+    "keywords_need_target_job": "Ajoutez d'abord au moins un métier visé.",
+    "already_decided": "Cette proposition a déjà été traitée."
   },
   "mail": {
     "testSubject": "Job4me : mail de test",
@@ -461,7 +462,6 @@
     "characters": "{{count}} caractères lus",
     "rows_one": "{{count}} ligne lue",
     "rows_other": "{{count}} lignes lues",
-    "nextStep": "La relecture champ par champ arrive à l'étape suivante.",
     "kinds": {
       "cv_pdf": "CV en PDF",
       "cv_docx": "CV en DOCX",
@@ -499,7 +499,8 @@
       "ai_refused": "Le modèle a refusé d'analyser ce CV : seules les coordonnées trouvées sont proposées.",
       "ai_invalid_output": "La réponse de l'IA était inexploitable, deux fois : seules les coordonnées trouvées sont proposées.",
       "ai_failed": "L'IA n'a pas répondu : seules les coordonnées trouvées sont proposées."
-    }
+    },
+    "review": "Relire les propositions"
   },
   "settings": {
     "tabs": "Pages des paramètres",
@@ -527,6 +528,40 @@
       "failed": "échec de l'appel",
       "blocked": "bloqué par un plafond",
       "disabled": "IA non configurée"
+    }
+  },
+  "review": {
+    "back": "← Retour au profil",
+    "title": "Relecture de l'import",
+    "intro": "{{kind}}, importé le {{date}}. Chaque proposition vient de l'extrait affiché : gardez-la, corrigez-la ou écartez-la. Rien n'entre dans le profil sans votre accord.",
+    "evidence": "Extrait : « {{text}} »",
+    "duplicate": "Déjà dans le profil ?",
+    "keep": "Garder",
+    "keepCorrected": "Garder ainsi",
+    "correct": "Corriger",
+    "chooseLevel": "Choisir le niveau",
+    "ignore": "Écarter",
+    "importHistory": "Importer",
+    "levelMissing": "niveau à choisir",
+    "history_one": "{{count}} ligne de l'historique LinkedIn",
+    "history_other": "{{count}} lignes de l'historique LinkedIn",
+    "allDone": "Tout est relu : votre profil est à jour.",
+    "empty": "Aucune proposition dans cet import.",
+    "fields": {
+      "fullName": "Nom complet",
+      "email": "Adresse e-mail",
+      "phone": "Téléphone",
+      "commune": "Commune"
+    },
+    "rubrics": {
+      "savedOffers": "Offres sauvegardées sur LinkedIn",
+      "pastApplications": "Candidatures envoyées via LinkedIn"
+    },
+    "decisions": {
+      "pending": "En attente",
+      "accepted": "Gardée",
+      "corrected": "Corrigée",
+      "ignored": "Écartée"
     }
   }
 }

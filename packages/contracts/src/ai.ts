@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { importRunSchema } from './imports';
 import { cefrLevels, keywordLanguages, skillLevels } from './profile';
 
 // Claude API (phase 1 plan, section 5; ADR 0009). Schemas of what the model must return, and of
@@ -95,7 +96,7 @@ export const keywordProposalSchema = z.object({
 });
 export type KeywordProposal = z.infer<typeof keywordProposalSchema>;
 
-/** Where an import proposal goes once accepted (lot 5 reviews them one by one). */
+/** Where an import proposal goes once accepted; Mehdi reviews them one by one. */
 export const proposalRubrics = [
   'identity',
   'target-jobs',
@@ -105,9 +106,46 @@ export const proposalRubrics = [
   'certifications',
   'skills',
   'languages',
+  // LinkedIn history, kept for phases 3 and 5: accepted as a whole.
+  'saved-offers',
+  'past-applications',
 ] as const;
 export type ProposalRubric = (typeof proposalRubrics)[number];
 export const proposalSources = ['local', 'ai', 'linkedin'] as const;
+export const proposalDecisions = ['pending', 'accepted', 'corrected', 'ignored'] as const;
+
+/** A proposal as the review screen shows it: its content, its evidence, a possible duplicate. */
+export const proposalSchema = z.object({
+  id: z.uuid(),
+  rubric: z.enum(proposalRubrics),
+  source: z.enum(proposalSources),
+  decision: z.enum(proposalDecisions),
+  content: z.record(z.string(), z.unknown()),
+  /** Close to an entry already in the profile. */
+  duplicate: z.boolean(),
+});
+export type Proposal = z.infer<typeof proposalSchema>;
+
+export const importReviewSchema = z.object({
+  run: importRunSchema,
+  proposals: z.array(proposalSchema),
+});
+export type ImportReview = z.infer<typeof importReviewSchema>;
+
+/** Accept as proposed, accept corrected (content given), or set aside. */
+export const proposalDecisionSchema = z.object({
+  decision: z.enum(['accept', 'ignore']),
+  content: z.record(z.string(), z.unknown()).optional(),
+});
+
+/** One LinkedIn history row (saved offer or past application). */
+export const historyRowSchema = z.object({
+  title: z.string().trim().min(1).max(300),
+  company: z.string().trim().max(300).nullable(),
+  url: z.string().trim().max(2000).nullable(),
+  date: z.iso.date().nullable(),
+});
+export type HistoryRow = z.infer<typeof historyRowSchema>;
 
 export const keywordRunStatuses = ['queued', 'running', 'done', 'failed'] as const;
 export const keywordRunSchema = z.object({

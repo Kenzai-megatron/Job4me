@@ -29,6 +29,7 @@ export const errorCodes = [
   'file_protected',
   'file_macros',
   'keywords_need_target_job',
+  'already_decided',
   'database_unavailable',
   'migrations_pending',
   'internal_error',
