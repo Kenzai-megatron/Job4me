@@ -40,6 +40,37 @@ const aiTaskSchema = z.object({
 });
 export type Environment = z.infer<typeof environmentSchema>;
 
+/** Settings of one source (docs/SOURCES.md, section 0; ADR 0014). */
+const sourceSettingsSchema = z.object({
+  /** ISO weekdays of the scheduled passes, 1 = Monday (decision D3). */
+  weekdays: z.array(z.number().int().min(1).max(7)).max(7),
+  /** Pause between two requests to this source. */
+  pauseMs: z.number().int().min(0).max(120_000),
+  /** Time budget of the source within a pass: a slow source returns what it has read. */
+  budgetMs: z.number().int().min(1000).max(900_000),
+  /** Extra attempts after a network error or a 5xx, never after a 4xx: 0 for pages and LinkedIn. */
+  retries: z.number().int().min(0).max(3),
+  /** Result pages read per keyword (one in test mode). */
+  maxPages: z.number().int().min(1).max(20),
+  /** After a 403 or a 429, no call at all for this long (LinkedIn: 24). 0: the next pass tries. */
+  cooldownHoursAfterBlock: z
+    .number()
+    .int()
+    .min(0)
+    .max(24 * 30),
+  enabledByDefault: z.boolean(),
+});
+export type SourceSettings = z.infer<typeof sourceSettingsSchema>;
+
+const timeZoneSchema = z.string().refine((value) => {
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}, 'must be an IANA time zone such as Europe/Brussels');
+
 export const settingsSchema = z
   .object({
     app: z.object({
@@ -189,6 +220,48 @@ export const settingsSchema = z
       prices: z.record(z.string(), priceSchema),
       unknownModelPrice: priceSchema,
     }),
+    /** Job offer collection (phase 2 plan; ADR 0013 to 0015). */
+    collect: z.object({
+      /** personal, or commercial: every source reserved for personal use is switched off. */
+      usageMode: z.enum(['personal', 'commercial']),
+      schedule: z.object({ cron: z.string().min(9), timeZone: timeZoneSchema }),
+      /** A whole pass, every source included (docs/SOURCES.md, section 1.2). */
+      passBudgetMs: z.number().int().min(10_000).max(3_600_000),
+      /** A pass still running after this long is marked interrupted (the worker stopped). */
+      staleAfterMs: z.number().int().min(60_000),
+      http: z.object({
+        userAgent: z.string().min(10).max(300),
+        acceptLanguage: z.string().min(2).max(100),
+        timeoutMs: z.number().int().min(1000).max(120_000),
+        maxResponseBytes: z
+          .number()
+          .int()
+          .min(1024)
+          .max(50 * 1024 * 1024),
+        maxRedirects: z.number().int().min(0).max(10),
+        retryBaseMs: z.number().int().min(100).max(60_000),
+      }),
+      offers: z.object({
+        maxDescriptionChars: z.number().int().min(100).max(10_000),
+        /** An offer not seen for this long is deleted (ADR 0015). */
+        retentionDays: z.number().int().min(7).max(3650),
+        listLimit: z.number().int().min(1).max(100),
+      }),
+      runs: z.object({
+        /** Pass logs are kept this long (ADR 0015). */
+        retentionDays: z.number().int().min(30).max(3650),
+        /** Latest runs shown on each source of the Sources screen. */
+        perSource: z.number().int().min(1).max(50),
+      }),
+      manual: z.object({
+        maxTextChars: z.number().int().min(100).max(50_000),
+        addsPerHour: z.number().int().min(1).max(500),
+      }),
+      test: z.object({ requestsPerHour: z.number().int().min(1).max(60) }),
+      /** Development and tests only: a source that makes offers up, without any request. */
+      demoSource: z.boolean(),
+      sources: z.record(z.string().regex(/^[a-z][a-z0-9_]{1,31}$/), sourceSettingsSchema),
+    }),
     backups: z.object({
       /** The most recent backups kept, then one a week for this many weeks (ADR 0012). */
       keepDaily: z.number().int().min(1).max(365),
@@ -218,6 +291,13 @@ export const settingsSchema = z
         code: 'custom',
         path: ['imports', 'extractor', 'staleAfterMs'],
         message: 'must be greater than timeoutMs, or a running extraction would be started twice',
+      });
+    }
+    if (settings.collect.staleAfterMs <= settings.collect.passBudgetMs) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['collect', 'staleAfterMs'],
+        message: 'must be greater than passBudgetMs, or a running pass would be marked interrupted',
       });
     }
     if (settings.auth.lockout.maxDelaySeconds < settings.auth.lockout.baseDelaySeconds) {

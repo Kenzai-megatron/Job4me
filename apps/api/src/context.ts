@@ -1,3 +1,4 @@
+import type { Connector } from '@job4me/collect';
 import type { Config } from '@job4me/config';
 import type { Database } from '@job4me/db';
 import type { Logger } from '@job4me/logger';
@@ -44,4 +45,6 @@ export interface AppDeps {
   webDistDir?: string;
   /** Injectable clock for tests. */
   now?: () => Date;
+  /** Tests replace the connectors of this machine (availableConnectors). */
+  connectors?: readonly Connector[];
 }

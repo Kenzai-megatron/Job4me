@@ -1,0 +1,23 @@
+{
+  "name": "@job4me/collect",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Job offer collection: common format, polite HTTP client, connectors (ADR 0013, 0014)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@job4me/config": "workspace:*",
+    "@job4me/contracts": "workspace:*",
+    "@job4me/logger": "workspace:*",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*"
+  }
+}

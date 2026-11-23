@@ -40,6 +40,8 @@ export default defineConfig({
           JOB4ME_LISTEN_PORT: String(PORT),
           JOB4ME_WEB_DIST: join(import.meta.dirname, '..', '..', 'apps', 'web', 'dist'),
           E2E_STATE_FILE: STATE_FILE,
+          // The demo source (no request at all) stands in for the real ones.
+          JOB4ME_COLLECT_DEMO_SOURCE: 'true',
         },
       },
 });

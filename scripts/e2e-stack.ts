@@ -57,8 +57,9 @@ async function main(): Promise<void> {
   const email = `e2e-${suffix}@example.org`;
   const link = await createAccount(email);
   const profileLink = await createAccount(`e2e-profile-${suffix}@example.org`);
+  const collectLink = await createAccount(`e2e-collect-${suffix}@example.org`);
   mkdirSync(join(ROOT, 'tests', 'e2e', '.state'), { recursive: true });
-  writeFileSync(STATE_FILE, JSON.stringify({ link, email, password, profileLink }), {
+  writeFileSync(STATE_FILE, JSON.stringify({ link, email, password, profileLink, collectLink }), {
     mode: 0o600,
   });
   await run('pnpm', ['--filter', '@job4me/e2e', 'test:e2e'], { env: { E2E_BASE_URL: origin } });

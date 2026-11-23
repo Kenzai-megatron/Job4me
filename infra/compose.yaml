@@ -26,6 +26,8 @@ x-app-env: &app-env
   JOB4ME_PUBLIC_ORIGIN: ${JOB4ME_PUBLIC_ORIGIN:-http://localhost:3000}
   JOB4ME_RP_ID: ${JOB4ME_RP_ID:-localhost}
   JOB4ME_PUSH_CONTACT: ${JOB4ME_PUSH_CONTACT:-mailto:job4me@example.invalid}
+  # Development stacks only (pnpm setup:dev): the demo source, which makes no request.
+  JOB4ME_COLLECT_DEMO_SOURCE: ${JOB4ME_COLLECT_DEMO_SOURCE:-false}
 
 services:
   postgres:

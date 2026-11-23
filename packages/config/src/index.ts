@@ -16,4 +16,5 @@ export {
   type ExtractorSecrets,
   type Secrets,
   type Settings,
+  type SourceSettings,
 } from './schema';

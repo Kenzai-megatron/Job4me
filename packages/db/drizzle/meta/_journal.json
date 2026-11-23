@@ -50,6 +50,13 @@
       "when": 1795364086647,
       "tag": "0006_review",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795422685421,
+      "tag": "0007_collect",
+      "breakpoints": true
     }
   ]
 }

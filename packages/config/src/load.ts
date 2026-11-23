@@ -104,6 +104,12 @@ function overridesFromEnv(env: Env): unknown {
     files: {
       ...(env.JOB4ME_FILES_DIR ? { dir: env.JOB4ME_FILES_DIR } : {}),
     },
+    collect: {
+      // Development stacks and end-to-end tests: the demo source (pnpm setup:dev writes it).
+      ...(env.JOB4ME_COLLECT_DEMO_SOURCE
+        ? { demoSource: ['1', 'true'].includes(env.JOB4ME_COLLECT_DEMO_SOURCE) }
+        : {}),
+    },
   };
 }
 

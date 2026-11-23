@@ -34,19 +34,19 @@ pnpm job4me user:create --email mehdi@example.org --name Mehdi
 
 ## Commandes
 
-| Commande                 | Effet                                                                                                                |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `pnpm install`           | installe les dépendances et active le hook de commit                                                                 |
-| `pnpm setup:dev`         | écrit `.env` et des secrets jetables dans `secrets/` (`--force` réécrit `.env`, garde les secrets)                   |
-| `pnpm dev`               | PostgreSQL, Mailpit, migrations, puis API, worker et interface en mode surveillance                                  |
-| `pnpm job4me <commande>` | administration : `user:create`, `user:enroll-link`, `sessions:revoke-all`, `audit:tail`, `config:check`, `mail:test` |
-| `pnpm lint`              | ESLint sur tout le dépôt                                                                                             |
-| `pnpm typecheck`         | vérification des types TypeScript                                                                                    |
-| `pnpm test`              | tests unitaires                                                                                                      |
-| `pnpm test:integration`  | tests d'intégration sur un vrai PostgreSQL (après `pnpm dev`)                                                        |
-| `pnpm test:e2e`          | tests de bout en bout Playwright sur l'interface construite et l'API                                                 |
-| `pnpm format`            | formatage Prettier                                                                                                   |
-| `pnpm check:compose`     | contrôle de Compose : ports sur `127.0.0.1`, conteneurs durcis, images épinglées                                     |
+| Commande                 | Effet                                                                                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm install`           | installe les dépendances et active le hook de commit                                                                                                  |
+| `pnpm setup:dev`         | écrit `.env` et des secrets jetables dans `secrets/` (`--force` réécrit `.env`, garde les secrets) ; active la source de démonstration de la collecte |
+| `pnpm dev`               | PostgreSQL, Mailpit, migrations, puis API, worker et interface en mode surveillance                                                                   |
+| `pnpm job4me <commande>` | administration : `user:create`, `user:enroll-link`, `sessions:revoke-all`, `audit:tail`, `config:check`, `mail:test`, `sources:test`, `sources:run`   |
+| `pnpm lint`              | ESLint sur tout le dépôt                                                                                                                              |
+| `pnpm typecheck`         | vérification des types TypeScript                                                                                                                     |
+| `pnpm test`              | tests unitaires                                                                                                                                       |
+| `pnpm test:integration`  | tests d'intégration sur un vrai PostgreSQL (après `pnpm dev`)                                                                                         |
+| `pnpm test:e2e`          | tests de bout en bout Playwright sur l'interface construite et l'API                                                                                  |
+| `pnpm format`            | formatage Prettier                                                                                                                                    |
+| `pnpm check:compose`     | contrôle de Compose : ports sur `127.0.0.1`, conteneurs durcis, images épinglées                                                                      |
 
 ## Pile en conteneurs (machine de la maison, CI)
 

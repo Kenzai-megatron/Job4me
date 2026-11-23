@@ -1,7 +1,7 @@
 import { Card } from '@job4me/ui';
 import { useTranslation } from 'react-i18next';
 
-export type Section = 'offers' | 'applications' | 'documents' | 'profile';
+export type Section = 'applications' | 'documents' | 'profile';
 
 /** Sections built in later phases: what they will hold, and when. */
 export function PlaceholderPage({ section, phase }: { section: Section; phase: number }) {

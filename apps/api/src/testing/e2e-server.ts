@@ -43,6 +43,12 @@ async function main() {
     name: 'Mehdi',
     password: E2E_PASSWORD,
   });
+  // A third one for the collection specs (phase 2).
+  const collect = await userCreate(database.db, config, {
+    email: 'collect@example.org',
+    name: 'Mehdi',
+    password: E2E_PASSWORD,
+  });
   mkdirSync(dirname(stateFile), { recursive: true });
   writeFileSync(
     stateFile,
@@ -51,6 +57,7 @@ async function main() {
       email: E2E_EMAIL,
       password: E2E_PASSWORD,
       profileLink: profile.link,
+      collectLink: collect.link,
     }),
   );
 
