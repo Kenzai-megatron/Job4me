@@ -30,6 +30,7 @@ Revue du 23/11/2026, par Claude, sur les lots 1 à 6 (profil, écrans, imports e
 | 15 | Par défaut, les sauvegardes restent sur le disque de la machine (`var/backups/`). | moyenne (disponibilité) | documenté : copie à faire ailleurs (guide, section 8) ; à vérifier sur la machine de la maison |
 | 16 | La correspondance LinkedIn suit le format d'export connu, pas encore une vraie archive. | faible | à vérifier avec l'archive de Mehdi |
 | 17 | Constat 13 de la phase 0 (paquets Debian de l'image de base) ; l'image passe à 515 Mo avec pdf.js et mammoth. | moyenne (surface de l'image) | suivi : rapport hebdomadaire, image distroless à évaluer en phase 2 |
+| 18 | Première analyse hebdomadaire après le lot 4 : `minimatch` 10.2.6 (GHSA-g3hv-75wg-m249, gravité moyenne), venu de `typescript-eslint` 8.72.2, outil de lint seulement. | faible (développement et CI) | exception datée jusqu'au 07/12/2026 dans `osv-scanner.toml` : la version corrigée (`typescript-eslint` 8.73.0, `minimatch` 11) devient installable sous la règle des 7 jours le 23/11/2026 et arrive par Renovate |
 
 ## Points vérifiés sans constat
 
