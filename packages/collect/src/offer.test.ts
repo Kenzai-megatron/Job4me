@@ -24,6 +24,11 @@ describe('cleanOffer', () => {
     });
   });
 
+  it('takes a job site written where the employer should be for an unknown employer', () => {
+    expect(cleanOffer({ ...raw, company: 'StepStone Belgium' }, 'demo', 1200)?.company).toBe('?');
+    expect(cleanOffer({ ...raw, company: 'Exemple SA' }, 'demo', 1200)?.company).toBe('Exemple SA');
+  });
+
   it('caps the description at the configured length', () => {
     const offer = cleanOffer({ ...raw, description: 'mot '.repeat(1000) }, 'demo', 1200);
     expect(offer?.description.length).toBeLessThanOrEqual(1200);

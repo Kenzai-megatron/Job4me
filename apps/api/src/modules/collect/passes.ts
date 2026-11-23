@@ -42,6 +42,7 @@ export function toSourceRun(row: SourceRunRow): SourceRun {
     readCount: row.readCount,
     keptCount: row.keptCount,
     newCount: row.newCount,
+    mergedCount: row.mergedCount,
     invalidCount: row.invalidCount,
     requestCount: row.requestCount,
     durationMs: row.durationMs,

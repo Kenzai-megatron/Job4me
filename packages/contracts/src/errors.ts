@@ -33,6 +33,7 @@ export const errorCodes = [
   'import_in_progress',
   'source_unknown',
   'source_commercial_mode',
+  'offer_not_merged',
   'database_unavailable',
   'migrations_pending',
   'internal_error',

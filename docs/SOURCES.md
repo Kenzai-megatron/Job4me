@@ -101,6 +101,8 @@ Les agrégateurs mettent parfois **le site d'origine à la place de l'employeur*
 
 Ordre d'appel : une annonce trouvée par deux sources est gardée sous la première interrogée. Mettre en tête les sources les mieux renseignées (Actiris donne commune et code postal).
 
+Dans Job4me : règles appliquées par `packages/collect/src/dedup.ts`, avec les précisions de l'ADR 0016 (notes du lot 1 de la phase 3).
+
 ### 1.7 La géographie
 
 - Table des quelque 2 700 localités belges de **GeoNames** (fichier BE, licence CC BY 4.0), plus les grandes villes, chargée en base. Les communes ont **deux noms** (Malines et Mechelen, Gand et Gent, Louvain et Leuven) : une table qui n'en porte qu'un rate la moitié des annonces.

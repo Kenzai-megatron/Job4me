@@ -111,6 +111,7 @@ function SourceCard({ source }: { source: SourceSummary }) {
                   read: formatNumber(source.window.read),
                   kept: formatNumber(source.window.kept),
                   fresh: formatNumber(source.window.fresh),
+                  merged: formatNumber(source.window.merged),
                 }),
                 source.window.failed > 0
                   ? t('sources.windowFailed', { count: source.window.failed })

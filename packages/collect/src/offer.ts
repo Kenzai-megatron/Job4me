@@ -1,5 +1,6 @@
 import { offerUrlSchema, sourceNameSchema } from '@job4me/contracts';
 import { z } from 'zod';
+import { isJobSite } from './dedup';
 import { cleanLine, truncate } from './text';
 
 // The common format of every collected offer (docs/SOURCES.md, section 1.1; ADR 0013).
@@ -45,19 +46,21 @@ function optional(value: string | null | undefined, max: number): string | null 
 
 /**
  * Cleans an offer and checks it against the common format: white space collapsed, lengths
- * capped, "?" for an unknown company or place. An offer that still does not fit (no title,
- * no http or https link) is dropped and counted as invalid by the orchestrator.
+ * capped, "?" for an unknown company or place, and for a job site written where the employer
+ * should be (docs/SOURCES.md, section 1.6). An offer that still does not fit (no title, no http
+ * or https link) is dropped and counted as invalid by the orchestrator.
  */
 export function cleanOffer(
   raw: RawOffer,
   source: string,
   maxDescriptionChars: number,
 ): CollectedOffer | null {
+  const company = optional(raw.company, 200);
   const parsed = collectedOfferSchema.safeParse({
     source,
     externalId: cleanLine(raw.externalId),
     title: truncate(cleanLine(raw.title), 300),
-    company: optional(raw.company, 200) ?? '?',
+    company: company === null || isJobSite(company) ? '?' : company,
     location: optional(raw.location, 200) ?? '?',
     postedAt: raw.postedAt ?? null,
     url: cleanLine(raw.url),

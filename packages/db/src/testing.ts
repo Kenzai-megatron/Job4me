@@ -44,7 +44,10 @@ export async function recreateDatabase(
  * Creates a throwaway database on the development server, migrated and granted like the real one.
  * Integration tests only: needs JOB4ME_DATABASE_OWNER_URL and JOB4ME_DATABASE_URL (from .env or CI).
  */
-export async function createTestDatabase(prefix: string): Promise<TestDatabase> {
+export async function createTestDatabase(
+  prefix: string,
+  options: { migrationsFolder?: string } = {},
+): Promise<TestDatabase> {
   process.env.JOB4ME_ENV ??= 'test';
   loadConfig();
   const secrets = loadSecrets();
@@ -64,7 +67,7 @@ export async function createTestDatabase(prefix: string): Promise<TestDatabase> 
   const extractorUrl = secrets.databaseExtractorUrl
     ? withDatabase(secrets.databaseExtractorUrl, name)
     : undefined;
-  await runMigrations({ ownerUrl, appUrl, extractorUrl });
+  await runMigrations({ ownerUrl, appUrl, extractorUrl, ...options });
   return {
     name,
     ownerUrl,

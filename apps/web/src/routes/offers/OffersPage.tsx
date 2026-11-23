@@ -1,4 +1,4 @@
-import type { ManualOfferInput, Offer } from '@job4me/contracts';
+import type { ManualOfferInput, ManualOfferResponse, Offer } from '@job4me/contracts';
 import { formatDate } from '@job4me/i18n';
 import { Alert, Button, Card, SelectField, TextAreaField, TextField } from '@job4me/ui';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -11,14 +11,17 @@ import { errorMessage } from '../../components/errors';
 
 const EMPTY = { title: '', url: '', company: '', location: '', text: '' };
 
-/** "Add an offer": a link and the text pasted; the server stores the link, never opens it. */
+/**
+ * "Add an offer": a link and the text pasted; the server stores the link, never opens it. An
+ * offer already collected gets the posting added by hand (ADR 0016).
+ */
 function AddOffer({ onAdded }: { onAdded: () => void }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<ManualOfferResponse | null>(null);
   const set = (field: keyof typeof EMPTY) => (value: string) =>
     setValues((current) => ({ ...current, [field]: value }));
 
@@ -26,7 +29,7 @@ function AddOffer({ onAdded }: { onAdded: () => void }) {
     event.preventDefault();
     setBusy(true);
     setError(null);
-    setDone(false);
+    setDone(null);
     const body: ManualOfferInput = {
       title: values.title,
       url: values.url.trim() || null,
@@ -35,9 +38,8 @@ function AddOffer({ onAdded }: { onAdded: () => void }) {
       text: values.text.trim() || null,
     };
     try {
-      await api.post<Offer>('/api/offers', body);
+      setDone(await api.post<ManualOfferResponse>('/api/offers', body));
       setValues(EMPTY);
-      setDone(true);
       setOpen(false);
       onAdded();
     } catch (caught) {
@@ -57,7 +59,20 @@ function AddOffer({ onAdded }: { onAdded: () => void }) {
         </div>
         {done ? (
           <p role="status" className="text-sm">
-            {t('offers.add.added')}
+            {done.merged ? (
+              <>
+                {t('offers.add.merged')}{' '}
+                <Link
+                  to="/offers/$offerId"
+                  params={{ offerId: done.offer.id }}
+                  className="font-semibold text-accent underline underline-offset-4"
+                >
+                  {t('offers.add.see')}
+                </Link>
+              </>
+            ) : (
+              t('offers.add.added')
+            )}
           </p>
         ) : null}
       </div>
@@ -121,22 +136,44 @@ function AddOffer({ onAdded }: { onAdded: () => void }) {
   );
 }
 
+/** The sites that carry an announcement, each named once, the retained one first. */
+export function useSourceNames() {
+  const { t } = useTranslation();
+  return (offer: Offer) =>
+    [...new Set(offer.postings.map((posting) => posting.source))]
+      .map((source) => t(`sources.names.${source}`, { defaultValue: source }))
+      .join(', ');
+}
+
+/** One announcement (ADR 0016): its retained posting, and every site that carries it. */
 function OfferItem({ offer }: { offer: Offer }) {
   const { t } = useTranslation();
+  const sourceNames = useSourceNames();
   const link = safeLink(offer.url);
   return (
     <li className="flex flex-col gap-1 py-4">
-      <h3 className="font-semibold">{offer.title}</h3>
+      <h3 className="font-semibold">
+        <Link
+          to="/offers/$offerId"
+          params={{ offerId: offer.id }}
+          className="underline-offset-4 hover:underline"
+        >
+          {offer.title}
+        </Link>
+      </h3>
       <p className="text-sm text-muted">
         {[
           offer.company,
           offer.location,
-          t(`sources.names.${offer.source}`, { defaultValue: offer.source }),
+          sourceNames(offer),
           offer.postedOn
             ? t('offers.posted', { date: formatDate(offer.postedOn) })
             : t('offers.seen', { date: formatDate(offer.firstSeenAt) }),
         ].join(' · ')}
       </p>
+      {offer.postings.length > 1 ? (
+        <p className="text-sm">{t('offers.postingCount', { count: offer.postings.length })}</p>
+      ) : null}
       {offer.details || offer.salary ? (
         <p className="text-sm">{[offer.details, offer.salary].filter(Boolean).join(' · ')}</p>
       ) : null}
@@ -155,7 +192,10 @@ function OfferItem({ offer }: { offer: Offer }) {
   );
 }
 
-/** Offers, first version (phase 2 plan, section 8): newest first, by source; scores come later. */
+/**
+ * Offers (phase 3 plan, section 10): one entry per announcement, newest first, with the sites that
+ * carry it; scores come with lot 4.
+ */
 export function OffersPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();

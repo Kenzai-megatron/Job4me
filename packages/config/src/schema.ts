@@ -249,6 +249,11 @@ export const settingsSchema = z
         maxDescriptionChars: z.number().int().min(100).max(10_000),
         /** An offer not seen for this long is deleted (ADR 0015). */
         retentionDays: z.number().int().min(7).max(3650),
+        /**
+         * A new posting is compared with the announcements seen this recently (ADR 0016): past
+         * it, the same offer seen again is a new announcement.
+         */
+        historyDays: z.number().int().min(1).max(365),
         listLimit: z.number().int().min(1).max(100),
       }),
       runs: z.object({

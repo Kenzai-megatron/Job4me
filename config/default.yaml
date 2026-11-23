@@ -175,6 +175,9 @@ collect:
     maxDescriptionChars: 1200
     # Decision D5 (ADR 0015): an offer not seen for 90 days is deleted.
     retentionDays: 90
+    # ADR 0016 (docs/SOURCES.md, section 1.6): a new posting joins an announcement seen within
+    # the last three weeks; past them, the same offer seen again is a new announcement.
+    historyDays: 21
     listLimit: 50
   runs:
     retentionDays: 365

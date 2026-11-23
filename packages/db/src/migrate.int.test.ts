@@ -1,3 +1,7 @@
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
@@ -43,6 +47,7 @@ describe('migrations', () => {
       'job_offer',
       'keyword_proposal_run',
       'language_level',
+      'offer',
       'one_time_token',
       'passkey',
       'past_application',
@@ -88,6 +93,7 @@ describe('migrations', () => {
       'collection_pass',
       'source_run',
       'job_offer',
+      'offer',
     ]) {
       expect(guarded).toContain(table);
     }
@@ -196,5 +202,60 @@ describe('audit log', () => {
     );
     await expect(owner.query('delete from audit_log')).rejects.toThrow(/append-only/);
     await expect(owner.query('truncate audit_log')).rejects.toThrow(/append-only/);
+  });
+});
+
+describe('migration 0009 (ADR 0016)', () => {
+  it('gives each posting of phase 2 its own announcement, to be identified by the worker', async () => {
+    // The migrations as they were before 0009, then the posting of a collection pass.
+    const folder = join(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
+    const before = await mkdtemp(join(tmpdir(), 'job4me-migrations-'));
+    const journal = JSON.parse(await readFile(join(folder, 'meta', '_journal.json'), 'utf8')) as {
+      entries: Array<{ idx: number; tag: string }>;
+    };
+    journal.entries = journal.entries.filter((entry) => entry.idx < 9);
+    await mkdir(join(before, 'meta'));
+    await writeFile(join(before, 'meta', '_journal.json'), JSON.stringify(journal));
+    for (const entry of journal.entries) {
+      await copyFile(join(folder, `${entry.tag}.sql`), join(before, `${entry.tag}.sql`));
+    }
+    const old = await createTestDatabase('db0009', { migrationsFolder: before });
+    const client = new pg.Client({ connectionString: old.ownerUrl });
+    await client.connect();
+    try {
+      const { rows: users } = await client.query<{ id: string }>(
+        "insert into \"user\" (email, display_name, webauthn_user_handle) values ('b@example.org', 'B', '\\x02') returning id",
+      );
+      const { rows: postings } = await client.query<{ id: string }>(
+        `insert into job_offer (user_id, source, external_id, title, first_seen_at, last_seen_at)
+         values ($1, 'actiris', 'a1', 'Comptable', now() - interval '3 days', now() - interval '1 day'),
+                ($1, 'forem', 'f1', 'Comptable (H/F)', now() - interval '2 days', now())
+         returning id`,
+        [users[0]!.id],
+      );
+
+      await runMigrations({ ownerUrl: old.ownerUrl, appUrl: old.appUrl });
+      const { rows: offers } = await client.query<{
+        id: string;
+        retained_id: string;
+        same_sightings: boolean;
+      }>(
+        `select o.id, o.retained_id,
+           o.first_seen_at = p.first_seen_at and o.last_seen_at = p.last_seen_at as same_sightings
+         from offer o join job_offer p on p.offer_id = o.id order by o.id`,
+      );
+      expect(offers.map((offer) => offer.id).sort()).toEqual(postings.map((row) => row.id).sort());
+      expect(offers.every((offer) => offer.retained_id === offer.id && offer.same_sightings)).toBe(
+        true,
+      );
+      const { rows } = await client.query<{ versions: number[] }>(
+        'select array_agg(distinct dedup_version) as versions from job_offer',
+      );
+      expect(rows[0]!.versions).toEqual([0]);
+    } finally {
+      await client.end();
+      await old.drop();
+      await rm(before, { recursive: true, force: true });
+    }
   });
 });

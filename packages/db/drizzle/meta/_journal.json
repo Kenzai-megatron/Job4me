@@ -64,6 +64,13 @@
       "when": 1795453852139,
       "tag": "0008_source_alert",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795459004510,
+      "tag": "0009_announcements",
+      "breakpoints": true
     }
   ]
 }

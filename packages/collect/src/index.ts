@@ -1,5 +1,22 @@
 export { type Connector, type ConnectorContext, eachKeyword } from './connector';
 export { addDays, type DateContext, localDate, normalizeDate } from './dates';
+export {
+  type Comparable,
+  DEDUP_VERSION,
+  employerWords,
+  identify,
+  type IncomingPosting,
+  isJobSite,
+  MERGE_REASONS,
+  type MergeReason,
+  mergeReason,
+  type MergeScope,
+  type Placement,
+  placePostings,
+  type PostingIdentity,
+  sameEmployer,
+  type StoredPosting,
+} from './dedup';
 export { asCollectError, CollectError, SourceSkipped } from './errors';
 export {
   type FetchLike,

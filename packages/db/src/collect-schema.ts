@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  type AnyPgColumn,
   boolean,
   check,
   date,
@@ -74,8 +75,9 @@ export const collectionPasses = pgTable(
 );
 
 /**
- * One source in one pass (ADR 0013): read before any filter, kept after the title filter, new
- * among the kept ones. Never a URL with a key, never page content: codes and counts only.
+ * One source in one pass (ADR 0013): read before any filter, kept after the title filter, then
+ * among the kept ones the new announcements and the postings merged into one already there
+ * (ADR 0016). Never a URL with a key, never page content: codes and counts only.
  */
 export const sourceRuns = pgTable(
   'source_run',
@@ -93,6 +95,8 @@ export const sourceRuns = pgTable(
     readCount: integer('read_count').notNull().default(0),
     keptCount: integer('kept_count').notNull().default(0),
     newCount: integer('new_count').notNull().default(0),
+    /** Postings of this run that joined an announcement already there (ADR 0016). */
+    mergedCount: integer('merged_count').notNull().default(0),
     invalidCount: integer('invalid_count').notNull().default(0),
     requestCount: integer('request_count').notNull().default(0),
     durationMs: integer('duration_ms'),
@@ -122,21 +126,48 @@ export const sourceRuns = pgTable(
     ),
     check(
       'source_run_counts_check',
-      sql`${t.readCount} >= 0 and ${t.keptCount} >= 0 and ${t.newCount} >= 0 and ${t.invalidCount} >= 0 and ${t.requestCount} >= 0`,
+      sql`${t.readCount} >= 0 and ${t.keptCount} >= 0 and ${t.newCount} >= 0 and ${t.mergedCount} >= 0 and ${t.invalidCount} >= 0 and ${t.requestCount} >= 0`,
     ),
     ownerPolicy('source_run'),
   ],
 );
 
 /**
- * An offer in the common format (docs/SOURCES.md, section 1.1). One row per source and
- * identifier: the exact duplicate of a source is merged, the merge across sources comes with
- * phase 3. Deleted 90 days after it was last seen (ADR 0015).
+ * The announcement (ADR 0016): one offer, however many sites carry it. Its postings are the
+ * job_offer rows; it shows the retained one, which names the employer, then has the longest
+ * description, then comes from the first source called. First and last sight are those of its
+ * postings; it is deleted 90 days after the last one (ADR 0015), its postings with it.
+ */
+export const offers = pgTable(
+  'offer',
+  {
+    ...common(),
+    retainedId: uuid('retained_id').references((): AnyPgColumn => jobOffers.id, {
+      onDelete: 'set null',
+    }),
+    firstSeenAt: at('first_seen_at').notNull().defaultNow(),
+    lastSeenAt: at('last_seen_at').notNull().defaultNow(),
+  },
+  (t) => [
+    index('offer_user_first_seen_idx').on(t.userId, t.firstSeenAt),
+    index('offer_user_last_seen_idx').on(t.userId, t.lastSeenAt),
+    ownerPolicy('offer'),
+  ],
+);
+
+/**
+ * A posting: an offer in the common format at one source (docs/SOURCES.md, section 1.1), one
+ * row per source and identifier, attached to its announcement. Its identity (content key, bare
+ * title, references) feeds the merge rules; `dedup_version` 0 marks a row of phase 2 that the
+ * worker has yet to identify.
  */
 export const jobOffers = pgTable(
   'job_offer',
   {
     ...common(),
+    offerId: uuid('offer_id')
+      .notNull()
+      .references(() => offers.id, { onDelete: 'cascade' }),
     source: text('source').notNull(),
     externalId: text('external_id').notNull(),
     origin: text('origin').notNull().default('collected'),
@@ -151,12 +182,29 @@ export const jobOffers = pgTable(
     details: text('details'),
     firstSeenAt: at('first_seen_at').notNull().defaultNow(),
     lastSeenAt: at('last_seen_at').notNull().defaultNow(),
+    contentKey: text('content_key'),
+    bareTitle: text('bare_title'),
+    titleRefs: text('title_refs')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    dedupVersion: integer('dedup_version').notNull().default(0),
+    /** How it joined its announcement; null for the posting that started it. */
+    mergeReason: text('merge_reason'),
   },
   (t) => [
     uniqueIndex('job_offer_user_source_external_idx').on(t.userId, t.source, t.externalId),
     index('job_offer_user_first_seen_idx').on(t.userId, t.firstSeenAt),
     index('job_offer_user_last_seen_idx').on(t.userId, t.lastSeenAt),
+    index('job_offer_offer_idx').on(t.offerId),
+    index('job_offer_user_key_idx').on(t.userId, t.contentKey),
+    index('job_offer_user_bare_idx').on(t.userId, t.bareTitle),
+    index('job_offer_user_version_idx').on(t.userId, t.dedupVersion),
     check('job_offer_source_check', sql`${t.source} ~ '^[a-z][a-z0-9_]{1,31}$'`),
+    check(
+      'job_offer_merge_reason_check',
+      sql`${t.mergeReason} is null or ${t.mergeReason} in ('key', 'reference', 'url', 'employer', 'no_employer')`,
+    ),
     check('job_offer_origin_check', sql`${t.origin} in ('collected', 'manual')`),
     check('job_offer_url_check', sql`${t.url} is null or ${t.url} ~* '^https?://'`),
     check(
@@ -171,3 +219,4 @@ export type SourceSettingRow = typeof sourceSettings.$inferSelect;
 export type CollectionPassRow = typeof collectionPasses.$inferSelect;
 export type SourceRunRow = typeof sourceRuns.$inferSelect;
 export type JobOfferRow = typeof jobOffers.$inferSelect;
+export type OfferRow = typeof offers.$inferSelect;

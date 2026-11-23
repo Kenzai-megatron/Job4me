@@ -247,6 +247,7 @@
     "already_decided": "Cette proposition a déjà été traitée.",
     "source_unknown": "Cette source n'existe pas sur ce serveur.",
     "source_commercial_mode": "En mode commercial, les sources réservées à l'usage personnel restent coupées.",
+    "offer_not_merged": "Cette offre n'a qu'une parution : il n'y a rien à séparer.",
     "import_in_progress": "Cet import est en cours de lecture : réessayez dans un instant."
   },
   "mail": {
@@ -594,7 +595,7 @@
     "days": "{{days}}",
     "cooldown": "En pause jusqu'au {{date}}, après un refus du site.",
     "never": "Pas encore interrogée.",
-    "counts": "{{read}} lues · {{kept}} retenues · {{fresh}} inédites",
+    "counts": "{{read}} lues · {{kept}} retenues · {{fresh}} inédites · {{merged}} fusionnées",
     "duration": "{{seconds}} s",
     "httpStatus": "{{error}} (HTTP {{status}})",
     "names": {
@@ -664,7 +665,7 @@
       "zero_read": "Muette depuis le {{date}} : aucune offre lue, sans erreur.",
       "collapse": "Volume effondré depuis le {{date}} : {{read}} offres lues contre {{usual}} d'habitude."
     },
-    "window": "Sur {{days}} jours : {{runs}} passages, {{read}} lues, {{kept}} retenues, {{fresh}} inédites",
+    "window": "Sur {{days}} jours : {{runs}} passages, {{read}} lues, {{kept}} retenues, {{fresh}} inédites, {{merged}} fusionnées",
     "windowFailed": "dont {{count}} en échec",
     "windowEmpty": "Aucun passage planifié ou manuel sur les {{days}} derniers jours.",
     "quota": "Recherches restantes : {{remaining}} (au {{date}})",
@@ -673,7 +674,7 @@
   },
   "offers": {
     "title": "Offres",
-    "intro": "Les offres collectées, la plus récente d'abord. La notation et le tri par pertinence arrivent en phase 3.",
+    "intro": "Une seule entrée par offre, même vue sur plusieurs sites, la plus récente d'abord. La notation et le tri par pertinence arrivent avec la suite de la phase 3.",
     "sources": "Sources",
     "list": "Offres collectées",
     "filter": "Source",
@@ -683,6 +684,8 @@
     "open": "Voir l'annonce",
     "posted": "publiée le {{date}}",
     "seen": "vue le {{date}}",
+    "postingCount_one": "Vue sur {{count}} parution",
+    "postingCount_other": "Vue sur {{count}} parutions : ouvrez l'offre pour les voir toutes.",
     "add": {
       "open": "Ajouter une offre",
       "title": "Ajouter une offre",
@@ -693,7 +696,30 @@
       "location": "Lieu",
       "text": "Texte de l'annonce",
       "submit": "Ajouter",
-      "added": "Offre ajoutée."
+      "added": "Offre ajoutée.",
+      "merged": "Cette offre était déjà collectée : votre ajout rejoint son annonce.",
+      "see": "Voir l'offre"
+    }
+  },
+  "offer": {
+    "back": "Toutes les offres",
+    "description": "Annonce",
+    "noDescription": "La source ne donne pas le texte de l'annonce : ouvrez-la sur le site.",
+    "postings_one": "{{count}} parution",
+    "postings_other": "{{count}} parutions",
+    "postingsHint": "La même offre vue sur plusieurs sites, ou republiée. Si une parution n'est pas la même offre, séparez-la : elle formera sa propre annonce, et les passages suivants la laisseront à part.",
+    "openOn": "Voir sur {{source}}",
+    "unmerge": "Ce n'est pas la même offre",
+    "detached": "Parution séparée : elle forme maintenant sa propre annonce.",
+    "seeDetached": "Voir cette annonce",
+    "seenOn": "vue le {{date}}",
+    "seenFrom": "vue du {{first}} au {{last}}",
+    "reasons": {
+      "key": "même intitulé et même employeur",
+      "reference": "même référence",
+      "url": "même lien et même intitulé",
+      "employer": "même intitulé et même employeur, écrits autrement",
+      "no_employer": "même intitulé, employeur inconnu d'un côté"
     }
   }
 }
