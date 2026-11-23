@@ -10,6 +10,7 @@ export {
   type RequestOptions,
   type Sleep,
 } from './http';
+export { absoluteLink, oneHalf, parsePage, textOf } from './html';
 export { type CollectedOffer, cleanOffer, collectedOfferSchema, type RawOffer } from './offer';
 export { compileTitleFilter, type TitleFilterRule } from './prefilter';
 export {

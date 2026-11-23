@@ -276,6 +276,18 @@ collect:
       cooldownHoursAfterBlock: 0
       enabledByDefault: true
       maxAgeDays: 60
+    # LinkedIn guest (lot 4, docs/SOURCES.md): the ten priority keywords, 20 s between two calls,
+    # one attempt, page by page; after a 403 or 429, no call at all for 24 hours.
+    linkedin:
+      weekdays: [2, 5]
+      pauseMs: 20000
+      budgetMs: 300000
+      retries: 0
+      maxPages: 3
+      cooldownHoursAfterBlock: 24
+      enabledByDefault: true
+      maxAgeDays: 7
+      params: { location: 'Brussels, Belgium', pageSize: 10 }
     demo:
       weekdays: [1, 2, 3, 4, 5, 6, 7]
       pauseMs: 0

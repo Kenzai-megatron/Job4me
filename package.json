@@ -28,10 +28,12 @@
     "stack:cli": "tsx scripts/stack.ts cli",
     "stack:backup": "tsx scripts/backup.ts",
     "stack:restore-test": "tsx scripts/restore-test.ts",
-    "test:scripts": "vitest run --config scripts/vitest.config.ts"
+    "test:scripts": "vitest run --config scripts/vitest.config.ts",
+    "probe:linkedin": "tsx scripts/probe-linkedin.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@job4me/collect": "workspace:*",
     "@job4me/config": "workspace:*",
     "@types/node": "26.6.6",
     "eslint": "10.15.0",

@@ -162,6 +162,7 @@ Pour te connecter aussi depuis ton PC : sur la page de connexion, choisis la pas
 | Fermer toutes les sessions | `pnpm stack:cli sessions:revoke-all --email <ton-adresse>` |
 | Tester les sources (un mot-clé, une page chacune, aucune offre enregistrée) | `pnpm stack:cli sources:test`, ou une seule : `pnpm stack:cli sources:test --source <nom>` ; aussi depuis l'écran **Sources** |
 | Lancer un passage de collecte sans attendre 7 h 10 | `pnpm stack:cli sources:run` |
+| Sonder LinkedIn avant son connecteur (une fois, phase 2) | `pnpm probe:linkedin`, puis envoyer à Claude le bloc affiché ; après un refus (429), plus rien vers LinkedIn pendant 24 heures |
 | Journal de la collecte (offres lues, retenues, inédites par source) | écran **Sources**, ou `pnpm stack:logs worker` (lignes `source run`) |
 
 Les conteneurs redémarrent seuls avec la machine (Docker démarré au boot). Tailscale garde sa configuration `serve`.
