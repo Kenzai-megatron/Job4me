@@ -35,3 +35,8 @@ Statut : acceptée le 23/11/2026.
 - Pauses de la configuration : 2 s entre deux requêtes d'Actiris (API d'un site), 0,3 s pour le Forem (open data), 1 s pour Adzuna et SerpApi ; deux nouveaux essais pour ces API robustes, budget de 120 à 180 s par source.
 - **Google Jobs le lundi, le mercredi et le vendredi, et non chaque jour** (écart signalé à la décision D3) : dix mots-clés prioritaires chaque jour feraient 300 recherches par mois, au-delà des 250 du plan gratuit ; trois jours par semaine en font environ 130 et laissent la place aux tests. Le compte est consulté avant chaque passage, sans dépenser de recherche ; sous la réserve (20), la source est sautée.
 - Clés d'Adzuna et de SerpApi : fichiers `secrets/adzuna_app_id`, `secrets/adzuna_app_key` et `secrets/serpapi_key`, vides par défaut, remis au seul conteneur `worker` (contrôlé par `pnpm check:compose`) ; elles voyagent dans l'URL et sont masquées dans chaque ligne de journal.
+
+## Mise en œuvre (lot 3, 23/11/2026)
+
+- Pages publiques le mardi et le vendredi (décision D3), **3 s entre deux pages d'un même site, un seul essai**, aucun cookie gardé d'une requête à l'autre : un site qui pose un défi anti-robot (Akamai devant StepStone) finit par répondre 403, et la source s'arrête là.
+- Les redirections de Jobijoba (mot-clé avec majuscule) restent sur son hôte ; une redirection vers un autre hôte arrête la source (`host_not_allowed`).

@@ -5,15 +5,24 @@ import { adzunaConnector } from './sources/adzuna';
 import { demoConnector } from './sources/demo';
 import { foremConnector } from './sources/forem';
 import { googleJobsConnector } from './sources/google-jobs';
+import { jobijobaConnector } from './sources/jobijoba';
+import { jobrapidoConnector } from './sources/jobrapido';
+import { stepstoneConnector } from './sources/stepstone';
+import { talentConnector } from './sources/talent';
 
 // Every connector, in calling order: the best informed sources first (Actiris gives the commune
-// and the postal code), so that phase 3 keeps the richer version of an offer seen twice (phase 2
-// plan, section 5). The public pages and LinkedIn arrive in lots 3 and 4.
+// and the postal code, the Forem the languages, StepStone the employer and a teaser), so that
+// phase 3 keeps the richer version of an offer seen twice (phase 2 plan, section 5); the
+// aggregators last. LinkedIn arrives in lot 4.
 const CONNECTORS: readonly Connector[] = [
   actirisConnector,
   foremConnector,
+  stepstoneConnector,
   googleJobsConnector,
   adzunaConnector,
+  jobijobaConnector,
+  jobrapidoConnector,
+  talentConnector,
   demoConnector,
 ];
 

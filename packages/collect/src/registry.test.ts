@@ -13,8 +13,12 @@ describe('connectors', () => {
     expect(availableConnectors(config).map((connector) => connector.name)).toEqual([
       'actiris',
       'forem',
+      'stepstone',
       'google_jobs',
       'adzuna',
+      'jobijoba',
+      'jobrapido',
+      'talent',
     ]);
     // Development and tests: the demo source replaces the real ones, no real site is called.
     config.collect.demoSource = true;
@@ -32,8 +36,20 @@ describe('connectors', () => {
     }
     // Open data under CC BY-SA allows any use; the others need a licence or are no API at all.
     expect(byName.forem!.personalUseOnly).toBe(false);
-    for (const name of ['actiris', 'adzuna', 'google_jobs']) {
+    for (const name of [
+      'actiris',
+      'adzuna',
+      'google_jobs',
+      'stepstone',
+      'jobijoba',
+      'jobrapido',
+      'talent',
+    ]) {
       expect(byName[name]!.personalUseOnly).toBe(true);
+    }
+    // Every public page is reserved for personal use (ADR 0014).
+    for (const connector of Object.values(byName)) {
+      if (connector.access === 'public_page') expect(connector.personalUseOnly).toBe(true);
     }
     config.collect.usageMode = 'commercial';
     expect(lockedByUsageMode(byName.actiris!, config)).toBe(true);

@@ -34,12 +34,18 @@ export function fakeNetwork(route: (url: URL, call: Call) => Response | Promise<
 export const json = (value: unknown, status = 200) =>
   new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } });
 
-/** A test answer kept next to the connectors, anonymized (ADR 0015). */
-export function fixture<T = unknown>(name: string): T {
-  return JSON.parse(
-    readFileSync(new URL(`./sources/fixtures/${name}`, import.meta.url), 'utf8'),
-  ) as T;
+/** A test answer kept next to the connectors, anonymized (ADR 0015), as text. */
+export function fixtureText(name: string): string {
+  return readFileSync(new URL(`./sources/fixtures/${name}`, import.meta.url), 'utf8');
 }
+
+/** The same, parsed as JSON. */
+export function fixture<T = unknown>(name: string): T {
+  return JSON.parse(fixtureText(name)) as T;
+}
+
+export const html = (body: string, status = 200) =>
+  new Response(body, { status, headers: { 'content-type': 'text/html; charset=utf-8' } });
 
 export const TEST_HTTP = {
   userAgent: 'Mozilla/5.0 (test) Chrome/142.0.0.0',

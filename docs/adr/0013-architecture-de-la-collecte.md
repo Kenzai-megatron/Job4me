@@ -39,3 +39,12 @@ La phase 2 collecte les offres de neuf sources du socle (spécification, section
 - **Mode d'usage** : seul le Forem (open data sous CC BY-SA 4.0) reste actif en mode commercial. Actiris (API interne du site, non publiée), Adzuna (licence exigée pour un usage commercial) et Google Jobs par SerpApi (formule payante pour un usage commercial, à vérifier le jour venu) sont classés « usage personnel », comme les pages publiques.
 - **Quota** : un connecteur peut se déclarer « sauté » avant sa première recherche (`SourceSkipped`, raison `quota`) et rapporter le solde de son compte (`reportQuota`), enregistré dans `source_setting`.
 - **Vérification réelle** : le connecteur Actiris a lu une vraie réponse (100 offres sur 100 au format commun) ; il ne s'arrête plus sur l'âge de la dernière annonce, la liste n'étant pas strictement chronologique. Le Forem a répondu 429 à l'environnement de Claude (limite quotidienne de l'ODWB par adresse, partagée là-bas) : sa vérification réelle se fait depuis la maison, `pnpm stack:cli sources:test --source forem`.
+
+## Mise en œuvre (lot 3, 23/11/2026)
+
+- Quatre pages publiques, toutes « usage personnel » : **StepStone** (liste complète des mots-clés et pré-filtre de titre, la recherche étant un OU), **Jobijoba**, **Jobrapido** et **Talent.com** (mots-clés prioritaires). Ordre d'appel : Actiris, Forem, StepStone, Google Jobs, Adzuna, puis les agrégateurs.
+- Lecture avec cheerio (`cheerio/slim`, sans parse5 ni undici) : `script`, `style`, `noscript`, `template` et `svg` retirés avant toute lecture ; aucun code de page exécuté. Jobrapido porte ses données en JSON dans un attribut `data-advert`, lu comme une donnée et validé par Zod.
+- Sondés le 23/11/2026 par une vraie requête chacun (hôtes autorisés avec l'accord de Mehdi), puis lus par leur connecteur : StepStone 25 offres sur 25 au format commun, Jobijoba 27 sur 30, Jobrapido 8 sur 8, Talent.com 10 récentes sur 16 lues. Les jeux de test reprennent le balisage réel (balises, classes, attributs, blocs `<style>`) avec des contenus inventés.
+- **Jobijoba** : les annonces sponsorisées n'ont qu'un lien chiffré (ROT13) ; il n'est jamais décodé : ces annonces sont lues et comptées, jamais gardées.
+- **Gabarit changé** : une page StepStone sans total ni carte lève `invalid_response`, jamais « 0 offre » en silence ; pour les autres, la page vide se voit au journal (0 lue) et nourrira l'alerte « source muette » du lot 5.
+- Budget d'un passage porté à 30 minutes (`collect.passBudgetMs`) : le mardi et le vendredi, pages publiques et LinkedIn s'ajoutent aux API.

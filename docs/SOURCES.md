@@ -236,6 +236,7 @@ GET https://www.stepstone.be/emplois/<mot-en-slug>/a-<ville-en-slug>?radius=40&p
 - Repli : l'URL de l'annonce contient titre, ville, employeur et identifiant (`/offres-d-emploi--Business-Controller-Leuven-Dixon-Finance--2243315-inline.html`).
 - La pagination rapporte (pages 2 et 3 : 47 offres absentes de la page 1 pour un seul mot-clé) ; la ville interrogée aussi (Wavre rendait 7 offres que « Bruxelles, 40 km » ne rendait pas).
 - Recherche en OU sur les mots : beaucoup de bruit (3 à 5 % au-dessus du seuil sur un profil finance). Une offre retirée rend **410 Gone** : définitif.
+- **Sondé par Job4me le 23/11/2026** : 200 derrière Akamai, sans cookie ; 25 cartes `article[data-at="job-item"]` dont l'`id` vaut `job-item-<numéro>` ; le texte des champs est dans des `<div>` imbriqués entre des blocs `<style>` ; ancienneté dans `data-at="job-item-timeago"` (« il y a 4 jours »), télétravail dans `job-item-work-from-home`, extrait dans `jobcard-content`. Le sélecteur `data-at="job-item"` apparaît aussi dans le CSS de la page : compter les `article`, pas les occurrences.
 
 #### LinkedIn : l'API « invité » (HTML), la plus précise mais bridée
 
@@ -299,13 +300,19 @@ Referer: https://www.welcometothejungle.com/
 
 `GET https://www.jobijoba.be/emploi/offres-emploi-<mot-clé encodé>.html?page=N` (encodage de formulaire, espaces en `+`, 2 pages). **Sans ville.** Blocs découpés sur `class="offer-header"` : titre `offer-header-title` (`h3`), lien `a.permalink-link`, lieu après `icon-map-marker`, employeur après `icon-apartment`, `publication_date`, `span.description`. Excellent rendement récent (§ 4).
 
+**Sondé par Job4me le 23/11/2026** : le mot-clé est servi avec une majuscule (301 de `comptable` vers `Comptable`) ; 30 blocs `div.offer[data-id="ad_<empreinte>"]` par page (1 079 offres pour « Comptable ») ; les annonces sponsorisées n'ont pas de `permalink-link`, seulement un lien chiffré en ROT13 dans `data-atc`, que Job4me ne décode pas.
+
 #### Talent.com (HTML)
 
 `GET https://be.talent.com/jobs?k=<mot-clé>&l=Bruxelles&p=N`. La carte est **l'`<article>` qui suit un élément `data-job-id="…"`** (12 caractères), quel que soit son attribut (gabarit changé le 21/10/2026). Classes à suffixe haché : chercher les préfixes `JobCard_title`, `JobCard_company`, `JobCard_location`. Lien : `https://be.talent.com/view?id=<id>` (redirige vers l'annonce). Donne le vrai lieu. Reprend surtout LinkedIn (12 de ses 20 premières offres déjà connues).
 
+**Sondé par Job4me le 23/11/2026** : l'`<article>` est maintenant **dans** l'élément `data-job-id`, qui porte aussi `data-new-id` (18 chiffres) : c'est lui que prend le lien `view?id=`. 16 cartes par page, page servie en néerlandais malgré l'`Accept-Language` ; la date fiable est l'attribut `dateTime` de `<time>`. Beaucoup d'annonces anciennes (jusqu'à mai 2025) : l'âge maximal en garde 10 sur 16.
+
 #### Jobrapido (HTML)
 
 `GET https://be.jobrapido.com/?w=<mot-clé>&p=N`, **sans `l=`** (sinon chaque offre porte la ville cherchée). Blocs `class="result-item js-result-item` ; titre `<h3 class="result-item__title…">` (le mot cherché y est en `<strong>` : ne pas s'arrêter à la première balise fermante) ; `result-item__company-label`, `result-item__location-label` ; lien `https://open.app.jobrapido.com/…` (couper la chaîne de requête). Il écrit parfois l'intitulé deux fois (« Office Assistant Office Assistant ») : garder une moitié.
+
+**Sondé par Job4me le 23/11/2026** : chaque résultat porte ses données en JSON dans `data-advert` (`advertId`, `title` avec ses `<strong>`, `company`, `location`, `date` en « 16 nov » ou « 15 okt », `openAdvertUrl`, `salary`) : plus sûr que les classes. Le lien est devenu `https://be.jobrapido.com/jobpreview/<advertId>?redirectTo=…`. 8 résultats par page seulement.
 
 #### Adzuna : l'API (clé gratuite sur developer.adzuna.com)
 

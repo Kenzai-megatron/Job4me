@@ -157,9 +157,11 @@ collect:
   schedule:
     cron: '10 7 * * *'
     timeZone: Europe/Brussels
-  passBudgetMs: 900000 # 15 minutes for the whole pass
+  # 30 minutes for the whole pass: on Tuesday and Friday the public pages and LinkedIn add up
+  # to more than the 15 minutes of docs/SOURCES.md, which counted the secondary sources only.
+  passBudgetMs: 1800000
   # A pass still running after this long is marked interrupted (the worker stopped).
-  staleAfterMs: 1800000
+  staleAfterMs: 2700000
   http:
     # Ordinary browser headers (docs/SOURCES.md, section 0): update the version now and then.
     userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
@@ -236,6 +238,44 @@ collect:
       cooldownHoursAfterBlock: 0
       enabledByDefault: true
       params: { location: 'Brussels, Belgium', language: fr, country: be, quotaReserve: 20 }
+    # Public pages (lot 3): Tuesday and Friday (decision D3), 3 s between two pages of a site,
+    # a single attempt, personal use only. StepStone searches with OR: the title filter sorts.
+    stepstone:
+      weekdays: [2, 5]
+      pauseMs: 3000
+      budgetMs: 180000
+      retries: 0
+      maxPages: 3
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      maxAgeDays: 60
+      params: { pageSize: 25 }
+    jobijoba:
+      weekdays: [2, 5]
+      pauseMs: 3000
+      budgetMs: 120000
+      retries: 0
+      maxPages: 2
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+    jobrapido:
+      weekdays: [2, 5]
+      pauseMs: 3000
+      budgetMs: 120000
+      retries: 0
+      maxPages: 2
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+    # Many old ads on Talent.com: the age limit keeps the recent ones.
+    talent:
+      weekdays: [2, 5]
+      pauseMs: 3000
+      budgetMs: 120000
+      retries: 0
+      maxPages: 2
+      cooldownHoursAfterBlock: 0
+      enabledByDefault: true
+      maxAgeDays: 60
     demo:
       weekdays: [1, 2, 3, 4, 5, 6, 7]
       pauseMs: 0
