@@ -109,6 +109,24 @@ describe('secrets', () => {
     expect(secrets.masterKey).toBe('a2V5');
   });
 
+  it('reads the keys of the job sources, an empty file meaning no key', () => {
+    const dir = makeRepo();
+    writeFileSync(join(dir, 'key'), 'a2V5\n');
+    writeFileSync(join(dir, 'adzuna_id'), 'app-id\n');
+    writeFileSync(join(dir, 'adzuna_key'), '');
+    const secrets = loadSecrets({
+      JOB4ME_DATABASE_URL: 'postgres://x',
+      JOB4ME_MASTER_KEY_FILE: join(dir, 'key'),
+      JOB4ME_ADZUNA_APP_ID_FILE: join(dir, 'adzuna_id'),
+      JOB4ME_ADZUNA_APP_KEY_FILE: join(dir, 'adzuna_key'),
+    });
+    expect(secrets.sourceKeys).toEqual({
+      adzunaAppId: 'app-id',
+      adzunaAppKey: undefined,
+      serpApiKey: undefined,
+    });
+  });
+
   it('fails when a required secret is missing', () => {
     expect(() => loadSecrets({ JOB4ME_DATABASE_URL: 'postgres://x' })).toThrow(/JOB4ME_MASTER_KEY/);
   });

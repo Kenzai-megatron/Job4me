@@ -1,6 +1,6 @@
 export { type Connector, type ConnectorContext, eachKeyword } from './connector';
 export { addDays, type DateContext, localDate, normalizeDate } from './dates';
-export { asCollectError, CollectError } from './errors';
+export { asCollectError, CollectError, SourceSkipped } from './errors';
 export {
   type FetchLike,
   parseJson,
@@ -19,4 +19,4 @@ export {
   lockedByUsageMode,
   sourceSettings,
 } from './registry';
-export { cleanLine, fold, stripAccents, truncate } from './text';
+export { cleanLine, fold, stripAccents, stripHtml, titleCase, truncate } from './text';

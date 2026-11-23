@@ -39,6 +39,10 @@ function ensureSecrets(): Record<string, string> {
     import_key: () => randomBytes(32).toString('base64'),
     // Left empty: the Claude API key is written by hand on the home machine (ADR 0009).
     anthropic_api_key: () => '',
+    // Left empty too: the keys of Adzuna and SerpApi, later (ADR 0014, decision D2).
+    adzuna_app_id: () => '',
+    adzuna_app_key: () => '',
+    serpapi_key: () => '',
     vapid_public_key: () => vapid.publicKey,
     vapid_private_key: () => vapid.privateKey,
   };
@@ -96,6 +100,9 @@ const lines = [
   `JOB4ME_MASTER_KEY_FILE=${secrets.master_key}`,
   `JOB4ME_IMPORT_KEY_FILE=${secrets.import_key}`,
   `JOB4ME_ANTHROPIC_API_KEY_FILE=${secrets.anthropic_api_key}`,
+  `JOB4ME_ADZUNA_APP_ID_FILE=${secrets.adzuna_app_id}`,
+  `JOB4ME_ADZUNA_APP_KEY_FILE=${secrets.adzuna_app_key}`,
+  `JOB4ME_SERPAPI_KEY_FILE=${secrets.serpapi_key}`,
   `JOB4ME_FILES_DIR=${FILES_DIR}`,
   `JOB4ME_VAPID_PUBLIC_KEY_FILE=${secrets.vapid_public_key}`,
   `JOB4ME_VAPID_PRIVATE_KEY_FILE=${secrets.vapid_private_key}`,

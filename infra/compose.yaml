@@ -132,11 +132,18 @@ services:
       # Structuring of imported CVs and Claude API (ADR 0009, 0010): the worker only.
       JOB4ME_IMPORT_KEY_FILE: /run/secrets/import_key
       JOB4ME_ANTHROPIC_API_KEY_FILE: /run/secrets/anthropic_api_key
+      # Keys of the job sources (ADR 0014): empty until written, the source is then skipped.
+      JOB4ME_ADZUNA_APP_ID_FILE: /run/secrets/adzuna_app_id
+      JOB4ME_ADZUNA_APP_KEY_FILE: /run/secrets/adzuna_app_key
+      JOB4ME_SERPAPI_KEY_FILE: /run/secrets/serpapi_key
     secrets:
       - db_app_password
       - master_key
       - import_key
       - anthropic_api_key
+      - adzuna_app_id
+      - adzuna_app_key
+      - serpapi_key
       - vapid_public_key
       - vapid_private_key
     networks:
@@ -191,6 +198,13 @@ secrets:
   # Empty until the key is written on the home machine: the AI then stays off.
   anthropic_api_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/anthropic_api_key
+  # Empty until the keys are written on the home machine: those sources are then skipped.
+  adzuna_app_id:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/adzuna_app_id
+  adzuna_app_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/adzuna_app_key
+  serpapi_key:
+    file: ${JOB4ME_SECRETS_DIR:-../secrets}/serpapi_key
   vapid_public_key:
     file: ${JOB4ME_SECRETS_DIR:-../secrets}/vapid_public_key
   vapid_private_key:

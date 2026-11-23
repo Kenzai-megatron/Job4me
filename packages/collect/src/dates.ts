@@ -146,11 +146,11 @@ export function normalizeDate(raw: unknown, context: DateContext): string | null
   if (/^(avant-hier|eergisteren)$/.test(text)) return addDays(today, -2);
 
   // "il y a 3 jours", "il y a plus de 30 jours", "26 days ago", "30+ days ago", "2 weken geleden".
-  const french = /^il y a (?:plus de )?(\d+|un|une) ([a-z]+)$/.exec(text);
+  const french = /^il y a (?:plus de )?(\d+|un|une)\+? ([a-z]+)$/.exec(text);
   if (french) return relative(french[1]!, french[2]!, today);
   const english = /^(\d+|an?|one)\+? ([a-z]+) ago$/.exec(text);
   if (english) return relative(english[1]!, english[2]!, today);
-  const dutch = /^(?:meer dan )?(\d+|een) ([a-z]+) geleden$/.exec(text);
+  const dutch = /^(?:meer dan )?(\d+|een)\+? ([a-z]+) geleden$/.exec(text);
   if (dutch) return relative(dutch[1]!, dutch[2]!, today);
 
   // "19 sep. 2026", "mardi 19 novembre 2026", "1er octobre", "24 septembre", "3 okt".

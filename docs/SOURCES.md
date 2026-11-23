@@ -170,6 +170,7 @@ Referer: https://www.actiris.brussels/fr/citoyens/offres-demploi/
 - **Offres relayées du VDAB ou du Forem** : employeur de façade « OFFRE D'UNE AUTRE REGION » (`numeroEntreprise` = `1111111111`) et adresse d'Actiris (Saint-Josse, 1210) comme lieu. Employeur inconnu ; lieu repris de la fin de l'intitulé s'il y figure (« … - Tielt Winge »), sinon inconnu.
 - Domaine : `actiris.brussels` (`actiris.be` répond 302). L'ancienne API (`/Umbraco/api/OffersApi/GetAllOffers`) répond 404 depuis le 10/10/2026 ; la nouvelle a été trouvée dans le JavaScript du site (`OfferService.getAllOffers`).
 - Peu de stages d'étudiant : ses « stages » sont surtout des Stage FIRST (`STAGE SPEP`), un dispositif pour demandeurs d'emploi.
+- **Sondé par Job4me le 23/11/2026** (puis lu par le connecteur : 100 offres sur 100 au format commun, toutes datées et situées) : tout ce qui précède se vérifie, sauf l'ordre, qui n'est pas strictement chronologique ; l'`Accept-Language` ordinaire d'un navigateur (`fr-BE,fr;q=0.9,…`) suffit, sans `Referer`. `dateCreation` arrive avec un décalage horaire et jusqu'à sept décimales (`2026-11-23T06:10:05.9362938+01:00`), `communeFr` peut être vide alors que `codePostal` est rempli, la liste porte un champ `employer` toujours nul. 321 résultats pour « comptable » en recherche par titre.
 
 #### Forem : open data ODWB (API JSON, sans clé)
 
@@ -192,6 +193,8 @@ Paramètres à encoder dans l'URL ; `POINT(longitude latitude)`, longitude d'abo
 - L'employeur est souvent doublé (« L.I.P. Belgique - L.I.P. Belgique ») : garder une moitié.
 - Piège : la recherche plein texte prend « .NET » pour « nettoyeur ».
 - Données propriété du Forem : citer la source sur l'offre.
+- **Sondé par Job4me le 23/11/2026** : 24 237 offres, mises à jour chaque nuit, licence **CC BY-SA 4.0** (attribution, partage dans les mêmes conditions). Les champs ci-dessus existent tous ; `lieuxtravaillocalite` peut aussi arriver en simple texte, `langues` et `niveauxetudes` à `null`. La recherche plein texte porte sur tous les champs, pas seulement l'intitulé (« comptable » ramène un « Polyvalent administratief bediende » dont le métier est comptable) : 158 offres à 40 km de Bruxelles sur 30 jours.
+- **Limite de l'ODWB** : 10 000 appels par jour et par adresse pour un utilisateur anonyme. Depuis une adresse partagée (l'environnement de Claude, un centre de données), elle peut être déjà atteinte : 429, `"errorcode": 10005`, `reset_time` à minuit UTC. Depuis la connexion de la maison, une soixantaine d'appels par jour n'en approche pas.
 
 #### VDAB : pages publiques (HTML)
 

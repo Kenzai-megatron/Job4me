@@ -38,3 +38,38 @@ export function truncate(value: string, max: number): string {
   if (space >= max * 0.8) cut = cut.slice(0, space);
   return `${cut.trimEnd()}…`;
 }
+
+const ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+};
+
+/**
+ * Plain text out of a snippet that carries markup (Adzuna's <strong>): tags dropped, common
+ * entities decoded. Never used to render: the interface shows offers as text only.
+ */
+export function stripHtml(value: string): string {
+  return value
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&(#\d+|#x[\da-f]+|[a-z]+);/gi, (entity, name: string) => {
+      if (name.startsWith('#x') || name.startsWith('#X')) {
+        return String.fromCodePoint(Number.parseInt(name.slice(2), 16));
+      }
+      if (name.startsWith('#')) return String.fromCodePoint(Number.parseInt(name.slice(1), 10));
+      return ENTITIES[name.toLowerCase()] ?? entity;
+    });
+}
+
+/** "LA LOUVIÈRE" becomes "La Louvière", "BRAINE-L'ALLEUD" "Braine-L'alleud". */
+export function titleCase(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(
+      /(^|[\s-])(\p{L})/gu,
+      (_match, before: string, letter: string) => `${before}${letter.toUpperCase()}`,
+    );
+}

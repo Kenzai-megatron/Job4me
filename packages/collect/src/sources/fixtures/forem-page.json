@@ -1,0 +1,53 @@
+{
+  "total_count": 3,
+  "results": [
+    {
+      "numerooffreforem": "9100001",
+      "titreoffre": "Polyvalent administratief bediende (H/F/X)",
+      "nomemployeur": "Exemple Interim Bruxelles",
+      "lieuxtravaillocalite": ["LAEKEN", "BRUXELLES"],
+      "lieuxtravailcodepostal": ["1020", "1020"],
+      "datedebutdiffusion": "2026-11-22",
+      "url": "https://www.leforem.be/recherche-offres/offre-detail/9100001",
+      "typecontrat": "Intérimaire avec option sur durée indéterminée",
+      "regimetravail": "Temps plein",
+      "langues": ["Néerlandais"],
+      "metier": "Agent administratif polyvalent / Agente administrative polyvalente",
+      "niveauxetudes": ["Primaire"],
+      "experiencerequise": null,
+      "source": "Exemple Interim"
+    },
+    {
+      "numerooffreforem": "9100002",
+      "titreoffre": "Comptable confirmé en fiduciaire - Bruxelles (H/F/X)",
+      "nomemployeur": "Fiduciaire Exemple - Fiduciaire Exemple",
+      "lieuxtravaillocalite": ["BRUXELLES"],
+      "lieuxtravailcodepostal": ["1000"],
+      "datedebutdiffusion": "2026-11-21",
+      "url": "https://www.leforem.be/recherche-offres/offre-detail/9100002",
+      "typecontrat": "Durée indéterminée",
+      "regimetravail": "Temps plein",
+      "langues": null,
+      "metier": "Comptable interne",
+      "niveauxetudes": ["Formation supérieure initiale de type court (Baccalauréat)"],
+      "experiencerequise": "Comptable interne",
+      "source": "Via site Forem"
+    },
+    {
+      "numerooffreforem": "9100003",
+      "titreoffre": "Responsable comptable - Wavre (H/F/X)",
+      "nomemployeur": null,
+      "lieuxtravaillocalite": "WAVRE",
+      "lieuxtravailcodepostal": ["1300"],
+      "datedebutdiffusion": "2026-11-21",
+      "url": null,
+      "typecontrat": "Durée indéterminée",
+      "regimetravail": null,
+      "langues": ["Français", "Néerlandais"],
+      "metier": "Responsable financier, budgétaire et de gestion",
+      "niveauxetudes": null,
+      "experiencerequise": null,
+      "source": "Via site Forem"
+    }
+  ]
+}

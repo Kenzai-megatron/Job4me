@@ -1,5 +1,6 @@
 import type { KeywordLevel, PassTrigger, SourceAccess, SourceFamily } from '@job4me/contracts';
 import type { Logger } from '@job4me/logger';
+import type { ZodType } from 'zod';
 import { asCollectError, type CollectError } from './errors';
 import type { PoliteClient } from './http';
 import type { RawOffer } from './offer';
@@ -21,6 +22,12 @@ export interface ConnectorContext {
   http: PoliteClient;
   /** Only the secrets this connector declares, all present (otherwise it is skipped). */
   secrets: Readonly<Record<string, string>>;
+  /** Centre of the searches around a point (configuration, until the geography of phase 3). */
+  area: { name: string; lat: number; lon: number };
+  /** Ads older than this are neither asked for nor kept; null: no limit. */
+  maxAgeDays: number | null;
+  /** The source's own values from the configuration (collect.sources.<name>.params). */
+  params: Readonly<Record<string, string | number | boolean>>;
   now: Date;
   timeZone: string;
   signal: AbortSignal;
@@ -29,6 +36,8 @@ export interface ConnectorContext {
   add(offers: readonly RawOffer[], readCount?: number): void;
   /** A failure that does not stop the source, such as one keyword out of ten. */
   warn(error: CollectError): void;
+  /** Searches left on a rationed source (SerpApi), stored with its settings. */
+  reportQuota(remaining: number): void;
 }
 
 export interface Connector {
@@ -44,6 +53,8 @@ export interface Connector {
   hosts: readonly string[];
   /** Names of the secrets it needs; without them it is "skipped, key missing". */
   secrets: readonly string[];
+  /** The shape of collect.sources.<name>.params, checked at start-up. */
+  params?: ZodType;
   run(context: ConnectorContext): Promise<void>;
 }
 

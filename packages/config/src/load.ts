@@ -222,6 +222,12 @@ export function loadSecrets(env: Env = process.env): Secrets {
     databaseExtractorUrl: extractorDatabaseUrl(env),
     importKey: readSecret('JOB4ME_IMPORT_KEY', env),
     anthropicApiKey: readSecret('JOB4ME_ANTHROPIC_API_KEY', env) || undefined,
+    // Free keys in Mehdi's name, on the home machine only (decision D2: later).
+    sourceKeys: {
+      adzunaAppId: readSecret('JOB4ME_ADZUNA_APP_ID', env) || undefined,
+      adzunaAppKey: readSecret('JOB4ME_ADZUNA_APP_KEY', env) || undefined,
+      serpApiKey: readSecret('JOB4ME_SERPAPI_KEY', env) || undefined,
+    },
     vapidPublicKey: readSecret('JOB4ME_VAPID_PUBLIC_KEY', env),
     vapidPrivateKey: readSecret('JOB4ME_VAPID_PRIVATE_KEY', env),
   };

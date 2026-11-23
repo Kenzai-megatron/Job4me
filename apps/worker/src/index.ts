@@ -63,8 +63,8 @@ async function main(): Promise<void> {
     settings: config.settings,
     logger,
     connectors,
-    // Adzuna and SerpApi keys arrive with their connectors (phase 2, lot 2; decision D2).
-    secrets: {},
+    // Adzuna and SerpApi (decision D2): empty until Mehdi writes them on the home machine.
+    secrets: secrets.sourceKeys,
   };
   await boss.work(QUEUES.collectSchedule, async () => {
     await schedulePasses({
