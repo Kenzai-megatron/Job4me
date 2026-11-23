@@ -82,7 +82,10 @@
     "setupTitle": "Terminez la configuration de votre accès",
     "setupTotp": "Le code à 6 chiffres n'est pas encore activé : sans lui, le mot de passe de secours ne fonctionne pas.",
     "setupCodes": "Vous n'avez plus de code de secours disponible.",
-    "setupLink": "Ouvrir les paramètres de sécurité"
+    "setupLink": "Ouvrir les paramètres de sécurité",
+    "silentTitle": "Des sources sont muettes",
+    "silentBody": "{{sources}} : rien rapporté au dernier passage, ou bien moins que d'habitude.",
+    "silentLink": "Ouvrir l'écran Sources"
   },
   "security": {
     "title": "Sécurité",
@@ -198,7 +201,9 @@
     "test": "Envoyer une notification de test",
     "testSent": "Notification de test envoyée : elle arrive dans quelques secondes.",
     "testTitle": "Job4me",
-    "testBody": "Les notifications fonctionnent sur cet appareil."
+    "testBody": "Les notifications fonctionnent sur cet appareil.",
+    "silentTitle": "Source muette",
+    "silentBody": "{{sources}} : rien lu au dernier passage, ou bien moins que d'habitude. Ouvrez l'écran Sources."
   },
   "scores": {
     "band80": "postuler aujourd'hui",
@@ -648,7 +653,18 @@
       "5": "vendredi",
       "6": "samedi",
       "7": "dimanche"
-    }
+    },
+    "alertBanner": "Sources muettes : testez-les pour voir si le site a changé, ou coupez-les.",
+    "alerts": {
+      "zero_read": "Muette depuis le {{date}} : aucune offre lue, sans erreur.",
+      "collapse": "Volume effondré depuis le {{date}} : {{read}} offres lues contre {{usual}} d'habitude."
+    },
+    "window": "Sur {{days}} jours : {{runs}} passages, {{read}} lues, {{kept}} retenues, {{fresh}} inédites",
+    "windowFailed": "dont {{count}} en échec",
+    "windowEmpty": "Aucun passage planifié ou manuel sur les {{days}} derniers jours.",
+    "quota": "Recherches restantes : {{remaining}} (au {{date}})",
+    "relevance": "Pertinence (part des offres notées 80 ou plus) : arrive en phase 3, avec la notation.",
+    "history": "Passages récents"
   },
   "offers": {
     "title": "Offres",

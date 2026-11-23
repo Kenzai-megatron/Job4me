@@ -18,6 +18,8 @@ import {
 import type { CollectPassJob, PassTrigger, RunStatus, SkipReason } from '@job4me/contracts';
 import { and, asc, type Database, desc, eq, inArray, lt, schema, sql, withUser } from '@job4me/db';
 import type { Logger } from '@job4me/logger';
+import type { PushMessage } from '../notify';
+import { checkSilentSources } from './alerts';
 
 // The orchestrator (ADR 0013): one pass, one source at a time in calling order, each in its own
 // try/catch and time budget within the pass budget. A source that fails never stops the others;
@@ -36,6 +38,8 @@ export interface CollectDeps {
   fetch?: FetchLike;
   sleep?: Sleep;
   now?: () => Date;
+  /** Tells the account's phone of a silent source (decision D4); absent without push keys. */
+  notify?: (userId: string, message: PushMessage) => Promise<unknown>;
 }
 
 export interface RunOutcome {
@@ -583,6 +587,15 @@ export async function runPass(deps: CollectDeps, job: CollectPassJob): Promise<R
       deps.logger.error(
         { passId, err: error instanceof Error ? error.message : 'unknown' },
         'collection pass not closed',
+      ),
+    );
+  }
+  // Silent sources (decision D4): judged on scheduled and manual passes, never on tests.
+  if (completed && trigger !== 'test') {
+    await checkSilentSources(deps, userId, passId).catch((error: unknown) =>
+      deps.logger.error(
+        { passId, err: error instanceof Error ? error.message : 'unknown' },
+        'silent sources not checked',
       ),
     );
   }

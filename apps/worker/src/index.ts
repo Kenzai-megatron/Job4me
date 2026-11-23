@@ -16,6 +16,7 @@ import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
 import { sendTestNotification } from './jobs/push-test';
+import { type PushMessage, pushToUser } from './notify';
 import { startStructurer } from './jobs/structurer';
 
 // The worker runs background jobs from the PostgreSQL queue (SPEC section 10).
@@ -45,6 +46,15 @@ async function main(): Promise<void> {
     tz: 'Europe/Brussels',
   });
 
+  const vapid =
+    secrets.vapidPublicKey && secrets.vapidPrivateKey
+      ? {
+          subject: config.settings.push.vapidSubject,
+          publicKey: secrets.vapidPublicKey,
+          privateKey: secrets.vapidPrivateKey,
+        }
+      : null;
+
   // Collection (ADR 0013): a pass is never retried by the queue (a private person's pace), and
   // may run as long as its budget before the queue considers it lost.
   assertSourceSettings(config.settings);
@@ -65,6 +75,13 @@ async function main(): Promise<void> {
     connectors,
     // Adzuna and SerpApi (decision D2): empty until Mehdi writes them on the home machine.
     secrets: secrets.sourceKeys,
+    // Silent sources reach the phone (decision D4) when the push keys exist.
+    ...(vapid
+      ? {
+          notify: (userId: string, message: PushMessage) =>
+            pushToUser({ db: database.db, logger, vapid }, userId, message),
+        }
+      : {}),
   };
   await boss.work(QUEUES.collectSchedule, async () => {
     await schedulePasses({
@@ -77,15 +94,6 @@ async function main(): Promise<void> {
     for (const job of jobs) await runPass(collectDeps, job.data);
   });
   logger.info({ sources: connectors.map((connector) => connector.name) }, 'collection ready');
-
-  const vapid =
-    secrets.vapidPublicKey && secrets.vapidPrivateKey
-      ? {
-          subject: config.settings.push.vapidSubject,
-          publicKey: secrets.vapidPublicKey,
-          privateKey: secrets.vapidPrivateKey,
-        }
-      : null;
 
   await boss.work<PushTestJob>(QUEUES.pushTest, async (jobs) => {
     if (!vapid) {

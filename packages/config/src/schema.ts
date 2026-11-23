@@ -256,6 +256,17 @@ export const settingsSchema = z
         retentionDays: z.number().int().min(30).max(3650),
         /** Latest runs shown on each source of the Sources screen. */
         perSource: z.number().int().min(1).max(50),
+        /** The window of the figures of each source (SPEC section 9: four weeks). */
+        windowDays: z.number().int().min(1).max(365),
+      }),
+      /** Silent source (decision D4): what raises the alert. */
+      mute: z.object({
+        /** Previous runs whose median read count is the usual volume. */
+        history: z.number().int().min(3).max(30),
+        /** Below this usual volume, a drop says nothing (too few offers to judge). */
+        minUsual: z.number().int().min(1).max(10_000),
+        /** A run reading less than this share of the usual volume is a collapse. */
+        collapseRatio: z.number().min(0).max(1),
       }),
       manual: z.object({
         maxTextChars: z.number().int().min(100).max(50_000),

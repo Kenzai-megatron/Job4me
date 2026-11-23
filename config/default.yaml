@@ -179,6 +179,15 @@ collect:
   runs:
     retentionDays: 365
     perSource: 8
+    # The figures of each source on the Sources screen: four weeks (SPEC, section 9).
+    windowDays: 28
+  # Silent source (decision D4: a notification on the phone and a banner on the Sources screen):
+  # nothing read without any error, or less than a quarter of the usual volume (the median of
+  # the six previous runs, when it reaches ten offers). Test passes never count.
+  mute:
+    history: 6
+    minUsual: 10
+    collapseRatio: 0.25
   manual:
     maxTextChars: 20000
     addsPerHour: 30

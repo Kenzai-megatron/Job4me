@@ -69,6 +69,7 @@ Les tests cités tournent dans la CI : `unit`, `integration` (PostgreSQL 18), `e
 | 37 | Données de tiers dans les annonces | offre supprimée 90 jours après sa dernière vue, journaux de passage après un an (configuration) ; le mode test n'enregistre aucune offre ; rien ne quitte la machine en phase 2 | `collect.int` : « deletes offers not seen for 90 days and pass logs older than a year », « in test mode, uses one keyword and one page, and writes its log but no offer » |
 | 38 | Pré-filtre de titre qui bloque le worker | expressions lues comme du texte (début de mot), jamais comme des expressions régulières : aucun retour arrière catastrophique | `prefilter` : « treats special characters as plain text, never as a pattern » |
 | 39 | Dépassement du quota de SerpApi | compte consulté avant chaque passage sans dépenser de recherche ; réserve dans la configuration ; source sautée sous la réserve, recherches bornées à ce qui reste au-dessus ; solde enregistré ; trois passages par semaine | `google-jobs` : « is skipped under the reserve, without spending a search », « searches only what stays above the reserve » ; `collect.int` : « stores the quota a rationed source reports, and skips it under its reserve » |
+| 40 | Source muette ou tarissement silencieux | journal à chaque passage ; alerte jugée sur les offres **lues** et sur la médiane des passages précédents, jamais sur un test ; une notification par incident et un bandeau tant que la source ne lit pas de nouveau | `collect.int` : « raise an alert on nothing read without an error, tell the phone once, then clear it », « raise an alert when the volume collapses against the previous runs », « never judge a test pass, a skipped source or a failed one » ; `collect.int` (API) : alerte et chiffres de quatre semaines |
 
 ## Risques acceptés pour la phase 0
 
@@ -89,8 +90,7 @@ Détail et raisons dans la [revue de sécurité de la phase 1](review-phase-1.md
 
 ## Phase 2 (collecte), en cours
 
-Le [plan de la phase 2](../plans/phase-2.md), section 9, détaille menaces, contrôles et tests ; les lignes 31 à 38 couvrent le socle (lot 1) et les pages publiques (lot 3), la ligne 39 le quota de SerpApi (lot 2). Restent à faire :
+Le [plan de la phase 2](../plans/phase-2.md), section 9, détaille menaces, contrôles et tests ; les lignes 31 à 38 couvrent le socle (lot 1) et les pages publiques (lot 3), la ligne 39 le quota de SerpApi (lot 2), la ligne 40 l'alerte « source muette » (lot 5). Restent à faire :
 
-- **Source muette ou tarissement silencieux** (menace 5 du plan) : alerte calculée sur les offres lues et la tendance des derniers passages, au lot 5 ; le journal par source existe dès le lot 1.
 - **Aucune image distante** : les offres n'affichent aucune image ; à garder ainsi tant qu'aucun proxy d'images n'existe.
 - **Suppression d'un import** et de son fichier chiffré (revue de la phase 1, constat 14).

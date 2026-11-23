@@ -21,11 +21,14 @@ import {
   and,
   desc,
   eq,
+  gte,
   type JobOfferRow,
   lt,
+  ne,
   or,
   recordAudit,
   schema,
+  sql,
   type Transaction,
   withUser,
 } from '@job4me/db';
@@ -79,19 +82,39 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       .from(schema.sourceSettings)
       .where(eq(schema.sourceSettings.userId, userId));
     const byName = new Map(rows.map((row) => [row.source, row]));
+    // The figures of the window (four weeks): scheduled and manual runs only, tests apart.
+    const days = settings.collect.runs.windowDays;
+    const runs = schema.sourceRuns;
+    const figures = await tx
+      .select({
+        source: runs.source,
+        runs: sql<number>`count(*) filter (where ${runs.status} <> 'skipped')::int`,
+        failed: sql<number>`count(*) filter (where ${runs.status} = 'failed')::int`,
+        read: sql<number>`coalesce(sum(${runs.readCount}), 0)::int`,
+        kept: sql<number>`coalesce(sum(${runs.keptCount}), 0)::int`,
+        fresh: sql<number>`coalesce(sum(${runs.newCount}), 0)::int`,
+      })
+      .from(runs)
+      .where(
+        and(
+          eq(runs.userId, userId),
+          ne(runs.trigger, 'test'),
+          gte(runs.createdAt, new Date(now().getTime() - days * 86_400_000)),
+        ),
+      )
+      .groupBy(runs.source);
+    const windows = new Map(figures.map(({ source, ...counts }) => [source, counts]));
     const result: SourceSummary[] = [];
     for (const connector of connectors()) {
       if (only && connector.name !== only) continue;
       const config = sourceSettings(settings, connector.name);
       const row = byName.get(connector.name);
       const locked = lockedByUsageMode(connector, settings);
-      const runs = await tx
+      const latest = await tx
         .select()
-        .from(schema.sourceRuns)
-        .where(
-          and(eq(schema.sourceRuns.userId, userId), eq(schema.sourceRuns.source, connector.name)),
-        )
-        .orderBy(desc(schema.sourceRuns.createdAt))
+        .from(runs)
+        .where(and(eq(runs.userId, userId), eq(runs.source, connector.name)))
+        .orderBy(desc(runs.createdAt))
         .limit(settings.collect.runs.perSource);
       result.push(
         sourceSummarySchema.parse({
@@ -107,7 +130,24 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
             row?.cooldownUntil && row.cooldownUntil > now()
               ? row.cooldownUntil.toISOString()
               : null,
-          runs: runs.map(toSourceRun),
+          alert:
+            row?.alert && row.alertSince
+              ? {
+                  kind: row.alert,
+                  since: row.alertSince.toISOString(),
+                  read: row.alertRead,
+                  usual: row.alertUsual,
+                }
+              : null,
+          quota:
+            row?.quotaRemaining !== null && row?.quotaRemaining !== undefined && row.quotaCheckedAt
+              ? { remaining: row.quotaRemaining, checkedAt: row.quotaCheckedAt.toISOString() }
+              : null,
+          window: {
+            days,
+            ...(windows.get(connector.name) ?? { runs: 0, failed: 0, read: 0, kept: 0, fresh: 0 }),
+          },
+          runs: latest.map(toSourceRun),
         }),
       );
     }

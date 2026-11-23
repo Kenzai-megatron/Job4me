@@ -84,6 +84,30 @@ export const sourceRunSchema = z.object({
 });
 export type SourceRun = z.infer<typeof sourceRunSchema>;
 
+/** Silent source (decision D4): nothing read without an error, or far less than usual. */
+export const sourceAlertKinds = ['zero_read', 'collapse'] as const;
+export type SourceAlertKind = (typeof sourceAlertKinds)[number];
+
+export const sourceAlertSchema = z.object({
+  kind: z.enum(sourceAlertKinds),
+  since: z.string(),
+  /** Read by the run that raised it, against the usual volume of the previous runs. */
+  read: z.number().int().min(0).nullable(),
+  usual: z.number().int().min(0).nullable(),
+});
+export type SourceAlert = z.infer<typeof sourceAlertSchema>;
+
+/** Scheduled and manual runs over the window of the configuration (four weeks), tests apart. */
+export const sourceWindowSchema = z.object({
+  days: z.number().int().min(1),
+  runs: z.number().int().min(0),
+  failed: z.number().int().min(0),
+  read: z.number().int().min(0),
+  kept: z.number().int().min(0),
+  fresh: z.number().int().min(0),
+});
+export type SourceWindow = z.infer<typeof sourceWindowSchema>;
+
 export const sourceSummarySchema = z.object({
   name: sourceNameSchema,
   access: z.enum(sourceAccesses),
@@ -98,6 +122,10 @@ export const sourceSummarySchema = z.object({
   locked: z.boolean(),
   /** No call before this time, after a 403 or a 429 (LinkedIn: 24 hours). */
   cooldownUntil: z.string().nullable(),
+  alert: sourceAlertSchema.nullable(),
+  /** Searches left on a rationed source (SerpApi), as its account said at the last pass. */
+  quota: z.object({ remaining: z.number().int(), checkedAt: z.string() }).nullable(),
+  window: sourceWindowSchema,
   /** The latest runs, newest first (tests included). */
   runs: z.array(sourceRunSchema),
 });

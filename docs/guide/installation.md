@@ -167,6 +167,8 @@ Pour te connecter aussi depuis ton PC : sur la page de connexion, choisis la pas
 
 Les conteneurs redémarrent seuls avec la machine (Docker démarré au boot). Tailscale garde sa configuration `serve`.
 
+Une source qui ne lit plus rien sans erreur, ou bien moins que d'habitude, déclenche l'alerte « source muette » : une notification sur le téléphone (une fois par incident) et un bandeau sur l'accueil et l'écran Sources. Teste alors la source : un site qui a changé de gabarit se voit tout de suite.
+
 La collecte tourne d'elle-même chaque matin à 7 h 10 : les API et l'open data chaque jour, les pages publiques et LinkedIn le mardi et le vendredi (configuration, `collect`). Une source coupée par son interrupteur, en pause après un refus du site ou sans clé apparaît « sautée » avec sa raison, jamais « 0 offre ». Les commandes `sources:*` choisissent seules le compte quand il n'y en a qu'un ; sinon, ajoute `--email <ton-adresse>`.
 
 ## 8. Sauvegardes

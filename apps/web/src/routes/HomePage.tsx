@@ -2,6 +2,7 @@ import { Alert, Card } from '@job4me/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
+import { sourcesQuery } from '../api/collect';
 import { securityQuery, sessionQuery } from '../api/queries';
 
 export function HomePage() {
@@ -10,6 +11,9 @@ export function HomePage() {
   const security = useQuery(securityQuery);
   const needsTotp = security.data && !security.data.totpEnabled;
   const needsCodes = security.data && security.data.recoveryCodesRemaining === 0;
+  // Silent sources (decision D4): also told here, the screen opened first.
+  const sources = useQuery(sourcesQuery);
+  const silent = sources.data?.sources.filter((source) => source.alert) ?? [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,6 +31,23 @@ export function HomePage() {
             className="mt-2 inline-block font-semibold text-accent underline underline-offset-4"
           >
             {t('home.setupLink')}
+          </Link>
+        </Alert>
+      ) : null}
+      {silent.length > 0 ? (
+        <Alert tone="error" title={t('home.silentTitle')}>
+          <p>
+            {t('home.silentBody', {
+              sources: silent
+                .map((source) => t(`sources.names.${source.name}`, { defaultValue: source.name }))
+                .join(', '),
+            })}
+          </p>
+          <Link
+            to="/sources"
+            className="mt-2 inline-block font-semibold text-accent underline underline-offset-4"
+          >
+            {t('home.silentLink')}
           </Link>
         </Alert>
       ) : null}
