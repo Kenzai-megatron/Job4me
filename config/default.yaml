@@ -199,8 +199,8 @@ collect:
   # Development and tests only (JOB4ME_COLLECT_DEMO_SOURCE, written by pnpm setup:dev): the demo
   # source, offers made up without any request, replaces every real source.
   demoSource: false
-  # Hypothèse: the searches around a point (Forem) start from Brussels, with the profile's
-  # radius, until the geography of phase 3 places the profile's base city.
+  # The city of the sites searched by city name (StepStone, Talent.com), and the centre of the
+  # searches around a point (Forem) while the profile's base city is not found (ADR 0017).
   area:
     name: Bruxelles
     lat: 50.8467

@@ -8,7 +8,7 @@ import { query } from './http-query';
 // Forem (docs/SOURCES.md, section 2.1): open data of the ODWB, without a key, under CC BY-SA 4.0
 // (the source is cited on every offer). Probed on 23/11/2026: 24 237 offers, updated daily,
 // results[] with lists for places and languages, no description (one is composed from the
-// fields, the languages above all). Searched around the centre of the configuration.
+// fields, the languages above all). Searched around the profile's base city (ADR 0017).
 
 const ENDPOINT =
   'https://www.odwb.be/api/explore/v2.1/catalog/datasets/offres-d-emploi-forem/records';

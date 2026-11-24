@@ -281,8 +281,9 @@ export const settingsSchema = z
       /** Development and tests: the demo source (no request at all) replaces the real ones. */
       demoSource: z.boolean(),
       /**
-       * Centre of the searches around a point (Forem), with the profile's radius. Hypothèse:
-       * Brussels, until the geography of phase 3 places the profile's base city.
+       * The city of the sites searched by city name (StepStone, Talent.com), and the centre of
+       * the searches around a point (Forem) while the profile's base city is not found in the
+       * localities (ADR 0017).
        */
       area: z.object({
         name: z.string().min(1).max(100),
