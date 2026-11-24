@@ -1,4 +1,6 @@
 import {
+  aiCallStatuses,
+  aiUsages,
   collectErrorCodes,
   errorCodes,
   exclusionReasons,
@@ -45,6 +47,8 @@ describe('translation files', () => {
       ...scoreBands.map((band) => `offers.bands.${band}`),
       ...scoreBands.map((band) => `offers.bandOptions.${band}`),
       ...scoreMethods.map((method) => `offers.methods.${method}`),
+      ...aiUsages.map((usage) => `ai.usages.${usage}`),
+      ...aiCallStatuses.map((status) => `ai.statuses.${status}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

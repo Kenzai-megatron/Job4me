@@ -138,6 +138,7 @@ export async function loadOffers(
                 confidence: row.confidence,
                 factors: row.factors ?? [],
                 reason: row.reason,
+                analysis: row.analysis ?? null,
                 scoredAt: row.scoredAt.toISOString(),
               }
             : null;

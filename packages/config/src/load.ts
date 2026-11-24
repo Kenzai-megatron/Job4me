@@ -110,6 +110,12 @@ function overridesFromEnv(env: Env): unknown {
         ? { demoSource: ['1', 'true'].includes(env.JOB4ME_COLLECT_DEMO_SOURCE) }
         : {}),
     },
+    ai: {
+      // The scoring by Claude (decision D5: off), switched on from .env on the home machine.
+      ...(env.JOB4ME_AI_SCORING
+        ? { scoring: { enabled: ['1', 'true'].includes(env.JOB4ME_AI_SCORING) } }
+        : {}),
+    },
   };
 }
 

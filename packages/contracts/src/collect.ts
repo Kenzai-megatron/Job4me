@@ -262,14 +262,40 @@ export const scoreFactorSchema = z.discriminatedUnion('kind', [
 ]);
 export type ScoreFactor = z.infer<typeof scoreFactorSchema>;
 
+const gridShape = <T extends z.ZodType>(value: T) =>
+  z.object({
+    skills: value,
+    experience: value,
+    languages: value,
+    practical: value,
+    sector: value,
+    motivations: value,
+  });
+
+/**
+ * The detailed analysis of an offer (phase 3 plan, section 8): the grid's subscores and the
+ * weights they were combined with, strengths, gaps, blocking elements, keywords to reuse.
+ */
+export const scoreAnalysisSchema = z.object({
+  subscores: gridShape(z.number().int().min(0).max(100)),
+  weights: gridShape(z.number().int().min(0).max(100)),
+  strengths: z.array(z.string()),
+  gaps: z.array(z.string()),
+  blockers: z.array(z.string()),
+  keywords: z.array(z.string()),
+});
+export type ScoreAnalysis = z.infer<typeof scoreAnalysisSchema>;
+
 /** The current score of an announcement: always explained, at low confidence without AI. */
 export const offerScoreSchema = z.object({
   value: z.number().int().min(0).max(100),
   method: z.enum(scoreMethods),
   confidence: z.enum(['low', 'normal']),
   factors: z.array(scoreFactorSchema),
-  /** Claude's short reason (lot 5). */
+  /** Claude's reason, in one sentence. */
   reason: z.string().nullable(),
+  /** The detailed analysis, when Claude Sonnet made one. */
+  analysis: scoreAnalysisSchema.nullable(),
   scoredAt: z.string(),
 });
 export type OfferScore = z.infer<typeof offerScoreSchema>;

@@ -77,17 +77,37 @@ describe('AI usage', () => {
           costUsd: 1.5,
           createdAt: old,
         },
+        {
+          userId: alice.userId,
+          usage: 'scoring_quick',
+          model: 'claude-haiku-5-5',
+          status: 'succeeded',
+          costUsd: 0.002,
+        },
+        // Held back by a cap: logged, never sent, free.
+        {
+          userId: alice.userId,
+          usage: 'scoring_quick',
+          model: 'claude-haiku-5-5',
+          status: 'blocked',
+          costUsd: 0,
+        },
       ]),
     );
     const usage = (await alice.browser.get('/api/ai/usage')).json<AiUsageResponse>();
-    expect(usage.weekUsd).toBeCloseTo(0.25, 6);
-    expect(usage.totalUsd).toBeCloseTo(1.75, 6);
+    expect(usage.weekUsd).toBeCloseTo(0.252, 6);
+    expect(usage.totalUsd).toBeCloseTo(1.752, 6);
     expect(usage.caps).toEqual(ctx.deps.config.settings.ai.caps);
-    expect(usage.calls[0]).toMatchObject({
-      usage: 'cv_structuring',
-      inputTokens: 1000,
-      cacheReadTokens: 100,
-    });
+    // Spending by usage (phase 3 plan, section 10), in the order of the usages.
+    expect(usage.byUsage.map((item) => item.usage)).toEqual([
+      'cv_structuring',
+      'keywords',
+      'scoring_quick',
+    ]);
+    expect(usage.byUsage[1]).toMatchObject({ weekUsd: 0, totalUsd: 1.5, calls: 1 });
+    expect(usage.byUsage[2]).toMatchObject({ weekUsd: 0.002, totalUsd: 0.002, calls: 1 });
+    const structuring = usage.calls.find((call) => call.usage === 'cv_structuring');
+    expect(structuring).toMatchObject({ inputTokens: 1000, cacheReadTokens: 100 });
     expect(Object.keys(usage.calls[0]!).sort()).toEqual([
       'cacheReadTokens',
       'costUsd',
@@ -101,6 +121,6 @@ describe('AI usage', () => {
     ]);
 
     const theirs = (await bob.browser.get('/api/ai/usage')).json<AiUsageResponse>();
-    expect(theirs).toMatchObject({ weekUsd: 0, totalUsd: 0, calls: [] });
+    expect(theirs).toMatchObject({ weekUsd: 0, totalUsd: 0, byUsage: [], calls: [] });
   });
 });

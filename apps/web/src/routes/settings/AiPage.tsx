@@ -44,6 +44,29 @@ export function AiPage() {
               <p className="text-sm text-muted">{t('ai.capsHint')}</p>
             </div>
           </Card>
+          {data.byUsage.length > 0 ? (
+            <Card aria-labelledby="ai-usages-title">
+              <div className="flex flex-col gap-3">
+                <h2 id="ai-usages-title" className="text-lg font-semibold">
+                  {t('ai.byUsage')}
+                </h2>
+                <ul className="flex flex-col divide-y divide-line">
+                  {data.byUsage.map((item) => (
+                    <li key={item.usage} className="flex flex-col gap-1 py-3">
+                      <span className="font-medium">{t(`ai.usages.${item.usage}`)}</span>
+                      <span className="text-sm text-muted">
+                        {t('ai.usageSpend', {
+                          week: dollars(item.weekUsd),
+                          total: dollars(item.totalUsd),
+                          count: item.calls,
+                        })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Card>
+          ) : null}
           <Card aria-labelledby="ai-calls-title">
             <div className="flex flex-col gap-3">
               <h2 id="ai-calls-title" className="text-lg font-semibold">

@@ -70,7 +70,23 @@ read -rs CLE && printf '%s' "$CLE" > secrets/anthropic_api_key && unset CLE
 pnpm stack:up
 ```
 
-Paramètres > IA montre ensuite la dépense de la semaine, le total et les derniers appels, sans leur contenu.
+Paramètres > IA montre ensuite la dépense de la semaine, le total, la dépense par usage et les derniers appels, sans leur contenu.
+
+### Activer la notation des offres par Claude (facultatif, coupée pendant la phase de test)
+
+Par défaut, les offres sont notées sans IA, gratuitement (décision D5). La notation par Claude est prête : notation rapide par Claude Haiku 5.5 par lots de 25, puis analyse détaillée par Claude Sonnet 5.5 des offres de 70 ou plus (ADR 0018). Elle demande la clé de la section précédente et partage ses plafonds (2 $ par semaine). Pour l'activer, ajoute cette ligne au fichier `.env` :
+
+```bash
+echo 'JOB4ME_AI_SCORING=true' >> .env
+```
+
+Puis redémarre la pile :
+
+```bash
+pnpm stack:up
+```
+
+La notation part après chaque passage planifié ou manuel, jamais après un passage de test : au plus 200 offres par passage en notation rapide et 10 analyses détaillées, à tour de rôle entre les sources ; le reste attend le passage suivant. Ce qui part chez Anthropic : ton profil sans identité ni coordonnées ni ville de base, et pour chaque offre son intitulé, son employeur, son lieu, sa distance et le début de son texte, sans adresse e-mail ni numéro de téléphone. Pour la couper, remets `false` dans `.env` et redémarre : les scores déjà donnés restent tant que ni ton profil ni l'offre ne changent.
 
 ### Activer Adzuna et Google Jobs (facultatif)
 

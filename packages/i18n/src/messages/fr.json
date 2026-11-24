@@ -549,12 +549,17 @@
     "week": "Sur 7 jours : {{amount}} sur un plafond de {{cap}}",
     "total": "Depuis le début : {{amount}} sur un plafond de {{cap}}",
     "capsHint": "Au-delà d'un plafond, aucun appel n'est envoyé. Réglez aussi un plafond mensuel dans la console d'Anthropic.",
+    "byUsage": "Par usage",
+    "usageSpend_one": "{{week}} sur 7 jours · {{total}} depuis le début · {{count}} appel",
+    "usageSpend_other": "{{week}} sur 7 jours · {{total}} depuis le début · {{count}} appels",
     "calls": "Derniers appels",
     "empty": "Aucun appel pour le moment.",
     "tokens": "{{input}} jetons lus, {{output}} écrits",
     "usages": {
       "cv_structuring": "Structuration du CV",
-      "keywords": "Proposition de mots-clés"
+      "keywords": "Proposition de mots-clés",
+      "scoring_quick": "Notation rapide des offres",
+      "scoring_detailed": "Analyse détaillée des offres"
     },
     "statuses": {
       "succeeded": "réussi",
@@ -770,8 +775,8 @@
     },
     "methods": {
       "rules": "Score sans IA (gratuit) : indicatif, il ne déclenchera jamais d'envoi automatique.",
-      "claude_quick": "Score rapide de Claude Haiku.",
-      "claude_detailed": "Analyse détaillée de Claude Sonnet."
+      "claude_quick": "Score rapide de Claude Haiku, sur le début de l’annonce.",
+      "claude_detailed": "Analyse détaillée de Claude Sonnet, avec les poids de votre grille."
     },
     "languages": {
       "fr": "français",
@@ -829,6 +834,17 @@
       "url": "même lien et même intitulé",
       "employer": "même intitulé et même employeur, écrits autrement",
       "no_employer": "même intitulé, employeur inconnu d'un côté"
+    },
+    "lowConfidence": "Confiance basse : la source ne donne pas le texte de l’annonce, le score repose sur son intitulé.",
+    "analysis": {
+      "grid": "Notes de la grille et leurs poids",
+      "criterion": "Critère",
+      "weight": "Poids",
+      "subscore": "Note",
+      "blockers": "Éléments bloquants",
+      "strengths": "Points forts",
+      "gaps": "Écarts",
+      "keywords": "Mots-clés à reprendre"
     }
   }
 }

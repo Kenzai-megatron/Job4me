@@ -41,6 +41,18 @@ describe('loadConfig', () => {
     expect(config.allowedOrigins).toEqual(['https://job4me.example.ts.net']);
   });
 
+  it('keeps the scoring by Claude off unless .env switches it on (decision D5)', () => {
+    const off = loadConfig({ cwd: makeRepo(), env: { JOB4ME_ENV: 'test' } });
+    expect(off.settings.ai.scoring.enabled).toBe(false);
+    const on = loadConfig({
+      cwd: makeRepo(),
+      env: { JOB4ME_ENV: 'test', JOB4ME_AI_SCORING: 'true' },
+    });
+    expect(on.settings.ai.scoring.enabled).toBe(true);
+    // Only the switch: models, caps and thresholds stay those of the configuration.
+    expect(on.settings.ai.scoring.quick).toEqual(off.settings.ai.scoring.quick);
+  });
+
   it('rejects a value outside its bounds', () => {
     const root = makeRepo('auth:\n  password:\n    argon2:\n      memoryKiB: 1024\n');
     expect(() => loadConfig({ cwd: root, env: { JOB4ME_ENV: 'test' } })).toThrow(ConfigError);
