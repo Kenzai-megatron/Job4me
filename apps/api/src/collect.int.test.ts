@@ -549,6 +549,54 @@ describe('offers', () => {
       ['alpha', null],
     ]);
   });
+
+  it('place an offer added by hand and measure it from the base city (ADR 0017)', async () => {
+    const { browser } = await signedInBrowser(ctx, 'manual-placed');
+    await browser.send('PATCH', '/api/profile', { baseCity: 'Bruxelles', basePostalCode: '1000' });
+    const response = await browser.post('/api/offers', {
+      title: 'Gestionnaire de paie',
+      location: 'Malines',
+      text: 'Poste en 100 % télétravail.',
+    });
+    expect(response.statusCode).toBe(200);
+    const { offer } = response.json<ManualOfferResponse>();
+    expect(offer.place).toEqual({
+      status: 'found',
+      name: 'Mechelen',
+      postalCode: '2800',
+      distanceKm: 27,
+    });
+    expect(offer.remote).toBe('full');
+    expect(offer.postings[0]!.place).toEqual({
+      status: 'found',
+      name: 'Mechelen',
+      postalCode: '2800',
+    });
+    const abroad = (
+      await browser.post('/api/offers', { title: 'Acheteur', location: 'Montrouge, France' })
+    ).json<ManualOfferResponse>();
+    expect(abroad.offer.place).toEqual({
+      status: 'abroad',
+      name: null,
+      postalCode: null,
+      distanceKm: null,
+    });
+  });
+
+  it('measure every distance again when the base city changes', async () => {
+    const { browser } = await signedInBrowser(ctx, 'base-moved');
+    await browser.send('PATCH', '/api/profile', { baseCity: 'Bruxelles' });
+    const { offer } = (
+      await browser.post('/api/offers', { title: 'Comptable', location: '2800 Mechelen' })
+    ).json<ManualOfferResponse>();
+    expect(offer.place.distanceKm).toBe(27);
+    await browser.send('PATCH', '/api/profile', { baseCity: 'Mechelen' });
+    expect((await browser.get(`/api/offers/${offer.id}`)).json<Offer>().place.distanceKm).toBe(0);
+    await browser.send('PATCH', '/api/profile', { baseCity: 'Nulle part' });
+    expect(
+      (await browser.get(`/api/offers/${offer.id}`)).json<Offer>().place.distanceKm,
+    ).toBeNull();
+  });
 });
 
 describe('command line', () => {

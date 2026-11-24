@@ -1,4 +1,4 @@
-import { assertSourceSettings, availableConnectors } from '@job4me/collect';
+import { assertSourceSettings, availableConnectors, Gazetteer } from '@job4me/collect';
 import { loadConfig, loadSecrets } from '@job4me/config';
 import {
   type CollectPassJob,
@@ -6,13 +6,13 @@ import {
   type PushTestJob,
   QUEUES,
 } from '@job4me/contracts';
-import { connect, queueOptions } from '@job4me/db';
+import { connect, queueOptions, readLocalities } from '@job4me/db';
 import { createLogger } from '@job4me/logger';
 import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
 import { runPass } from './collect/pass';
-import { identifyStoredPostings } from './collect/postings';
+import { prepareStoredPostings } from './collect/postings';
 import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
@@ -69,14 +69,17 @@ async function main(): Promise<void> {
   await boss.schedule(QUEUES.collectSchedule, collect.schedule.cron, null, {
     tz: collect.schedule.timeZone,
   });
-  // Postings stored before their identity existed (phase 2) are identified and regrouped
-  // into announcements (ADR 0016) before any pass may add to them.
-  await identifyStoredPostings(
-    { db: database.db, logger },
+  // The Belgian localities (ADR 0017), loaded by the migration: read once.
+  const gazetteer = new Gazetteer(await readLocalities(database.db), config.settings.geo);
+  // Postings stored before their identity (ADR 0016) or their place (ADR 0017) existed get
+  // them, before any pass may add to their announcements.
+  await prepareStoredPostings(
+    { db: database.db, logger, gazetteer, settings: config.settings },
     connectors.map((connector) => connector.name),
   );
   const collectDeps = {
     db: database.db,
+    gazetteer,
     settings: config.settings,
     logger,
     connectors,

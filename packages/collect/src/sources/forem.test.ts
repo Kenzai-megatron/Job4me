@@ -14,7 +14,7 @@ const page = () => fixture<Page>('forem-page.json');
 const params = { pageSize: 100 };
 
 describe('Forem', () => {
-  it('asks the open data for the keyword, around the centre, within the age limit', async () => {
+  it('asks the open data for the keyword, around the base city, within the age limit', async () => {
     const net = fakeNetwork(() => json(page()));
     const result = await runConnector(foremConnector, {
       fetch: net.fetch,
@@ -32,6 +32,17 @@ describe('Forem', () => {
     );
     expect(url.searchParams.get('order_by')).toBe('datedebutdiffusion desc');
     expect(url.searchParams.get('limit')).toBe('100');
+    // Around the base city of the profile once it is found (ADR 0017): here Mechelen.
+    const around = fakeNetwork(() => json(page()));
+    await runConnector(foremConnector, {
+      fetch: around.fetch,
+      params,
+      radiusKm: 25,
+      center: { name: 'Mechelen', lat: 51.0257, lon: 4.4776 },
+    });
+    expect(new URL(around.calls[0]!.url).searchParams.get('where')).toContain(
+      `geom'POINT(4.4776 51.0257)', 25km)`,
+    );
     expect(url.searchParams.get('offset')).toBe('0');
     expect(url.searchParams.get('select')).toContain('numerooffreforem,titreoffre,nomemployeur');
     // Spaces travel as %20, never as "+".

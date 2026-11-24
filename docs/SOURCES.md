@@ -113,6 +113,7 @@ Dans Job4me : règles appliquées par `packages/collect/src/dedup.ts`, avec les 
 - **Un lieu inconnu est gardé** (affiché sans distance) : une offre réelle perdue coûte plus cher qu'une offre de trop. Un lieu qui nomme un autre pays (« Montrouge, France ») est hors rayon.
 - Télétravail annoncé (dans le lieu, le titre ou la description) : gardé quelle que soit la distance, si Mehdi l'accepte.
 - Les sources qui étiquettent les offres avec la ville **cherchée** (Jobijoba, Jobrapido) s'interrogent **sans ville** ; c'est le filtre de distance qui trie.
+- Dans Job4me : `packages/collect/src/places.ts`, localités de `packages/db/drizzle/data/localities.tsv` (`pnpm geonames`), précisions dans l'ADR 0017 (notes du lot 2 de la phase 3).
 
 ### 1.8 La suite de la chaîne et la notation
 

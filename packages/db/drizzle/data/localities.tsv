@@ -1,0 +1,2766 @@
+# Localités belges dérivées de GeoNames (https://www.geonames.org), licence CC BY 4.0.
+# Fichiers BE des codes postaux, des lieux et des noms alternatifs, lus le 2026-11-24.
+# Régénéré par `pnpm geonames` (ADR 0017) ; chargé en base par la migration.
+id	name	names	postal_codes	latitude	longitude	region	province
+1	Bruxelles	Brussel|Brüssel|Brussels	1000	50.85040	4.34880	BRU	Bruxelles-Capitale
+2	Laeken	Laken	1020	50.87590	4.34840	BRU	Bruxelles-Capitale
+3	Schaerbeek	Schaarbeek	1030	50.86940	4.37740	BRU	Bruxelles-Capitale
+4	Etterbeek		1040	50.83270	4.38840	BRU	Bruxelles-Capitale
+5	Ixelles	Elsene|Ixelles-Elsene	1050	50.83330	4.36670	BRU	Bruxelles-Capitale
+6	Saint-Gilles	Sint-Gillis	1060	50.82760	4.34390	BRU	Bruxelles-Capitale
+7	Anderlecht		1070	50.83620	4.31450	BRU	Bruxelles-Capitale
+8	Molenbeek-Saint-Jean	Sint-Jans-Molenbeek	1080	50.84990	4.31250	BRU	Bruxelles-Capitale
+9	Koekelberg		1081	50.86120	4.33140	BRU	Bruxelles-Capitale
+10	Berchem-Sainte-Agathe	Sint-Agatha-Berchem	1082	50.86570	4.29560	BRU	Bruxelles-Capitale
+11	Ganshoren		1083	50.87070	4.31530	BRU	Bruxelles-Capitale
+12	Jette		1090	50.87310	4.33420	BRU	Bruxelles-Capitale
+13	Neder-Over-Heembeek		1120	50.90570	4.39220	BRU	Bruxelles-Capitale
+14	Haren	Haaren|Haeren	1130	50.89560	4.41700	BRU	Bruxelles-Capitale
+15	Evere		1140	50.87440	4.39900	BRU	Bruxelles-Capitale
+16	Woluwe-Saint-Pierre	Sint-Pieters-Woluwe|Woluwe-Saint-Pierre - Sint-Pieters-Woluwe	1150	50.85510	4.37070	BRU	Bruxelles-Capitale
+17	Auderghem	Anderghen|Oudergem	1160	50.81670	4.43330	BRU	Bruxelles-Capitale
+18	Watermael-Boitsfort	Watermaal-Boschvoorde|Watermaal-Bosvoorde	1170	50.80150	4.41440	BRU	Bruxelles-Capitale
+19	Uccle	Ukkel	1180	50.80220	4.33940	BRU	Bruxelles-Capitale
+20	Forest	Vorst	1190	50.81680	4.32780	BRU	Bruxelles-Capitale
+21	Woluwe-Saint-Lambert	Sint-Lambrechts-Woluwe|Woluwé-Saint-Lambert	1200	50.84390	4.42910	BRU	Bruxelles-Capitale
+22	Saint-Josse-Ten-Noode	Sint-Joost-ten-Node	1210	50.85380	4.37280	BRU	Bruxelles-Capitale
+23	Limal		1300	50.69480	4.57540	WAL	Province du Brabant Wallon
+24	Wavre	Waver	1300	50.71720	4.60140	WAL	Province du Brabant Wallon
+25	Bierges		1301	50.71140	4.58660	WAL	Province du Brabant Wallon
+26	La Hulpe	Terhulpen	1310	50.73090	4.48580	WAL	Province du Brabant Wallon
+27	Glimes		1315	50.68000	4.83710	WAL	Province du Brabant Wallon
+28	Incourt		1315	50.69150	4.79820	WAL	Province du Brabant Wallon
+29	Opprebais		1315	50.68000	4.79780	WAL	Province du Brabant Wallon
+30	Piétrebais		1315	50.72780	4.76450	WAL	Province du Brabant Wallon
+31	Roux-Miroir		1315	50.70860	4.78270	WAL	Province du Brabant Wallon
+32	Beauvechain	Bevekom	1320	50.78200	4.77180	WAL	Province du Brabant Wallon
+33	Hamme-Mille		1320	50.78020	4.71730	WAL	Province du Brabant Wallon
+34	L'Ecluse	L'Écluse	1320	50.77300	4.83140	WAL	Province du Brabant Wallon
+35	Nodebais		1320	50.77280	4.73690	WAL	Province du Brabant Wallon
+36	Tourinnes-la-Grosse		1320	50.78300	4.74440	WAL	Province du Brabant Wallon
+37	Bonlez		1325	50.70210	4.68860	WAL	Province du Brabant Wallon
+38	Chaumont-Gistoux	Chaumont	1325	50.67750	4.72120	WAL	Province du Brabant Wallon
+39	Corroy-le-Grand		1325	50.66310	4.67400	WAL	Province du Brabant Wallon
+40	Dion-Valmont		1325	50.70820	4.66770	WAL	Province du Brabant Wallon
+41	Longueville		1325	50.70240	4.74010	WAL	Province du Brabant Wallon
+42	Rixensart		1330	50.71230	4.52530	WAL	Province du Brabant Wallon
+43	Rosières	Rosières-Saint-André	1331	50.73100	4.54470	WAL	Province du Brabant Wallon
+44	Genval		1332	50.72160	4.49380	WAL	Province du Brabant Wallon
+45	Ottignies		1340	50.66530	4.56680	WAL	Province du Brabant Wallon
+46	Ottignies-Louvain-La-Neuve		1340	50.66710	4.55020	WAL	Brabant Wallon
+47	Céroux-Mousty		1341	50.66090	4.52070	WAL	Province du Brabant Wallon
+48	Limelette		1342	50.68430	4.57190	WAL	Province du Brabant Wallon
+49	Louvain-la-Neuve		1348	50.66830	4.61440	WAL	Province du Brabant Wallon
+50	Enines	Énines	1350	50.69430	4.92690	WAL	Province du Brabant Wallon
+51	Folx-les-Caves		1350	50.66120	4.93780	WAL	Province du Brabant Wallon
+52	Jandrain-Jandrenouille		1350	50.67180	4.97800	WAL	Province du Brabant Wallon
+53	Jauche	Geten	1350	50.68140	4.95560	WAL	Province du Brabant Wallon
+54	Marilles		1350	50.70720	4.95270	WAL	Province du Brabant Wallon
+55	Noduwez		1350	50.72860	4.96780	WAL	Province du Brabant Wallon
+56	Orp-Jauche		1350	50.68390	4.94930	WAL	Brabant Wallon
+57	Orp-le-Grand		1350	50.70330	4.98910	WAL	Province du Brabant Wallon
+58	Hélécine		1357	50.73900	4.69830	WAL	Brabant Wallon
+59	Linsmeau	Linsmeel	1357	50.73560	4.99980	WAL	Province du Brabant Wallon
+60	Neerheylissem		1357	50.75840	4.98830	WAL	Province du Brabant Wallon
+61	Opheylissem		1357	50.74710	4.97690	WAL	Province du Brabant Wallon
+62	Malèves-Sainte-Marie-Wastinnes		1360	50.63880	4.79470	WAL	Province du Brabant Wallon
+63	Orbais		1360	50.63800	4.76350	WAL	Province du Brabant Wallon
+64	Perwez	Perwijs	1360	50.62430	4.81350	WAL	Province du Brabant Wallon
+65	Thorembais-les-Béguines		1360	50.65820	4.81750	WAL	Province du Brabant Wallon
+66	Thorembais-Saint-Trond		1360	50.63490	4.78410	WAL	Province du Brabant Wallon
+67	Autre-Eglise	Autre-Église	1367	50.66920	4.90380	WAL	Province du Brabant Wallon
+68	Bomal		1367	50.67010	4.87320	WAL	Province du Brabant Wallon
+69	Geest-Gérompont-Petit-Rosière		1367	50.64040	4.85870	WAL	Province du Brabant Wallon
+70	Gérompont		1367	50.64810	4.88140	WAL	Province du Brabant Wallon
+71	Grand-Rosière-Hottomont		1367	50.63190	4.86560	WAL	Province du Brabant Wallon
+72	Huppaye		1367	50.69360	4.89420	WAL	Province du Brabant Wallon
+73	Mont-Saint-André		1367	50.65630	4.86610	WAL	Province du Brabant Wallon
+74	Ramillies		1367	50.63390	4.90120	WAL	Province du Brabant Wallon
+75	Dongelberg		1370	50.70340	4.82000	WAL	Province du Brabant Wallon
+76	Jauchelette		1370	50.68670	4.84360	WAL	Province du Brabant Wallon
+77	Jodoigne	Geldenaken	1370	50.72360	4.86910	WAL	Province du Brabant Wallon
+78	Jodoigne-Souveraine	Opgeldenaken	1370	50.70940	4.83760	WAL	Province du Brabant Wallon
+79	Lathuy		1370	50.72460	4.82620	WAL	Province du Brabant Wallon
+80	Mélin		1370	50.74000	4.82880	WAL	Province du Brabant Wallon
+81	Piétrain		1370	50.72530	4.92030	WAL	Province du Brabant Wallon
+82	Saint-Jean-Geest	Sint-Jans-Geest	1370	50.74010	4.89650	WAL	Province du Brabant Wallon
+83	Saint-Remy-Geest	Sint-Remigius-Geest	1370	50.74690	4.85850	WAL	Province du Brabant Wallon
+84	Zétrud-Lumay	Zetrud|Zittert-Lummen	1370	50.75710	4.88710	WAL	Province du Brabant Wallon
+85	Couture-Saint-Germain		1380	50.67480	4.47260	WAL	Province du Brabant Wallon
+86	Lasne		1380	50.68750	4.48160	WAL	Brabant Wallon
+87	Lasne-Chapelle-Saint-Lambert		1380	50.69300	4.50100	WAL	Province du Brabant Wallon
+88	Maransart		1380	50.65970	4.46690	WAL	Province du Brabant Wallon
+89	Ohain		1380	50.69880	4.46980	WAL	Province du Brabant Wallon
+90	Plancenoit		1380	50.66230	4.42830	WAL	Province du Brabant Wallon
+91	Archennes	Eerken	1390	50.75260	4.66960	WAL	Province du Brabant Wallon
+92	Biez		1390	50.72370	4.71360	WAL	Province du Brabant Wallon
+93	Bossut-Gottechain		1390	50.75820	4.69510	WAL	Province du Brabant Wallon
+94	Grez-Doiceau	Graven	1390	50.73900	4.69830	WAL	Province du Brabant Wallon
+95	Nethen		1390	50.78320	4.67500	WAL	Province du Brabant Wallon
+96	Monstreux		1400	50.59820	4.28940	WAL	Province du Brabant Wallon
+97	Nivelles	Nijvel	1400	50.59830	4.32850	WAL	Province du Brabant Wallon
+98	Baulers		1401	50.61330	4.35280	WAL	Province du Brabant Wallon
+99	Thines		1402	50.59680	4.36900	WAL	Province du Brabant Wallon
+100	Bornival		1404	50.60190	4.27650	WAL	Province du Brabant Wallon
+101	Waterloo		1410	50.71470	4.39910	WAL	Province du Brabant Wallon
+102	Braine-l'Alleud	Braine-l’Alleud|Eigenbrakel	1420	50.68360	4.36780	WAL	Province du Brabant Wallon
+103	Ophain-Bois-Seigneur-Isaac	Ophain	1421	50.66650	4.34870	WAL	Province du Brabant Wallon
+104	Lillois-Witterzée		1428	50.64550	4.36680	WAL	Province du Brabant Wallon
+105	Bierghes	Bierk	1430	50.69580	4.11920	WAL	Province du Brabant Wallon
+106	Quenast		1430	50.66960	4.15660	WAL	Province du Brabant Wallon
+107	Rebecq	Rebecq-Rognon|Roosbeek	1430	50.66600	4.13200	WAL	Brabant Wallon
+108	Rebecq-Rognon	Rebecq|Roosbeek	1430	50.65150	4.10680	WAL	Province du Brabant Wallon
+109	Corbais		1435	50.64610	4.65590	WAL	Province du Brabant Wallon
+110	Hévillers		1435	50.62330	4.61730	WAL	Province du Brabant Wallon
+111	Mont-Saint-Guibert		1435	50.63430	4.61060	WAL	Province du Brabant Wallon
+112	Braine-le-Château	Braine-Le-Chateau|Kasteelbrakel	1440	50.67990	4.27390	WAL	Province du Brabant Wallon
+113	Wauthier-Braine	Vauthter-Braine|Wauthier|Woutersbrakel	1440	50.68180	4.29850	WAL	Province du Brabant Wallon
+114	Chastre		1450	50.60070	4.63400	WAL	Brabant Wallon
+115	Chastre-Villeroux-Blanmont		1450	50.60860	4.64200	WAL	Province du Brabant Wallon
+116	Cortil-Noirmont		1450	50.58110	4.64340	WAL	Province du Brabant Wallon
+117	Gentinnes		1450	50.57840	4.60700	WAL	Province du Brabant Wallon
+118	Saint-Géry		1450	50.58130	4.61360	WAL	Province du Brabant Wallon
+119	Nil-Saint-Vincent-Saint-Martin		1457	50.64330	4.68170	WAL	Province du Brabant Wallon
+120	Tourinnes-Saint-Lambert		1457	50.64020	4.72360	WAL	Province du Brabant Wallon
+121	Walhain		1457	50.61680	4.69480	WAL	Brabant Wallon
+122	Walhain-Saint-Paul		1457	50.62630	4.69840	WAL	Province du Brabant Wallon
+123	Ittre	Itter	1460	50.64400	4.26480	WAL	Province du Brabant Wallon
+124	Virginal-Samme		1460	50.64040	4.20580	WAL	Province du Brabant Wallon
+125	Haut-Ittre		1461	50.65310	4.29780	WAL	Province du Brabant Wallon
+126	Baisy-Thy		1470	50.59710	4.47600	WAL	Province du Brabant Wallon
+127	Bousval		1470	50.61660	4.50800	WAL	Province du Brabant Wallon
+128	Genappe	Genepiën	1470	50.61170	4.45150	WAL	Province du Brabant Wallon
+129	Loupoigne		1471	50.59810	4.44450	WAL	Province du Brabant Wallon
+130	Vieux-Genappe		1472	50.60850	4.44100	WAL	Province du Brabant Wallon
+131	Glabais		1473	50.63070	4.45330	WAL	Province du Brabant Wallon
+132	Ways		1474	50.61110	4.46450	WAL	Province du Brabant Wallon
+133	Houtain-le-Val		1476	50.58240	4.41260	WAL	Province du Brabant Wallon
+134	Clabecq	Klabbeek	1480	50.69250	4.22150	WAL	Province du Brabant Wallon
+135	Oisquercq	Oostkerk	1480	50.67010	4.21980	WAL	Province du Brabant Wallon
+136	Saintes	Sint-Renelde	1480	50.70500	4.16010	WAL	Province du Brabant Wallon
+137	Tubize	Tubeke	1480	50.69060	4.20090	WAL	Province du Brabant Wallon
+138	Court-Saint-Etienne	Court-Saint-Étienne	1490	50.63380	4.56850	WAL	Province du Brabant Wallon
+139	Marbais	Marbeek	1495	50.54650	4.53500	WAL	Province du Brabant Wallon
+140	Mellery		1495	50.58190	4.56900	WAL	Province du Brabant Wallon
+141	Sart-Dames-Avelines		1495	50.56860	4.49220	WAL	Province du Brabant Wallon
+142	Tilly		1495	50.56080	4.55490	WAL	Province du Brabant Wallon
+143	Villers-la-Ville		1495	50.56670	4.51670	WAL	Province du Brabant Wallon
+144	Halle	Hal	1500	50.73380	4.23450	VLG	Provincie Vlaams-Brabant
+145	Buizingen	Buysinghen	1501	50.73540	4.24770	VLG	Provincie Vlaams-Brabant
+146	Lembeek	Lembecq	1502	50.71570	4.21830	VLG	Provincie Vlaams-Brabant
+147	Herfelingen	Herffelinghen	1540	50.74820	4.09750	VLG	Provincie Vlaams-Brabant
+148	Herne	Hérinnes	1540	50.72420	4.03480	VLG	Provincie Vlaams-Brabant
+149	Sint-Pieters-Kapelle	Saint-Pierre-Cappelle	1541	50.70760	3.99000	VLG	Provincie Vlaams-Brabant
+150	Biévène	Bever	1547	50.71640	3.94120	VLG	Provincie Vlaams-Brabant
+151	Hoeilaart	Hoeylaert	1560	50.76730	4.46830	VLG	Provincie Vlaams-Brabant
+152	Galmaarden	Gammerages	1570	50.75390	3.97120	VLG	Provincie Vlaams-Brabant
+153	Tollembeek	Thollembeek	1570	50.74100	4.00670	VLG	Provincie Vlaams-Brabant
+154	Vollezele	Vollezeel	1570	50.76120	4.02430	VLG	Provincie Vlaams-Brabant
+155	Oudenaken	Audenaeken	1600	50.77980	4.19780	VLG	Provincie Vlaams-Brabant
+156	Sint-Laureins-Berchem	Berchem-Saint-Laurent	1600	50.78720	4.20010	VLG	Provincie Vlaams-Brabant
+157	Sint-Pieters-Leeuw	Leeuw-Saint-Pierre	1600	50.77930	4.24350	VLG	Provincie Vlaams-Brabant
+158	Ruisbroek		1601	50.79010	4.29770	VLG	Provincie Vlaams-Brabant
+159	Vlezenbeek	Vlesenbeek	1602	50.80780	4.23200	VLG	Provincie Vlaams-Brabant
+160	Drogenbos	Drogenbosch|Droogenbosch	1620	50.78730	4.31470	VLG	Provincie Vlaams-Brabant
+161	Linkebeek		1630	50.76780	4.33690	VLG	Provincie Vlaams-Brabant
+162	Rhode-Saint-Genèse	Sint-Genesius-Rode	1640	50.74640	4.35750	VLG	Provincie Vlaams-Brabant
+163	Beersel		1650	50.76590	4.30020	VLG	Provincie Vlaams-Brabant
+164	Lot		1651	50.76790	4.27710	VLG	Provincie Vlaams-Brabant
+165	Alsemberg		1652	50.74130	4.33750	VLG	Provincie Vlaams-Brabant
+166	Dworp	Tourneppe	1653	50.72980	4.30110	VLG	Provincie Vlaams-Brabant
+167	Huizingen	Huyssinghen	1654	50.74650	4.27380	VLG	Provincie Vlaams-Brabant
+168	Bogaarden	Bogaerden	1670	50.73990	4.13590	VLG	Provincie Vlaams-Brabant
+169	Heikruis	Hautecroix	1670	50.73510	4.11160	VLG	Provincie Vlaams-Brabant
+170	Pepingen	Pepinghen	1670	50.75920	4.15980	VLG	Provincie Vlaams-Brabant
+171	Elingen	Elinghen	1671	50.77890	4.17090	VLG	Provincie Vlaams-Brabant
+172	Beert	Brages	1673	50.74100	4.18100	VLG	Provincie Vlaams-Brabant
+173	Bellingen	Bellinghen	1674	50.74090	4.15370	VLG	Provincie Vlaams-Brabant
+174	Dilbeek		1700	50.84800	4.25970	VLG	Provincie Vlaams-Brabant
+175	Sint-Martens-Bodegem	Bodeghem-Saint-Martin|Bodegnem-Saint-Martin	1700	50.86180	4.21320	VLG	Provincie Vlaams-Brabant
+176	Sint-Ulriks-Kapelle	Cappelle-Saint-Ulric|Chapelle-Saint-Ulric	1700	50.87900	4.21880	VLG	Provincie Vlaams-Brabant
+177	Itterbeek		1701	50.83800	4.24950	VLG	Provincie Vlaams-Brabant
+178	Groot-Bijgaarden	Grand-Bigard	1702	50.87170	4.24970	VLG	Provincie Vlaams-Brabant
+179	Schepdaal	Schepdael	1703	50.83840	4.19610	VLG	Provincie Vlaams-Brabant
+180	Asse	Assche	1730	50.91010	4.19840	VLG	Provincie Vlaams-Brabant
+181	Bekkerzeel	Beckerzeel	1730	50.88540	4.23780	VLG	Provincie Vlaams-Brabant
+182	Kobbegem	Cobbeghem	1730	50.90820	4.25250	VLG	Provincie Vlaams-Brabant
+183	Mollem	Molhem	1730	50.93120	4.22630	VLG	Provincie Vlaams-Brabant
+184	Relegem	Releghem	1731	50.89910	4.27690	VLG	Provincie Vlaams-Brabant
+185	Zellik	Zellick	1731	50.88410	4.27330	VLG	Provincie Vlaams-Brabant
+186	Ternat	Ternath	1740	50.86650	4.16680	VLG	Provincie Vlaams-Brabant
+187	Wambeek	Wambeke	1741	50.85280	4.16170	VLG	Provincie Vlaams-Brabant
+188	Sint-Katherina-Lombeek	Lombeek-Sainte-Catherine	1742	50.87310	4.15360	VLG	Provincie Vlaams-Brabant
+189	Mazenzele	Maxenzeel	1745	50.94250	4.17220	VLG	Provincie Vlaams-Brabant
+190	Opwijk	Opwyck	1745	50.96720	4.18440	VLG	Provincie Vlaams-Brabant
+191	Gaasbeek		1750	50.79950	4.18930	VLG	Provincie Vlaams-Brabant
+192	Lennik		1750	50.80900	4.16220	VLG	Brabant Flamand
+193	Sint-Kwintens-Lennik	Lennick-Saint-Quentin	1750	50.80380	4.15490	VLG	Provincie Vlaams-Brabant
+194	Sint-Martens-Lennik	Lennick-Saint-Martin	1750	50.81160	4.16970	VLG	Provincie Vlaams-Brabant
+195	Gooik	Goyck	1755	50.79440	4.11380	VLG	Provincie Vlaams-Brabant
+196	Kester	Castre	1755	50.76400	4.12060	VLG	Provincie Vlaams-Brabant
+197	Leerbeek		1755	50.77790	4.11940	VLG	Provincie Vlaams-Brabant
+198	Oetingen	Oetinghen	1755	50.77320	4.06350	VLG	Provincie Vlaams-Brabant
+199	Onze-Lieve-Vrouw-Lombeek	Lombeek-Notre-Dame	1760	50.82000	4.11030	VLG	Provincie Vlaams-Brabant
+200	Pamel		1760	50.84530	4.07130	VLG	Provincie Vlaams-Brabant
+201	Roosdaal		1760	50.83330	4.08330	VLG	Provincie Vlaams-Brabant
+202	Strijtem	Strythem	1760	50.84160	4.11700	VLG	Provincie Vlaams-Brabant
+203	Borchtlombeek		1761	50.84790	4.13880	VLG	Provincie Vlaams-Brabant
+204	Liedekerke		1770	50.86890	4.08740	VLG	Provincie Vlaams-Brabant
+205	Wemmel		1780	50.90810	4.30610	VLG	Provincie Vlaams-Brabant
+206	Brussegem	Brusseghem	1785	50.92560	4.26680	VLG	Provincie Vlaams-Brabant
+207	Hamme		1785	50.92090	4.28300	VLG	Provincie Vlaams-Brabant
+208	Merchtem		1785	50.95130	4.23200	VLG	Provincie Vlaams-Brabant
+209	Affligem		1790	50.90940	4.11160	VLG	Provincie Vlaams-Brabant
+210	Essene	Esschene	1790	50.90160	4.13740	VLG	Provincie Vlaams-Brabant
+211	Hekelgem		1790	50.90570	4.10770	VLG	Provincie Vlaams-Brabant
+212	Teralfene	Teralphene	1790	50.89190	4.09900	VLG	Provincie Vlaams-Brabant
+213	Peutie	Peuthy	1800	50.93000	4.45190	VLG	Provincie Vlaams-Brabant
+214	Vilvoorde	Vilvorde	1800	50.92810	4.42940	VLG	Provincie Vlaams-Brabant
+215	Melsbroek	Melsbroeck	1820	50.91560	4.47980	VLG	Provincie Vlaams-Brabant
+216	Perk	Perck	1820	50.93570	4.49620	VLG	Provincie Vlaams-Brabant
+217	Steenokkerzeel	Steen-Ockerzeel	1820	50.91850	4.50990	VLG	Provincie Vlaams-Brabant
+218	Machelen		1830	50.91060	4.44170	VLG	Provincie Vlaams-Brabant
+219	Diegem	Dieghem	1831	50.89730	4.43350	VLG	Provincie Vlaams-Brabant
+220	Londerzeel		1840	51.00470	4.30300	VLG	Provincie Vlaams-Brabant
+221	Malderen		1840	51.02080	4.24640	VLG	Provincie Vlaams-Brabant
+222	Steenhuffel	Steenhussel	1840	50.99540	4.26790	VLG	Provincie Vlaams-Brabant
+223	Grimbergen	Grimberghen	1850	50.93410	4.37210	VLG	Provincie Vlaams-Brabant
+224	Humbeek		1851	50.96800	4.37960	VLG	Provincie Vlaams-Brabant
+225	Beigem	Beyghem	1852	50.94910	4.36910	VLG	Provincie Vlaams-Brabant
+226	Strombeek-Bever	Strombeek	1853	50.91040	4.35580	VLG	Provincie Vlaams-Brabant
+227	Meise	Meysse	1860	50.93930	4.32660	VLG	Provincie Vlaams-Brabant
+228	Wolvertem	Wolverthem	1861	50.95170	4.30960	VLG	Provincie Vlaams-Brabant
+229	Kapelle-op-den-Bos	Chapelle-au-Bois	1880	51.00970	4.36300	VLG	Provincie Vlaams-Brabant
+230	Nieuwenrode		1880	50.97960	4.35280	VLG	Provincie Vlaams-Brabant
+231	Ramsdonk		1880	51.01500	4.33520	VLG	Provincie Vlaams-Brabant
+232	Berg	Den Berg	1910	51.00790	4.31980	VLG	Provincie Vlaams-Brabant
+233	Buken	Beuken	1910	50.93970	4.61690	VLG	Provincie Vlaams-Brabant
+234	Kampenhout	Campenhout	1910	50.94210	4.55100	VLG	Provincie Vlaams-Brabant
+235	Nederokkerzeel	Neder-Ockerzeel	1910	50.91940	4.56390	VLG	Provincie Vlaams-Brabant
+236	Nossegem	Nosseghem	1930	50.88180	4.50820	VLG	Provincie Vlaams-Brabant
+237	Zaventem	Saventhem	1930	50.88370	4.47300	VLG	Provincie Vlaams-Brabant
+238	Sint-Stevens-Woluwe	Woluwe-Saint-Etienne|Woluwe-Saint-Étienne	1932	50.86840	4.45200	VLG	Provincie Vlaams-Brabant
+239	Sterrebeek		1933	50.86170	4.49380	VLG	Provincie Vlaams-Brabant
+240	Kraainem	Crainhem	1950	50.86160	4.46950	VLG	Provincie Vlaams-Brabant
+241	Wezembeek-Oppem	Wesembeek|Wesembeek-Ophem|Wesenbeck	1970	50.83950	4.49430	VLG	Provincie Vlaams-Brabant
+242	Eppegem	Eppeghem	1980	50.96240	4.45510	VLG	Provincie Vlaams-Brabant
+243	Zemst	Sempst	1980	50.98320	4.46080	VLG	Provincie Vlaams-Brabant
+244	Hofstade		1981	50.99130	4.49230	VLG	Provincie Vlaams-Brabant
+245	Elewijt	Elewyt	1982	50.96040	4.49680	VLG	Provincie Vlaams-Brabant
+246	Weerde		1982	50.97350	4.47490	VLG	Provincie Vlaams-Brabant
+247	Antwerpen	Antwerp|Anvers	2000,2018,2020,2030,2040,2050,2060	51.21990	4.40350	VLG	Provincie Antwerpen
+248	Berendrecht		2040	51.34250	4.31420	VLG	Provincie Antwerpen
+249	Lillo		2040	51.28070	4.50600	VLG	Provincie Antwerpen
+250	Zandvliet		2040	51.35930	4.31000	VLG	Provincie Antwerpen
+251	Burcht	Burght	2070	51.20390	4.34290	VLG	Provincie Oost-Vlaanderen
+252	Zwijndrecht	Zwyndrecht	2070	51.21980	4.32660	VLG	Provincie Oost-Vlaanderen
+253	Deurne		2100	51.22130	4.46590	VLG	Provincie Antwerpen
+254	Wijnegem	Wyneghem	2110	51.22790	4.51890	VLG	Provincie Antwerpen
+255	Borgerhout	Borgerhouts	2140	51.20960	4.43540	VLG	Provincie Antwerpen
+256	Borsbeek		2150	51.19660	4.48540	VLG	Provincie Antwerpen
+257	Wommelgem	Wommelghem	2160	51.20450	4.52250	VLG	Provincie Antwerpen
+258	Merksem	Merxem	2170	51.24620	4.44900	VLG	Provincie Antwerpen
+259	Ekeren	Eeckeren	2180	51.28090	4.41810	VLG	Provincie Antwerpen
+260	Herentals	Herenthals	2200	51.17660	4.83250	VLG	Provincie Antwerpen
+261	Morkhoven	Morckhoven	2200	51.11890	4.81880	VLG	Provincie Antwerpen
+262	Noorderwijk	Norderwyck	2200	51.14120	4.84060	VLG	Provincie Antwerpen
+263	Hallaar	Haalaeraard|Hallaer	2220	51.08420	4.72920	VLG	Provincie Antwerpen
+264	Heist-op-den-Berg	Heyst-op-den-Berg	2220	51.07540	4.72830	VLG	Provincie Antwerpen
+265	Booischot	Boisschot	2221	51.05220	4.77510	VLG	Provincie Antwerpen
+266	Itegem	Iteghem	2222	51.10330	4.72860	VLG	Provincie Antwerpen
+267	Wiekevorst		2222	51.10800	4.79240	VLG	Provincie Antwerpen
+268	Schriek	Schrieck	2223	51.02840	4.69360	VLG	Provincie Antwerpen
+269	Herselt	Hersselt	2230	51.05160	4.88230	VLG	Provincie Antwerpen
+270	Ramsel		2230	51.03240	4.83240	VLG	Provincie Antwerpen
+271	Houtvenne		2235	51.04180	4.80860	VLG	Provincie Antwerpen
+272	Hulshout		2235	51.07450	4.79080	VLG	Provincie Antwerpen
+273	Westmeerbeek		2235	51.06130	4.83830	VLG	Provincie Antwerpen
+274	Massenhoven		2240	51.20020	4.63570	VLG	Provincie Antwerpen
+275	Viersel		2240	51.18770	4.64920	VLG	Provincie Antwerpen
+276	Zandhoven	Santhoven	2240	51.21490	4.66160	VLG	Provincie Antwerpen
+277	Pulderbos	Pulderbosch	2242	51.21710	4.69360	VLG	Provincie Antwerpen
+278	Pulle		2243	51.20320	4.71430	VLG	Provincie Antwerpen
+279	Olen	Oolen	2250	51.14390	4.85980	VLG	Provincie Antwerpen
+280	Oevel		2260	51.13790	4.90470	VLG	Provincie Antwerpen
+281	Tongerlo		2260	51.10620	4.91640	VLG	Provincie Antwerpen
+282	Westerlo	Westerloo	2260	51.09050	4.91540	VLG	Provincie Antwerpen
+283	Zoerle-Parwijs	Zoerle-Parwys	2260	51.08970	4.87110	VLG	Provincie Antwerpen
+284	Herenthout		2270	51.14010	4.75570	VLG	Provincie Antwerpen
+285	Gierle		2275	51.26850	4.86730	VLG	Provincie Antwerpen
+286	Lille		2275	51.24200	4.82310	VLG	Provincie Antwerpen
+287	Poederlee	Poederle	2275	51.22770	4.84030	VLG	Provincie Antwerpen
+288	Wechelderzande		2275	51.26300	4.78650	VLG	Provincie Antwerpen
+289	Grobbendonk	Grobbendonck	2280	51.19040	4.73560	VLG	Provincie Antwerpen
+290	Bouwel		2288	51.17290	4.74180	VLG	Provincie Antwerpen
+291	Vorselaar	Vorsselaer	2290	51.20240	4.77260	VLG	Provincie Antwerpen
+292	Turnhout		2300	51.32250	4.94470	VLG	Provincie Antwerpen
+293	Rijkevorsel	Ryckevorsel	2310	51.34800	4.76050	VLG	Provincie Antwerpen
+294	Hoogstraten	Hoogstraeten	2320	51.40030	4.76030	VLG	Provincie Antwerpen
+295	Meer		2321	51.42200	4.78030	VLG	Provincie Antwerpen
+296	Minderhout		2322	51.41710	4.76290	VLG	Provincie Antwerpen
+297	Wortel		2323	51.39830	4.79460	VLG	Provincie Antwerpen
+298	Meerle		2328	51.47230	4.80320	VLG	Provincie Antwerpen
+299	Merksplas	Merxplas	2330	51.35850	4.86510	VLG	Provincie Antwerpen
+300	Beerse	Beersse	2340	51.31930	4.85300	VLG	Provincie Antwerpen
+301	Vlimmeren		2340	51.29520	4.78130	VLG	Provincie Antwerpen
+302	Vosselaar	Vosselaer	2350	51.30860	4.88960	VLG	Provincie Antwerpen
+303	Oud-Turnhout	Vieux-Turnhout	2360	51.31980	4.98410	VLG	Provincie Antwerpen
+304	Arendonk	Arendonck	2370	51.32270	5.08290	VLG	Provincie Antwerpen
+305	Ravels	Raevels	2380	51.37270	4.99210	VLG	Provincie Antwerpen
+306	Weelde		2381	51.40780	4.99250	VLG	Provincie Antwerpen
+307	Poppel		2382	51.44570	5.04330	VLG	Provincie Antwerpen
+308	Baarle-Hertog	Baarle-Nassau|Baerle-Duc	2387	51.40500	4.89230	VLG	Provincie Antwerpen
+309	Malle		2390	51.29920	4.71090	VLG	Provincie Antwerpen
+310	Oostmalle		2390	51.30000	4.73330	VLG	Provincie Antwerpen
+311	Westmalle		2390	51.29770	4.69010	VLG	Provincie Antwerpen
+312	Mol	Moll	2400	51.19190	5.11660	VLG	Provincie Antwerpen
+313	Eindhout	Eynthout	2430	51.10380	4.99990	VLG	Provincie Antwerpen
+314	Laakdal		2430	51.08070	5.00560	VLG	Anvers
+315	Vorst		2430	51.08030	5.02000	VLG	Provincie Antwerpen
+316	Varendonk	Vaerendonck	2431	51.08410	4.95140	VLG	Provincie Antwerpen
+317	Veerle		2431	51.06990	4.98760	VLG	Provincie Antwerpen
+318	Geel	Gheel	2440	51.16560	4.98920	VLG	Provincie Antwerpen
+319	Meerhout		2450	51.13210	5.07840	VLG	Provincie Antwerpen
+320	Kasterlee	Casterle|Casterlé	2460	51.24120	4.96650	VLG	Provincie Antwerpen
+321	Lichtaart	Lichtaert	2460	51.22490	4.91680	VLG	Provincie Antwerpen
+322	Tielen	Thielen	2460	51.24300	4.89960	VLG	Provincie Antwerpen
+323	Retie	Rethy	2470	51.26650	5.08240	VLG	Provincie Antwerpen
+324	Dessel	Desschel	2480	51.23850	5.11450	VLG	Provincie Antwerpen
+325	Balen	Baelen|Balen-sur-Nethe	2490	51.16840	5.17030	VLG	Provincie Antwerpen
+326	Olmen		2491	51.14230	5.15000	VLG	Provincie Antwerpen
+327	Koningshooikt	Koningshoyckt	2500	51.09610	4.60990	VLG	Provincie Antwerpen
+328	Lier	Lierre	2500	51.13130	4.57040	VLG	Provincie Antwerpen
+329	Broechem		2520	51.18130	4.60180	VLG	Provincie Antwerpen
+330	Emblem	Emblehem	2520	51.16240	4.60490	VLG	Provincie Antwerpen
+331	Oelegem	Oeleghem	2520	51.21310	4.59830	VLG	Provincie Antwerpen
+332	Ranst		2520	51.18980	4.56530	VLG	Provincie Antwerpen
+333	Boechout	Bouchout	2530	51.15960	4.49190	VLG	Provincie Antwerpen
+334	Vremde		2531	51.17530	4.52320	VLG	Provincie Antwerpen
+335	Hove		2540	51.15450	4.47070	VLG	Provincie Antwerpen
+336	Lint	Linth	2547	51.12710	4.49670	VLG	Provincie Antwerpen
+337	Kontich	Contich	2550	51.13210	4.44710	VLG	Provincie Antwerpen
+338	Waarloos	Waerloos	2550	51.10600	4.45480	VLG	Provincie Antwerpen
+339	Bevel		2560	51.13780	4.68030	VLG	Provincie Antwerpen
+340	Kessel		2560	51.13890	4.62960	VLG	Provincie Antwerpen
+341	Nijlen	Nylen	2560	51.16100	4.67010	VLG	Provincie Antwerpen
+342	Duffel		2570	51.09550	4.50900	VLG	Provincie Antwerpen
+343	Beerzel	Beersel	2580	51.05750	4.67130	VLG	Provincie Antwerpen
+344	Putte		2580	51.05340	4.63260	VLG	Provincie Antwerpen
+345	Berlaar	Berlaer	2590	51.11760	4.65840	VLG	Provincie Antwerpen
+346	Gestel		2590	51.12870	4.67300	VLG	Provincie Antwerpen
+347	Berchem		2600	51.19020	4.43260	VLG	Provincie Antwerpen
+348	Wilrijk	Wilryck	2610	51.16730	4.39510	VLG	Provincie Antwerpen
+349	Hemiksem	Hemixem|Hemixeu	2620	51.14480	4.33870	VLG	Provincie Antwerpen
+350	Schelle		2627	51.12620	4.34110	VLG	Provincie Antwerpen
+351	Aartselaar	Aertselaer	2630	51.13410	4.38680	VLG	Provincie Antwerpen
+352	Mortsel		2640	51.16700	4.45130	VLG	Provincie Antwerpen
+353	Edegem	Edeghem	2650	51.15660	4.44500	VLG	Provincie Antwerpen
+354	Hoboken	Hoboken-lez-Anvers	2660	51.17610	4.34840	VLG	Provincie Antwerpen
+355	Mechelen	Malines|Mecheln|Mechlin	2800	51.02570	4.47760	VLG	Provincie Antwerpen
+356	Walem	Waelhem	2800	51.06710	4.45840	VLG	Provincie Antwerpen
+357	Heffen		2801	51.04720	4.41600	VLG	Provincie Antwerpen
+358	Hombeek		2811	51.01750	4.43890	VLG	Provincie Antwerpen
+359	Leest		2811	51.03320	4.41530	VLG	Provincie Antwerpen
+360	Muizen	Muysen	2812	51.01110	4.51430	VLG	Provincie Antwerpen
+361	Bonheiden	Bonheyden	2820	51.02260	4.54710	VLG	Provincie Antwerpen
+362	Rijmenam	Rymenam	2820	51.00160	4.58400	VLG	Provincie Antwerpen
+363	Blaasveld	Blaesveld	2830	51.05590	4.37670	VLG	Provincie Antwerpen
+364	Heindonk	Heyndonck	2830	51.06700	4.40810	VLG	Provincie Antwerpen
+365	Tisselt	Thisselt	2830	51.03400	4.35950	VLG	Provincie Antwerpen
+366	Willebroek	Willebroeck	2830	51.06040	4.36020	VLG	Provincie Antwerpen
+367	Reet	Reeth	2840	51.10200	4.41260	VLG	Provincie Antwerpen
+368	Rumst	Rumpst	2840	51.08150	4.42220	VLG	Provincie Antwerpen
+369	Terhagen	Terhaegen	2840	51.07970	4.39910	VLG	Provincie Antwerpen
+370	Niel		2845	51.11100	4.33430	VLG	Provincie Antwerpen
+371	Boom		2850	51.09240	4.37170	VLG	Provincie Antwerpen
+372	Sint-Katelijne-Waver	Kathelijne-Waver|Wavre-Sainte-Catherine	2860	51.06690	4.53470	VLG	Provincie Antwerpen
+373	Onze-Lieve-Vrouw-Waver	Wavre-Notre-Dame	2861	51.06270	4.57940	VLG	Provincie Antwerpen
+374	Breendonk	Breendonck	2870	51.04300	4.32360	VLG	Provincie Antwerpen
+375	Liezele		2870	51.06000	4.28040	VLG	Provincie Antwerpen
+376	Puurs	Puers	2870	51.07410	4.28840	VLG	Provincie Antwerpen
+377	Puurs-Sint-Amands	Puers-Saint-Amand	2870	51.06630	4.30590	VLG	Anvers
+378	Ruisbroek	Ruysbroeck	2870	51.08830	4.33130	VLG	Provincie Antwerpen
+379	Bornem	Bornhem	2880	51.09720	4.24360	VLG	Provincie Antwerpen
+380	Hingene		2880	51.10350	4.26900	VLG	Provincie Antwerpen
+381	Mariekerke		2880	51.06500	4.19250	VLG	Provincie Antwerpen
+382	Weert		2880	51.10320	4.19080	VLG	Provincie Antwerpen
+383	Lippelo	Lippeloo	2890	51.04260	4.25900	VLG	Provincie Antwerpen
+384	Oppuurs	Oppuers	2890	51.06630	4.24220	VLG	Provincie Antwerpen
+385	Sint-Amands	Saint-Amand	2890	51.05640	4.20960	VLG	Provincie Antwerpen
+386	Schoten	Schooten	2900	51.25250	4.50270	VLG	Provincie Antwerpen
+387	Essen	Esschen	2910	51.46790	4.46900	VLG	Provincie Antwerpen
+388	Kalmthout	Calmpthout	2920	51.38440	4.47560	VLG	Provincie Antwerpen
+389	Brasschaat	Brasschaep|Brasschaet	2930	51.29120	4.49180	VLG	Provincie Antwerpen
+390	Hoevenen		2940	51.30600	4.40200	VLG	Provincie Antwerpen
+391	Stabroek	Stabroeck	2940	51.33190	4.37130	VLG	Provincie Antwerpen
+392	Kapellen	Cappellen	2950	51.31380	4.43540	VLG	Provincie Antwerpen
+393	Brecht		2960	51.35020	4.63830	VLG	Provincie Antwerpen
+394	Sint-Job-in-'t-Goor	Saint-Job-in 't-Goor	2960	51.29910	4.57290	VLG	Provincie Antwerpen
+395	Sint-Lenaarts	Saint-Léonard	2960	51.34870	4.68010	VLG	Provincie Antwerpen
+396	's Gravenwezel		2970	51.26270	4.56110	VLG	Provincie Antwerpen
+397	Schilde		2970	51.24110	4.58340	VLG	Provincie Antwerpen
+398	Halle		2980	51.24070	4.64330	VLG	Provincie Antwerpen
+399	Zoersel		2980	51.26830	4.71300	VLG	Provincie Antwerpen
+400	Loenhout		2990	51.39950	4.64400	VLG	Provincie Antwerpen
+401	Wuustwezel	Wuestwezel	2990	51.39210	4.59550	VLG	Provincie Antwerpen
+402	Leuven	Louvain|Löwen	3000	50.87960	4.70090	VLG	Provincie Vlaams-Brabant
+403	Heverlee	Heverle	3001	50.86430	4.69600	VLG	Provincie Vlaams-Brabant
+404	Kessel Lo	Kessel-Lo|Kessel-Loo	3010	50.88550	4.73720	VLG	Provincie Vlaams-Brabant
+405	Wilsele		3012	50.89190	4.69770	VLG	Provincie Vlaams-Brabant
+406	Wijgmaal	Vygmael|Wygmael	3018	50.92670	4.70210	VLG	Provincie Vlaams-Brabant
+407	Herent		3020	50.90860	4.67060	VLG	Provincie Vlaams-Brabant
+408	Veltem-Beisem	Velthem-Beyssem	3020	50.90810	4.61910	VLG	Provincie Vlaams-Brabant
+409	Winksele	Winxele	3020	50.89860	4.64610	VLG	Provincie Vlaams-Brabant
+410	Huldenberg		3040	50.78940	4.58310	VLG	Provincie Vlaams-Brabant
+411	Loonbeek		3040	50.80940	4.60970	VLG	Provincie Vlaams-Brabant
+412	Neerijse	Neerijsche|Neeryssche	3040	50.81720	4.62360	VLG	Provincie Vlaams-Brabant
+413	Ottenburg	Ottenbourg	3040	50.75160	4.61640	VLG	Provincie Vlaams-Brabant
+414	Sint-Agatha-Rode	Rhode-Sainte-Agathe	3040	50.78600	4.63100	VLG	Provincie Vlaams-Brabant
+415	Oud-Heverlee	Vieux-Héverlé	3050	50.83520	4.66420	VLG	Provincie Vlaams-Brabant
+416	Sint-Joris-Weert	Weert-Saint-Georges	3051	50.80230	4.65260	VLG	Provincie Vlaams-Brabant
+417	Blanden		3052	50.82620	4.71020	VLG	Provincie Vlaams-Brabant
+418	Haasrode	Haesrode	3053	50.83170	4.72950	VLG	Provincie Vlaams-Brabant
+419	Vaalbeek	Vaelbeek	3054	50.82620	4.68980	VLG	Provincie Vlaams-Brabant
+420	Bertem	Berthem	3060	50.86400	4.62920	VLG	Provincie Vlaams-Brabant
+421	Korbeek-Dijle	Corbeek-Dyle	3060	50.83810	4.63790	VLG	Provincie Vlaams-Brabant
+422	Leefdaal	Leefdael	3061	50.84760	4.58940	VLG	Provincie Vlaams-Brabant
+423	Kortenberg	Cortenberg	3070	50.88980	4.54350	VLG	Provincie Vlaams-Brabant
+424	Erps-Kwerps	Erps-Querbs	3071	50.90120	4.55980	VLG	Provincie Vlaams-Brabant
+425	Everberg		3078	50.87680	4.56980	VLG	Provincie Vlaams-Brabant
+426	Meerbeek		3078	50.88210	4.58970	VLG	Provincie Vlaams-Brabant
+427	Duisburg	Duysbourg	3080	50.81580	4.55530	VLG	Provincie Vlaams-Brabant
+428	Tervuren	Tervueren	3080	50.82370	4.51420	VLG	Provincie Vlaams-Brabant
+429	Vossem		3080	50.83630	4.56040	VLG	Provincie Vlaams-Brabant
+430	Overijse	Overijase|Overijsche|Overyssche	3090	50.77440	4.53460	VLG	Provincie Vlaams-Brabant
+431	Rotselaar	Rotselaer	3110	50.95300	4.71670	VLG	Provincie Vlaams-Brabant
+432	Wezemaal	Wesemael	3111	50.94850	4.75540	VLG	Provincie Vlaams-Brabant
+433	Werchter		3118	50.97310	4.70120	VLG	Provincie Vlaams-Brabant
+434	Tremelo	Tremeloo	3120	50.99230	4.70810	VLG	Provincie Vlaams-Brabant
+435	Baal	Bael	3128	50.99550	4.75320	VLG	Provincie Vlaams-Brabant
+436	Begijnendijk	Beggynendyck	3130	51.01940	4.78380	VLG	Provincie Vlaams-Brabant
+437	Betekom	Betecom	3130	50.98680	4.78190	VLG	Provincie Vlaams-Brabant
+438	Keerbergen		3140	51.00300	4.63430	VLG	Provincie Vlaams-Brabant
+439	Haacht	Haecht	3150	50.97740	4.63780	VLG	Provincie Vlaams-Brabant
+440	Tildonk	Thildonck|Thildonk	3150	50.94380	4.64480	VLG	Provincie Vlaams-Brabant
+441	Wespelaar	Wespelaer	3150	50.96080	4.63980	VLG	Provincie Vlaams-Brabant
+442	Boortmeerbeek		3190	50.97930	4.57440	VLG	Provincie Vlaams-Brabant
+443	Hever		3191	50.99540	4.55130	VLG	Provincie Vlaams-Brabant
+444	Aarschot	Aerschot	3200	50.98710	4.83690	VLG	Provincie Vlaams-Brabant
+445	Gelrode		3200	50.96630	4.80410	VLG	Provincie Vlaams-Brabant
+446	Langdorp		3201	50.99560	4.87170	VLG	Provincie Vlaams-Brabant
+447	Rillaar	Rillaer	3202	50.97380	4.89180	VLG	Provincie Vlaams-Brabant
+448	Linden		3210	50.89490	4.77030	VLG	Provincie Vlaams-Brabant
+449	Lubbeek		3210	50.88280	4.83900	VLG	Provincie Vlaams-Brabant
+450	Binkom		3211	50.87160	4.88410	VLG	Provincie Vlaams-Brabant
+451	Pellenberg		3212	50.87240	4.79390	VLG	Provincie Vlaams-Brabant
+452	Holsbeek		3220	50.92100	4.75750	VLG	Provincie Vlaams-Brabant
+453	Kortrijk-Dutsel	Cortryck-Dutzel	3220	50.92680	4.80800	VLG	Provincie Vlaams-Brabant
+454	Sint-Pieters-Rode	Rhode-Saint-Pierre	3220	50.93250	4.82250	VLG	Provincie Vlaams-Brabant
+455	Nieuwrode	Nieuwrhode	3221	50.95000	4.83330	VLG	Provincie Vlaams-Brabant
+456	Scherpenheuvel	Montaigu	3270	50.98070	4.97550	VLG	Provincie Vlaams-Brabant
+457	Scherpenheuvel-Zichem	Montaigu-Zichem	3270	51.01040	4.97490	VLG	Brabant Flamand
+458	Averbode		3271	51.02890	4.98070	VLG	Provincie Vlaams-Brabant
+459	Zichem	Sichem	3271	51.00190	4.98320	VLG	Provincie Vlaams-Brabant
+460	Messelbroek	Messelbroeck	3272	50.99550	4.93660	VLG	Provincie Vlaams-Brabant
+461	Testelt		3272	51.01080	4.95310	VLG	Provincie Vlaams-Brabant
+462	Deurne		3290	51.03910	5.09650	VLG	Provincie Vlaams-Brabant
+463	Diest		3290	50.98920	5.05060	VLG	Provincie Vlaams-Brabant
+464	Schaffen		3290	50.99990	5.08670	VLG	Provincie Vlaams-Brabant
+465	Webbekom	Webbecom|Webbecon	3290	50.97410	5.04030	VLG	Provincie Vlaams-Brabant
+466	Kaggevinne	Caggevinne	3293	50.98040	5.01890	VLG	Provincie Vlaams-Brabant
+467	Molenstede		3294	51.00400	5.01300	VLG	Provincie Vlaams-Brabant
+468	Bost		3300	50.84490	4.81310	VLG	Provincie Vlaams-Brabant
+469	Goetsenhoven	Gossoncourt	3300	50.76880	4.95160	VLG	Provincie Vlaams-Brabant
+470	Hakendover	Haekendover	3300	50.79590	4.98230	VLG	Provincie Vlaams-Brabant
+471	Kumtich	Cumptich	3300	50.82100	4.88720	VLG	Provincie Vlaams-Brabant
+472	Oorbeek	Oirbeek	3300	50.79910	4.89230	VLG	Provincie Vlaams-Brabant
+473	Oplinter		3300	50.83020	4.99000	VLG	Provincie Vlaams-Brabant
+474	Sint-Margriete-Houtem	Hautem-Sainte-Marguerite	3300,3470	50.82880	4.95800	VLG	Provincie Vlaams-Brabant
+475	Tienen	Thienen|Tirlemont	3300	50.80740	4.93780	VLG	Provincie Vlaams-Brabant
+476	Vissenaken	Vissenaeken	3300	50.83850	4.90490	VLG	Provincie Vlaams-Brabant
+477	Hoegaarden	Hougaerde	3320	50.77560	4.88950	VLG	Provincie Vlaams-Brabant
+478	Meldert		3320	50.78810	4.83780	VLG	Provincie Vlaams-Brabant
+479	Outgaarden	Autgaerde	3321	50.76670	4.91930	VLG	Provincie Vlaams-Brabant
+480	Drieslinter		3350	50.84570	5.05040	VLG	Provincie Vlaams-Brabant
+481	Linter		3350	50.84160	5.03660	VLG	Provincie Vlaams-Brabant
+482	Melkwezer	Melckweser	3350	50.82570	5.06140	VLG	Provincie Vlaams-Brabant
+483	Neerhespen		3350	50.79220	5.04890	VLG	Provincie Vlaams-Brabant
+484	Neerlinter		3350	50.83970	5.02290	VLG	Provincie Vlaams-Brabant
+485	Orsmaal-Gussenhoven	Orsmaal|Orsmael-Gussenhoven	3350	50.80530	5.06180	VLG	Provincie Vlaams-Brabant
+486	Overhespen		3350	50.79600	5.03560	VLG	Provincie Vlaams-Brabant
+487	Wommersom		3350	50.81270	5.01770	VLG	Provincie Vlaams-Brabant
+488	Bierbeek		3360	50.82880	4.75950	VLG	Provincie Vlaams-Brabant
+489	Korbeek-Lo	Corbeek-Loo|Korbeek-Loo	3360	50.86030	4.76270	VLG	Provincie Vlaams-Brabant
+490	Lovenjoel	Lovenjoul	3360	50.85850	4.78090	VLG	Provincie Vlaams-Brabant
+491	Opvelp		3360	50.81020	4.79350	VLG	Provincie Vlaams-Brabant
+492	Boutersem	Bautersem	3370	50.83510	4.83450	VLG	Provincie Vlaams-Brabant
+493	Kerkom		3370	50.85570	4.87420	VLG	Provincie Vlaams-Brabant
+494	Neervelp		3370	50.82160	4.80940	VLG	Provincie Vlaams-Brabant
+495	Roosbeek		3370	50.83610	4.86280	VLG	Provincie Vlaams-Brabant
+496	Vertrijk	Vertryck	3370	50.82930	4.83450	VLG	Provincie Vlaams-Brabant
+497	Willebringen		3370	50.81240	4.84390	VLG	Provincie Vlaams-Brabant
+498	Bunsbeek		3380	50.84170	4.94520	VLG	Provincie Vlaams-Brabant
+499	Glabbeek		3380	50.87270	4.95620	VLG	Provincie Vlaams-Brabant
+500	Kapellen	Cappellen	3381	50.88590	4.95170	VLG	Provincie Vlaams-Brabant
+501	Attenrode	Attenrode-Wever	3384	50.87780	4.92440	VLG	Provincie Vlaams-Brabant
+502	Houwaart	Hauwaert	3390	50.93370	4.85990	VLG	Provincie Vlaams-Brabant
+503	Sint-Joris-Winge	Winghe-Saint-Georges	3390	50.90450	4.87490	VLG	Provincie Vlaams-Brabant
+504	Tielt	Thielt|Tielt-brabant	3390	50.94210	4.90510	VLG	Provincie Vlaams-Brabant
+505	Tielt-Winge		3390	50.91740	4.88370	VLG	Brabant Flamand
+506	Meensel-Kiezegem	Meensel|Meensel-Kieseghem	3391	50.89620	4.92500	VLG	Provincie Vlaams-Brabant
+507	Eliksem	Elixem	3400	50.78410	5.01040	VLG	Provincie Vlaams-Brabant
+508	Ezemaal	Esemael	3400	50.77700	5.00100	VLG	Provincie Vlaams-Brabant
+509	Laar	Laer	3400	50.77070	5.02640	VLG	Provincie Vlaams-Brabant
+510	Landen		3400	50.75270	5.08200	VLG	Provincie Vlaams-Brabant
+511	Neerwinden		3400	50.76760	5.04020	VLG	Provincie Vlaams-Brabant
+512	Overwinden		3400	50.75500	5.04800	VLG	Provincie Vlaams-Brabant
+513	Rumsdorp		3400	50.76720	5.07440	VLG	Provincie Vlaams-Brabant
+514	Wange	Wanghe	3400	50.78640	5.03140	VLG	Provincie Vlaams-Brabant
+515	Waasmont	Wamont	3401	50.72830	5.06330	VLG	Provincie Vlaams-Brabant
+516	Walsbets	Walsbetz	3401	50.73760	5.08410	VLG	Provincie Vlaams-Brabant
+517	Walshoutem	Houtain-l'Évêque	3401	50.73220	5.08400	VLG	Provincie Vlaams-Brabant
+518	Wezeren		3401	50.73070	5.10470	VLG	Provincie Vlaams-Brabant
+519	Attenhoven		3404	50.91320	4.72940	VLG	Provincie Vlaams-Brabant
+520	Neerlanden		3404	50.77800	5.07820	VLG	Provincie Vlaams-Brabant
+521	Budingen		3440	50.86510	5.09850	VLG	Provincie Vlaams-Brabant
+522	Dormaal	Dormael	3440	50.80780	5.09900	VLG	Provincie Vlaams-Brabant
+523	Halle-Booienhoven	Halle-Boyenhoven	3440	50.80530	5.11170	VLG	Provincie Vlaams-Brabant
+524	Helen-Bos	Heelen-Bosch	3440	50.81850	5.08290	VLG	Provincie Vlaams-Brabant
+525	Zoutleeuw	Léau|Zoutleew	3440	50.83320	5.10380	VLG	Provincie Vlaams-Brabant
+526	Geetbets	Geet Betz	3450	50.89430	5.11200	VLG	Provincie Vlaams-Brabant
+527	Grazen	Graesen|Grassen	3450	50.87450	5.13140	VLG	Provincie Vlaams-Brabant
+528	Rummen		3454	50.88910	5.16520	VLG	Provincie Vlaams-Brabant
+529	Assent	Caggevinne-Assent	3460	50.95190	5.01470	VLG	Provincie Vlaams-Brabant
+530	Bekkevoort	Becquevoort	3460	50.94070	4.96900	VLG	Provincie Vlaams-Brabant
+531	Molenbeek-Wersbeek	Molenbeek	3461	50.91950	4.94760	VLG	Provincie Vlaams-Brabant
+532	Kortenaken	Cortenaeken	3470	50.90860	5.05970	VLG	Provincie Vlaams-Brabant
+533	Ransberg		3470	50.87490	5.03950	VLG	Provincie Vlaams-Brabant
+534	Hoeleden		3471	50.86660	4.98540	VLG	Provincie Vlaams-Brabant
+535	Kersbeek-Miskom	Kersbeek|Kersbeek-Miscom	3472	50.88540	4.99580	VLG	Provincie Vlaams-Brabant
+536	Waanrode	Waenrode	3473	50.91620	5.00480	VLG	Provincie Vlaams-Brabant
+537	Hasselt		3500	50.93110	5.33780	VLG	Provincie Limburg
+538	Sint-Lambrechts-Herk	Herck-Saint-Lambert	3500	50.89910	5.30790	VLG	Provincie Limburg
+539	Wimmertingen		3501	50.88330	5.35000	VLG	Provincie Limburg
+540	Kermt	Kermpt	3510	50.94760	5.24830	VLG	Provincie Limburg
+541	Spalbeek		3510	50.94920	5.22390	VLG	Provincie Limburg
+542	Kuringen	Curange	3511	50.94430	5.29900	VLG	Provincie Limburg
+543	Stokrooie	Stockroye	3511	50.96640	5.28140	VLG	Provincie Limburg
+544	Stevoort		3512	50.91860	5.25330	VLG	Provincie Limburg
+545	Zonhoven		3520	50.99060	5.36820	VLG	Provincie Limburg
+546	Helchteren		3530	51.05590	5.38240	VLG	Provincie Limburg
+547	Houthalen	Houthaelen|Houthaelenberg	3530	51.03430	5.37430	VLG	Provincie Limburg
+548	Houthalen-Helchteren	Houthaelen	3530	51.03220	5.37850	VLG	Limbourg
+549	Berbroek		3540	50.95030	5.20900	VLG	Provincie Limburg
+550	Donk	Donck	3540	50.93880	5.13720	VLG	Provincie Limburg
+551	Herk-de-Stad	Herck-la-Ville	3540	50.94010	5.16640	VLG	Provincie Limburg
+552	Schulen	Schuelen	3540	50.95970	5.19010	VLG	Provincie Limburg
+553	Halen	Haelen	3545	50.94840	5.11100	VLG	Provincie Limburg
+554	Loksbergen	Loxbergen	3545	50.93410	5.06980	VLG	Provincie Limburg
+555	Zelem	Zeelhem	3545	50.97740	5.10690	VLG	Provincie Limburg
+556	Heusden		3550	51.03660	5.28010	VLG	Provincie Limburg
+557	Heusden-Zolder		3550	51.03730	5.29650	VLG	Provincie Limburg
+558	Zolder		3550	51.02460	5.30980	VLG	Provincie Limburg
+559	Linkhout	Linckhout	3560	50.96780	5.13740	VLG	Provincie Limburg
+560	Lummen		3560	50.98770	5.19120	VLG	Provincie Limburg
+561	Meldert		3560	51.00010	5.14210	VLG	Provincie Limburg
+562	Alken		3570	50.87550	5.30560	VLG	Provincie Limburg
+563	Beringen	Beeringen	3580	51.04950	5.22610	VLG	Provincie Limburg
+564	Beverlo	Beverloo	3581	51.08650	5.21850	VLG	Provincie Limburg
+565	Koersel	Coursel	3582	51.05910	5.27120	VLG	Provincie Limburg
+566	Paal	Pael	3583	51.03990	5.17230	VLG	Provincie Limburg
+567	Diepenbeek		3590	50.90770	5.41870	VLG	Provincie Limburg
+568	Genk	Genck	3600	50.96500	5.50080	VLG	Provincie Limburg
+569	Gellik	Gellick	3620	50.88470	5.61010	VLG	Provincie Limburg
+570	Lanaken	Lanaeken	3620	50.89320	5.64680	VLG	Provincie Limburg
+571	Neerharen		3620	50.90960	5.68030	VLG	Provincie Limburg
+572	Veldwezelt		3620	50.86810	5.63100	VLG	Provincie Limburg
+573	Rekem	Reckheim	3621	50.92240	5.69380	VLG	Provincie Limburg
+574	Eisden	Eysden	3630	50.98460	5.71430	VLG	Provincie Limburg
+575	Leut	Leuth	3630	50.99110	5.73620	VLG	Provincie Limburg
+576	Maasmechelen	Massmechelen|Mechelen	3630	50.96550	5.69450	VLG	Provincie Limburg
+577	Mechelen-aan-de-Maas	Mechelen|Mechelen-aan-Maas	3630	50.97990	5.69350	VLG	Provincie Limburg
+578	Meeswijk	Meeswyck	3630	51.00000	5.74810	VLG	Provincie Limburg
+579	Opgrimbie	Opgrimby	3630	50.94190	5.67970	VLG	Provincie Limburg
+580	Vucht		3630	50.97830	5.71100	VLG	Provincie Limburg
+581	Boorsem	Boorsheim	3631	50.94210	5.71900	VLG	Provincie Limburg
+582	Uikhoven	Uykhoven	3631	50.92390	5.71920	VLG	Provincie Limburg
+583	Kessenich		3640	51.15090	5.82330	VLG	Provincie Limburg
+584	Kinrooi	Kinroy	3640	51.14540	5.74210	VLG	Provincie Limburg
+585	Molenbeersel		3640	51.17040	5.73760	VLG	Provincie Limburg
+586	Ophoven		3640	51.08220	5.56970	VLG	Provincie Limburg
+587	Dilsen		3650	51.03850	5.73940	VLG	Provincie Limburg
+588	Dilsen-Stokkem		3650	51.03050	5.73470	VLG	Limbourg
+589	Elen	Eelen	3650	51.06640	5.75130	VLG	Provincie Limburg
+590	Lanklaar	Lanklaer	3650	51.01940	5.72510	VLG	Provincie Limburg
+591	Rotem		3650	51.05290	5.74100	VLG	Provincie Limburg
+592	Stokkem	Stockheim	3650	51.02330	5.74500	VLG	Provincie Limburg
+593	Opglabbeek		3660	51.13940	5.51540	VLG	Provincie Limburg
+594	As	Asch	3665	51.00750	5.58450	VLG	Provincie Limburg
+595	Niel-bij-As	Niel-bij-Asch|Niel-près-d'Asch	3668	51.01850	5.60530	VLG	Provincie Limburg
+596	Ellikom	Ellicum	3670	51.12770	5.52390	VLG	Provincie Limburg
+597	Gruitrode		3670	51.08940	5.58820	VLG	Provincie Limburg
+598	Meeuwen	Meuwen	3670	51.09910	5.52110	VLG	Provincie Limburg
+599	Neerglabbeek		3670	51.08910	5.61610	VLG	Provincie Limburg
+600	Oudsbergen		3670	51.10200	5.56140	VLG	Limbourg
+601	Wijshagen	Wyshagen	3670	51.10490	5.55790	VLG	Provincie Limburg
+602	Maaseik	Maeseyck	3680	51.09800	5.78380	VLG	Provincie Limburg
+603	Neeroeteren		3680	51.09160	5.69930	VLG	Provincie Limburg
+604	Opoeteren		3680	51.06920	5.65560	VLG	Provincie Limburg
+605	Zutendaal	Sutendael	3690	50.93310	5.57530	VLG	Provincie Limburg
+606	's Herenelderen		3700	50.80880	5.50070	VLG	Provincie Limburg
+607	Berg		3700	50.79060	5.49310	VLG	Provincie Limburg
+608	Diets-Heur	Dietsch-Heur|Heur-le-Tiexhe|Heure-le-Tixhe	3700	50.74540	5.48320	VLG	Provincie Limburg
+609	Haren	Haaren|Haeren	3700,3840	50.79300	5.39920	VLG	Provincie Limburg
+610	Henis		3700	50.79990	5.47030	VLG	Provincie Limburg
+611	Kolmont		3700,3840	50.80420	5.42450	VLG	Provincie Limburg
+612	Koninksem	Koninxheim	3700	50.76530	5.43890	VLG	Provincie Limburg
+613	Lauw	Lowaige	3700	50.73880	5.41330	VLG	Provincie Limburg
+614	Mal	Mall	3700	50.76870	5.51970	VLG	Provincie Limburg
+615	Neerrepen		3700	50.81090	5.44450	VLG	Provincie Limburg
+616	Nerem	Nederheim|Neerem	3700	50.76350	5.50990	VLG	Provincie Limburg
+617	Overrepen		3700	50.80800	5.43110	VLG	Provincie Limburg
+618	Piringen	Pirange	3700	50.78670	5.41820	VLG	Provincie Limburg
+619	Riksingen	Rixingen	3700	50.80430	5.46260	VLG	Provincie Limburg
+620	Rutten	Russon	3700	50.74760	5.44350	VLG	Provincie Limburg
+621	Sluizen	Sluse	3700	50.76520	5.53140	VLG	Provincie Limburg
+622	Tongeren	Tongres	3700	50.78050	5.46480	VLG	Provincie Limburg
+623	Vreren	Freeren|Vreeren	3700	50.75170	5.49590	VLG	Provincie Limburg
+624	Widooie	Widoye	3700	50.77160	5.40780	VLG	Provincie Limburg
+625	Herstappe		3717	50.72610	5.42660	VLG	Provincie Limburg
+626	Kortessem	Cortessem|Cortessum|Kortessum	3720	50.85890	5.38970	VLG	Provincie Limburg
+627	Vliermaalroot	Vliermaelroodt	3721	50.86510	5.42620	VLG	Provincie Limburg
+628	Wintershoven		3722	50.85160	5.41960	VLG	Provincie Limburg
+629	Guigoven	Guygoven	3723	50.83920	5.40040	VLG	Provincie Limburg
+630	Vliermaal	Vliermael	3724	50.84070	5.42860	VLG	Provincie Limburg
+631	Hoeselt	Hoesselt	3730	50.84710	5.48770	VLG	Provincie Limburg
+632	Romershoven		3730	50.85640	5.45990	VLG	Provincie Limburg
+633	Sint-Huibrechts-Hern	Hern-Saint-Hubert	3730	50.82980	5.44930	VLG	Provincie Limburg
+634	Werm		3730	50.83260	5.47960	VLG	Provincie Limburg
+635	Schalkhoven		3732	50.84130	5.44950	VLG	Provincie Limburg
+636	Beverst		3740	50.89090	5.47550	VLG	Provincie Limburg
+637	Bilzen	Bilsen	3740	50.87330	5.51840	VLG	Provincie Limburg
+638	Eigenbilzen	Eygenbilsen	3740	50.87490	5.57580	VLG	Provincie Limburg
+639	Grote-Spouwen	Grand-Spauwen|Groote-Spouwen	3740	50.83280	5.55430	VLG	Provincie Limburg
+640	Hees		3740	50.84680	5.60770	VLG	Provincie Limburg
+641	Kleine-Spouwen	Petit-Spauwen	3740	50.83840	5.55010	VLG	Provincie Limburg
+642	Mopertingen		3740	50.86120	5.57590	VLG	Provincie Limburg
+643	Munsterbilzen	Munsterbilsen	3740	50.88940	5.52650	VLG	Provincie Limburg
+644	Rijkhoven	Ryckhoven	3740	50.83290	5.51500	VLG	Provincie Limburg
+645	Rosmeer		3740	50.84590	5.57810	VLG	Provincie Limburg
+646	Waltwilder		3740	50.86640	5.54430	VLG	Provincie Limburg
+647	Martenslinde		3742	50.85600	5.53380	VLG	Provincie Limburg
+648	Hoelbeek		3746	50.87210	5.55910	VLG	Provincie Limburg
+649	Genoelselderen		3770	50.80210	5.53740	VLG	Provincie Limburg
+650	Herderen		3770	50.80730	5.57350	VLG	Provincie Limburg
+651	Kanne		3770	50.81330	5.66950	VLG	Provincie Limburg
+652	Membruggen		3770	50.81530	5.53370	VLG	Provincie Limburg
+653	Millen		3770	50.78620	5.55620	VLG	Provincie Limburg
+654	Riemst	Riempst	3770	50.80990	5.60130	VLG	Provincie Limburg
+655	Val-Meer	Fall|Fall-et-Mheer|Val	3770	50.78720	5.59560	VLG	Provincie Limburg
+656	Vlijtingen	Vlytingen	3770	50.83200	5.58430	VLG	Provincie Limburg
+657	Vroenhoven		3770	50.82610	5.63990	VLG	Provincie Limburg
+658	Zichen-Zussen-Bolder	Sichen-Sussen-et-Bolré	3770	50.79420	5.62480	VLG	Provincie Limburg
+659	Fouron-Saint-Martin	Sint-Martens-Voeren	3790	50.74850	5.81290	VLG	Provincie Limburg
+660	Fourons	Voeren	3790	50.75050	5.78320	VLG	Limbourg
+661	Mouland	Moelingen	3790	50.75690	5.71370	VLG	Provincie Limburg
+662	Remersdaal		3791	50.73140	5.88060	VLG	Provincie Limburg
+663	Fouron-Saint-Pierre	Sint-Pieters-Voeren	3792	50.73860	5.82220	VLG	Provincie Limburg
+664	Teuven		3793	50.75180	5.87570	VLG	Provincie Limburg
+665	Fouron-Le-Comte		3798	50.75870	5.76110	VLG	Provincie Limburg
+666	Aalst	Aelst	3800	50.78200	5.20920	VLG	Provincie Limburg
+667	Brustem	Brusthem	3800	50.80480	5.22260	VLG	Provincie Limburg
+668	Engelmanshoven		3800	50.77210	5.25270	VLG	Provincie Limburg
+669	Gelinden		3800	50.76560	5.26120	VLG	Provincie Limburg
+670	Groot-Gelmen	Grande-Jamine	3800	50.78350	5.26380	VLG	Provincie Limburg
+671	Halmaal	Halmael	3800	50.80450	5.15470	VLG	Provincie Limburg
+672	Kerkom-bij-Sint-Truiden	Kerckom|Kerckom-bij-Sint-Truiden|Kerkom	3800	50.77370	5.17840	VLG	Provincie Limburg
+673	Ordingen		3800	50.81320	5.23500	VLG	Provincie Limburg
+674	Sint-Truiden	Saint-Trond|Sint Truijen	3800	50.81680	5.18650	VLG	Provincie Limburg
+675	Zepperen		3800	50.82140	5.24770	VLG	Provincie Limburg
+676	Duras		3803	50.83450	5.14570	VLG	Provincie Limburg
+677	Gorsem	Gorssum	3803	50.83510	5.16220	VLG	Provincie Limburg
+678	Runkelen	Runckelen	3803	50.84640	5.15050	VLG	Provincie Limburg
+679	Wilderen		3803	50.81550	5.14230	VLG	Provincie Limburg
+680	Velm		3806	50.77870	5.13100	VLG	Provincie Limburg
+681	Berlingen		3830	50.81940	5.31130	VLG	Provincie Limburg
+682	Wellen		3830	50.84100	5.33870	VLG	Provincie Limburg
+683	Herten		3831	50.83510	5.32210	VLG	Provincie Limburg
+684	Ulbeek		3832	50.84370	5.30500	VLG	Provincie Limburg
+685	Bommershoven		3840	50.78730	5.37900	VLG	Provincie Limburg
+686	Borgloon	Looz	3840	50.80510	5.34370	VLG	Provincie Limburg
+687	Broekom	Brouckom	3840	50.78270	5.33230	VLG	Provincie Limburg
+688	Gors-Opleeuw		3840	50.82310	5.38340	VLG	Provincie Limburg
+689	Gotem	Gothem	3840	50.80500	5.31300	VLG	Provincie Limburg
+690	Groot-Loon	Grand-Looz	3840	50.79270	5.36340	VLG	Provincie Limburg
+691	Hendrieken		3840	50.79850	5.32710	VLG	Provincie Limburg
+692	Hoepertingen	Houppertingen	3840	50.81220	5.28440	VLG	Provincie Limburg
+693	Jesseren		3840	50.80580	5.39210	VLG	Provincie Limburg
+694	Kerniel		3840	50.81670	5.36510	VLG	Provincie Limburg
+695	Kuttekoven	Cuttecoven	3840	50.80920	5.32610	VLG	Provincie Limburg
+696	Rijkel	Ryckel	3840	50.80940	5.26140	VLG	Provincie Limburg
+697	Voort	Voordt	3840	50.79480	5.31980	VLG	Provincie Limburg
+698	Binderveld		3850	50.86080	5.16490	VLG	Provincie Limburg
+699	Kozen	Cosen	3850	50.87520	5.24000	VLG	Provincie Limburg
+700	Nieuwerkerken		3850	50.86380	5.19470	VLG	Provincie Limburg
+701	Wijer	Weyer	3850	50.89860	5.22450	VLG	Provincie Limburg
+702	Batsheers	Basheers	3870	50.73860	5.28100	VLG	Provincie Limburg
+703	Bovelingen		3870	50.73550	5.25360	VLG	Provincie Limburg
+704	Gutshoven		3870	50.75360	5.29930	VLG	Provincie Limburg
+705	Heers		3870	50.75380	5.30210	VLG	Provincie Limburg
+706	Heks	Hex	3870	50.76950	5.35810	VLG	Provincie Limburg
+707	Horpmaal	Horpmael	3870	50.75960	5.33520	VLG	Provincie Limburg
+708	Klein-Gelmen	Petit-Jamine	3870	50.77110	5.27590	VLG	Provincie Limburg
+709	Mechelen-Bovelingen	Marlinne|Mechelen	3870	50.74080	5.26280	VLG	Provincie Limburg
+710	Mettekoven	Mettecoven	3870	50.78070	5.29090	VLG	Provincie Limburg
+711	Opheers		3870	50.73990	5.29810	VLG	Provincie Limburg
+712	Rukkelingen-Loon	Roclenge-Looz	3870	50.72840	5.25380	VLG	Provincie Limburg
+713	Vechmaal	Vechmael	3870	50.76170	5.37450	VLG	Provincie Limburg
+714	Veulen	Fologne	3870	50.76380	5.30570	VLG	Provincie Limburg
+715	Boekhout	Bouckhout	3890	50.74570	5.23330	VLG	Provincie Limburg
+716	Gingelom		3890	50.74790	5.13420	VLG	Provincie Limburg
+717	Jeuk	Goyer	3890	50.73500	5.20990	VLG	Provincie Limburg
+718	Kortijs	Corthys	3890	50.70660	5.14890	VLG	Provincie Limburg
+719	Montenaken	Montenaeken	3890	50.72090	5.12940	VLG	Provincie Limburg
+720	Niel-bij-Sint-Truiden	Niel-Saint-Trond	3890	50.74040	5.14200	VLG	Provincie Limburg
+721	Vorsen	Fresin	3890	50.70380	5.17080	VLG	Provincie Limburg
+722	Borlo	Borloo	3891	50.74230	5.18090	VLG	Provincie Limburg
+723	Buvingen		3891	50.75260	5.17690	VLG	Provincie Limburg
+724	Mielen-boven-Aalst	Mielen-sur-Aelst	3891	50.75640	5.21420	VLG	Provincie Limburg
+725	Muizen	Muysen	3891	50.76040	5.17930	VLG	Provincie Limburg
+726	Overpelt		3900	51.21040	5.41560	VLG	Provincie Limburg
+727	Pelt		3900	51.21040	5.41560	VLG	Limbourg
+728	Neerpelt		3910	51.22810	5.44270	VLG	Provincie Limburg
+729	Sint-Huibrechts-Lille	Lille-Saint-Hubert	3910	51.22270	5.49440	VLG	Provincie Limburg
+730	Lommel		3920	51.23070	5.31350	VLG	Provincie Limburg
+731	Achel		3930	51.25300	5.47980	VLG	Provincie Limburg
+732	Hamont		3930	51.25330	5.54730	VLG	Provincie Limburg
+733	Hamont-Achel		3930	51.24970	5.50550	VLG	Limbourg
+734	Hechtel		3940	51.12520	5.36770	VLG	Provincie Limburg
+735	Hechtel-Eksel		3940	51.14170	5.37610	VLG	Limbourg
+736	Eksel	Exel	3941	51.15180	5.39060	VLG	Provincie Limburg
+737	Ham		3945	51.10080	5.15920	VLG	Limbourg
+738	Kwaadmechelen	Quaedmechelen|Zwaadmechelen	3945	51.10100	5.14480	VLG	Provincie Limburg
+739	Oostham		3945	51.10370	5.17880	VLG	Provincie Limburg
+740	Bocholt		3950	51.17340	5.57990	VLG	Provincie Limburg
+741	Kaulille	Caulille	3950	51.18760	5.52370	VLG	Provincie Limburg
+742	Reppel		3950	51.15410	5.56240	VLG	Provincie Limburg
+743	Beek		3960	51.15520	5.60300	VLG	Provincie Limburg
+744	Bree	Brée	3960	51.14150	5.59690	VLG	Provincie Limburg
+745	Gerdingen		3960	51.14820	5.58140	VLG	Provincie Limburg
+746	Opitter		3960	51.11700	5.64750	VLG	Provincie Limburg
+747	Tongerlo	Tongerloo	3960	51.12760	5.66090	VLG	Provincie Limburg
+748	Leopoldsburg	Bourg-Léopold	3970	51.11670	5.25000	VLG	Provincie Limburg
+749	Heppen		3971	51.10930	5.22900	VLG	Provincie Limburg
+750	Tessenderlo	Tessenderloo	3980	51.06510	5.08860	VLG	Provincie Limburg
+751	Grote-Brogel	Grand-Brogel|Groote-Brogel	3990	51.15280	5.50590	VLG	Provincie Limburg
+752	Kleine-Brogel	Petit-Brogel	3990	51.17270	5.45060	VLG	Provincie Limburg
+753	Peer		3990	51.13030	5.45950	VLG	Provincie Limburg
+754	Wijchmaal	Wychmael	3990	51.13510	5.41330	VLG	Provincie Limburg
+755	Glain		4000	50.64770	5.54380	WAL	Province de Liège
+756	Liège	Lige|Luik|Lüttich	4000,4020	50.63370	5.56750	WAL	Province de Liège
+757	Rocourt		4000	50.67580	5.54620	WAL	Province de Liège
+758	Bressoux		4020	50.63990	5.60630	WAL	Province de Liège
+759	Jupille-sur-Meuse	Jupille	4020	50.64590	5.63310	WAL	Province de Liège
+760	Wandre		4020	50.66770	5.65960	WAL	Province de Liège
+761	Grivegnée		4030	50.62150	5.61100	WAL	Province de Liège
+762	Angleur		4031	50.61130	5.59940	WAL	Province de Liège
+763	Chênée		4032	50.61200	5.61410	WAL	Province de Liège
+764	Herstal	Heristal|Héristal	4040	50.66420	5.62350	WAL	Province de Liège
+765	Milmort		4041	50.69040	5.59320	WAL	Province de Liège
+766	Vottem		4041	50.67160	5.57690	WAL	Province de Liège
+767	Liers		4042	50.69400	5.56460	WAL	Province de Liège
+768	Chaudfontaine		4050	50.58280	5.63410	WAL	Province de Liège
+769	Vaux-sous-Chèvremont		4051	50.60300	5.63350	WAL	Province de Liège
+770	Beaufays		4052	50.55880	5.63880	WAL	Province de Liège
+771	Embourg		4053	50.59040	5.60680	WAL	Province de Liège
+772	Boncelles		4100	50.57110	5.53630	WAL	Province de Liège
+773	Seraing		4100	50.58360	5.50110	WAL	Province de Liège
+774	Jemeppe-sur-Meuse	Jemeppe	4101	50.61700	5.49850	WAL	Province de Liège
+775	Ougrée	Ougrêye	4102	50.60150	5.54440	WAL	Province de Liège
+776	Ehein		4120,4480	50.54570	5.44510	WAL	Province de Liège
+777	Neupré	Neupre	4120	50.54390	5.48010	WAL	Liège
+778	Rotheux-Rimière	Rotheux	4120	50.53360	5.48060	WAL	Province de Liège
+779	Neuville-en-Condroz		4121	50.55290	5.45080	WAL	Province de Liège
+780	Plainevaux		4122	50.54560	5.52330	WAL	Province de Liège
+781	Esneux		4130	50.53600	5.56780	WAL	Province de Liège
+782	Tilff		4130	50.56430	5.57640	WAL	Province de Liège
+783	Dolembreux		4140	50.53760	5.62560	WAL	Province de Liège
+784	Gomzé-Andoumont		4140	50.54430	5.68940	WAL	Province de Liège
+785	Rouvreux		4140	50.48980	5.65010	WAL	Province de Liège
+786	Sprimont		4140	50.50920	5.65950	WAL	Province de Liège
+787	Louveigné		4141,4920	50.53200	5.70840	WAL	Province de Liège
+788	Anthisnes		4160	50.48320	5.51900	WAL	Province de Liège
+789	Villers-aux-Tours		4161	50.49830	5.51630	WAL	Province de Liège
+790	Hody		4162	50.48640	5.50290	WAL	Province de Liège
+791	Tavier		4163	50.49630	5.47060	WAL	Province de Liège
+792	Comblain-au-Pont	Comblain|Komblenx	4170	50.47490	5.57710	WAL	Province de Liège
+793	Poulseur		4171	50.50910	5.57860	WAL	Province de Liège
+794	Comblain-Fairon		4180	50.44620	5.54490	WAL	Province de Liège
+795	Comblain-la-Tour		4180	50.45340	5.56910	WAL	Province de Liège
+796	Hamoir		4180	50.42670	5.53300	WAL	Province de Liège
+797	Filot		4181	50.42540	5.56740	WAL	Province de Liège
+798	Ferrières	Ferrieres	4190	50.40160	5.61090	WAL	Province de Liège
+799	My		4190	50.40560	5.57380	WAL	Province de Liège
+800	Vieuxville		4190	50.39480	5.54940	WAL	Province de Liège
+801	Werbomont		4190	50.38070	5.68220	WAL	Province de Liège
+802	Xhoris		4190	50.44590	5.60430	WAL	Province de Liège
+803	Burdinne		4210	50.58450	5.07660	WAL	Province de Liège
+804	Hannêche		4210	50.57850	5.04860	WAL	Province de Liège
+805	Lamontzée		4210	50.58440	5.09280	WAL	Province de Liège
+806	Marneffe		4210	50.58050	5.14490	WAL	Province de Liège
+807	Oteppe		4210	50.58010	5.12630	WAL	Province de Liège
+808	Héron	Heron	4217	50.54730	5.09770	WAL	Province de Liège
+809	Lavoir		4217	50.55050	5.11950	WAL	Province de Liège
+810	Waret-L'Evêque	Waret-l'Évêque	4217	50.55670	5.06750	WAL	Province de Liège
+811	Couthuin		4218	50.53160	5.12320	WAL	Province de Liège
+812	Acosse		4219	50.59300	5.04680	WAL	Province de Liège
+813	Ambresin		4219	50.63070	5.03100	WAL	Province de Liège
+814	Meeffe		4219	50.60680	5.01770	WAL	Province de Liège
+815	Wasseiges		4219	50.62190	5.00530	WAL	Province de Liège
+816	Boëlhe		4250	50.68240	5.16660	WAL	Province de Liège
+817	Geer		4250	50.66990	5.17360	WAL	Province de Liège
+818	Hollogne-sur-Geer		4250	50.67650	5.20430	WAL	Province de Liège
+819	Lens-Saint-Servais		4250	50.66340	5.15510	WAL	Province de Liège
+820	Omal		4252	50.65600	5.19980	WAL	Province de Liège
+821	Darion		4253	50.66500	5.18670	WAL	Province de Liège
+822	Ligney		4254	50.66180	5.18240	WAL	Province de Liège
+823	Berloz		4257	50.69830	5.21240	WAL	Province de Liège
+824	Corswarem	Corswaren|Korsworm	4257	50.71100	5.21370	WAL	Province de Liège
+825	Rosoux-Crenwick	Roost-Krenwik|Rosoux-Grenwick	4257	50.70720	5.18950	WAL	Province de Liège
+826	Avennes		4260	50.62870	5.11690	WAL	Province de Liège
+827	Braives		4260	50.61740	5.13300	WAL	Province de Liège
+828	Ciplet		4260	50.61760	5.09030	WAL	Province de Liège
+829	Fallais		4260	50.61000	5.17120	WAL	Province de Liège
+830	Fumal		4260	50.58670	5.18310	WAL	Province de Liège
+831	Ville-en-Hesbaye		4260	50.61740	5.11660	WAL	Province de Liège
+832	Latinne		4261	50.62520	5.16460	WAL	Province de Liège
+833	Tourinne		4263	50.63890	5.17520	WAL	Province de Liège
+834	Abolens		4280	50.67260	5.14930	WAL	Province de Liège
+835	Avernas-le-Bauduin		4280	50.69440	5.07860	WAL	Province de Liège
+836	Avin		4280	50.62240	5.06920	WAL	Province de Liège
+837	Bertrée		4280	50.69530	5.09080	WAL	Province de Liège
+838	Blehen		4280	50.65900	5.12420	WAL	Province de Liège
+839	Cras-Avernas		4280	50.69680	5.12390	WAL	Province de Liège
+840	Crehen		4280	50.65980	5.06330	WAL	Province de Liège
+841	Grand-Hallet		4280	50.69530	5.03590	WAL	Province de Liège
+842	Hannut	Hannuit	4280	50.67140	5.07900	WAL	Province de Liège
+843	Lens-Saint-Remy		4280	50.65080	5.13190	WAL	Province de Liège
+844	Merdorp		4280	50.64880	4.99960	WAL	Province de Liège
+845	Moxhe		4280	50.63080	5.08340	WAL	Province de Liège
+846	Petit-Hallet		4280	50.68760	5.01990	WAL	Province de Liège
+847	Poucet		4280	50.67610	5.11650	WAL	Province de Liège
+848	Thisnes		4280	50.66580	5.04380	WAL	Province de Liège
+849	Trognée	Truielingen	4280	50.68690	5.12420	WAL	Province de Liège
+850	Villers-le-Peuplier		4280	50.65670	5.09410	WAL	Province de Liège
+851	Wansin		4280	50.67850	5.01910	WAL	Province de Liège
+852	Lincent	Lijsem	4287	50.71220	5.03650	WAL	Province de Liège
+853	Pellaines	Pellen	4287	50.72670	5.00710	WAL	Province de Liège
+854	Racour	Raatshoven	4287	50.73920	5.02810	WAL	Province de Liège
+855	Bettincourt	Bettencourt|Bettenhoven	4300	50.71240	5.23550	WAL	Province de Liège
+856	Bleret		4300	50.68960	5.28790	WAL	Province de Liège
+857	Bovenistier		4300	50.66780	5.28400	WAL	Province de Liège
+858	Grand-Axhe		4300	50.68080	5.22980	WAL	Province de Liège
+859	Lantremange		4300	50.71170	5.29580	WAL	Province de Liège
+860	Oleye	Liek	4300	50.71400	5.28130	WAL	Province de Liège
+861	Waremme	Borgworm	4300	50.69760	5.25520	WAL	Province de Liège
+862	Aineffe		4317	50.62460	5.25730	WAL	Province de Liège
+863	Borlez		4317	50.63330	5.24390	WAL	Province de Liège
+864	Celles		4317	50.65440	5.24670	WAL	Province de Liège
+865	Faimes		4317	50.66250	5.26000	WAL	Province de Liège
+866	Les Waleffes		4317	50.63750	5.22360	WAL	Province de Liège
+867	Viemme		4317	50.64710	5.27220	WAL	Province de Liège
+868	Awans		4340	50.66770	5.46330	WAL	Province de Liège
+869	Fooz		4340	50.67540	5.43620	WAL	Province de Liège
+870	Othée	Elch	4340	50.71590	5.46720	WAL	Province de Liège
+871	Villers-l'Evêque	Villers-l'Évêque	4340	50.70450	5.43960	WAL	Province de Liège
+872	Hognoul		4342	50.68180	5.45390	WAL	Province de Liège
+873	Fexhe-le-Haut-Clocher		4347	50.66540	5.39980	WAL	Province de Liège
+874	Freloux		4347	50.68060	5.40660	WAL	Province de Liège
+875	Noville		4347	50.65980	5.38200	WAL	Province de Liège
+876	Roloux		4347	50.65090	5.39710	WAL	Province de Liège
+877	Voroux-Goreux		4347	50.65470	5.42920	WAL	Province de Liège
+878	Lamine		4350	50.68900	5.33450	WAL	Province de Liège
+879	Momalle		4350	50.68590	5.37590	WAL	Province de Liège
+880	Pousset		4350	50.69500	5.30400	WAL	Province de Liège
+881	Remicourt		4350	50.68070	5.32790	WAL	Province de Liège
+882	Hodeige		4351	50.69630	5.34160	WAL	Province de Liège
+883	Donceel		4357	50.64830	5.32000	WAL	Province de Liège
+884	Haneffe		4357	50.63840	5.32010	WAL	Province de Liège
+885	Jeneffe		4357	50.65140	5.35450	WAL	Province de Liège
+886	Limont		4357	50.66190	5.31240	WAL	Province de Liège
+887	Bergilers	Belliek	4360	50.71590	5.32910	WAL	Province de Liège
+888	Grandville		4360	50.72370	5.33920	WAL	Province de Liège
+889	Lens-sur-Geer		4360	50.72160	5.35090	WAL	Province de Liège
+890	Oreye	Oerle	4360	50.71750	5.34880	WAL	Province de Liège
+891	Otrange	Wouteringen	4360	50.73600	5.37860	WAL	Province de Liège
+892	Crisnée	Crisnee	4367	50.71700	5.39800	WAL	Province de Liège
+893	Fize-Le-Marsal		4367	50.70270	5.38550	WAL	Province de Liège
+894	Kemexhe		4367	50.69780	5.40900	WAL	Province de Liège
+895	Odeur		4367	50.70640	5.41580	WAL	Province de Liège
+896	Thys		4367	50.72240	5.39090	WAL	Province de Liège
+897	Awirs		4400	50.60010	5.40630	WAL	Province de Liège
+898	Chokier		4400	50.59160	5.44170	WAL	Province de Liège
+899	Flémalle	Flemalle	4400	50.60220	5.44360	WAL	Liège
+900	Flémalle-Grande		4400	50.60910	5.47670	WAL	Province de Liège
+901	Flémalle-Haute		4400	50.59990	5.44470	WAL	Province de Liège
+902	Gleixhe		4400	50.61390	5.39010	WAL	Province de Liège
+903	Ivoz-Ramet		4400	50.58800	5.46570	WAL	Province de Liège
+904	Mons-lez-Liège		4400	50.61670	5.46670	WAL	Province de Liège
+905	Montegnée		4420	50.64580	5.51410	WAL	Province de Liège
+906	Saint-Nicolas	Sint-Niklaas	4420	50.62840	5.53240	WAL	Province de Liège
+907	Tilleur		4420	50.61800	5.54280	WAL	Province de Liège
+908	Ans		4430	50.66230	5.52030	WAL	Province de Liège
+909	Loncin		4431	50.66650	5.50510	WAL	Province de Liège
+910	Alleur		4432	50.67470	5.51320	WAL	Province de Liège
+911	Xhendremael		4432	50.70450	5.47980	WAL	Province de Liège
+912	Juprelle		4450	50.70760	5.53130	WAL	Province de Liège
+913	Lantin		4450	50.68870	5.52460	WAL	Province de Liège
+914	Slins		4450	50.72790	5.56260	WAL	Province de Liège
+915	Voroux-lez-Liers	Voroux|Voroux-les-Liers	4451	50.68750	5.55440	WAL	Province de Liège
+916	Paifve		4452	50.72820	5.52340	WAL	Province de Liège
+917	Wihogne	Nudorp	4452	50.72920	5.50480	WAL	Province de Liège
+918	Villers-Saint-Siméon		4453	50.71120	5.53890	WAL	Province de Liège
+919	Fexhe-Slins	Fexhe|Fexhe-les Slins|Fexhe-lez-Slins	4458	50.72030	5.56970	WAL	Province de Liège
+920	Bierset		4460	50.65500	5.45100	WAL	Province de Liège
+921	Grâce-Berleur		4460	50.64030	5.50330	WAL	Province de Liège
+922	Grâce-Hollogne	Grace-Hollogne	4460	50.63450	5.47570	WAL	Province de Liège
+923	Hollogne-aux-Pierres		4460	50.64060	5.47180	WAL	Province de Liège
+924	Horion-Hozémont		4460	50.62580	5.38820	WAL	Province de Liège
+925	Velroux		4460	50.64440	5.42550	WAL	Province de Liège
+926	Saint-Georges-sur-Meuse	Saint-Georges	4470	50.60010	5.35740	WAL	Province de Liège
+927	Clermont-sous-Huy		4480	50.56960	5.39230	WAL	Province de Liège
+928	Engis		4480	50.58160	5.39920	WAL	Province de Liège
+929	Hermalle-sous-Huy		4480	50.55920	5.36390	WAL	Province de Liège
+930	Ben-Ahin		4500	50.50410	5.18680	WAL	Province de Liège
+931	Huy	Hoei	4500	50.51890	5.23280	WAL	Province de Liège
+932	Tihange		4500	50.52970	5.26180	WAL	Province de Liège
+933	Antheit		4520	50.54930	5.24020	WAL	Province de Liège
+934	Bas-Oha		4520	50.52650	5.19220	WAL	Province de Liège
+935	Huccorgne		4520	50.56700	5.16050	WAL	Province de Liège
+936	Moha		4520	50.54800	5.18640	WAL	Province de Liège
+937	Vinalmont		4520	50.56330	5.23160	WAL	Province de Liège
+938	Wanze		4520	50.53910	5.20850	WAL	Province de Liège
+939	Fize-Fontaine		4530	50.58520	5.28400	WAL	Province de Liège
+940	Vaux-et-Borset		4530	50.61390	5.23440	WAL	Province de Liège
+941	Vieux-Waleffe		4530	50.61590	5.19820	WAL	Province de Liège
+942	Villers-le-Bouillet		4530	50.57710	5.25940	WAL	Province de Liège
+943	Warnant-Dreye	Warnant	4530	50.59510	5.22560	WAL	Province de Liège
+944	Bodegnée		4537	50.58550	5.30370	WAL	Province de Liège
+945	Chapon-Seraing		4537	50.60880	5.26910	WAL	Province de Liège
+946	Seraing-le-Château		4537	50.62100	5.29820	WAL	Province de Liège
+947	Verlaine		4537	50.60740	5.31740	WAL	Province de Liège
+948	Amay		4540	50.54830	5.30970	WAL	Province de Liège
+949	Ampsin		4540	50.54150	5.27790	WAL	Province de Liège
+950	Flône		4540	50.55840	5.33640	WAL	Province de Liège
+951	Jehay		4540	50.57310	5.32380	WAL	Province de Liège
+952	Ombret		4540	50.54220	5.33380	WAL	Province de Liège
+953	Nandrin		4550	50.50670	5.41910	WAL	Province de Liège
+954	Saint-Séverin	Saint-Séverin-en Condroz|Saint-Séverin-en-Condroz|St Séverin	4550	50.53010	5.41140	WAL	Province de Liège
+955	Villers-le-Temple		4550	50.50860	5.37080	WAL	Province de Liège
+956	Yernée-Fraineux	Yernée	4550	50.52840	5.38160	WAL	Province de Liège
+957	Abée		4557	50.47330	5.35550	WAL	Province de Liège
+958	Fraiture		4557	50.47910	5.41870	WAL	Province de Liège
+959	Ramelot		4557	50.46670	5.33330	WAL	Province de Liège
+960	Seny		4557	50.45930	5.40210	WAL	Province de Liège
+961	Soheit-Tinlot		4557	50.48380	5.38860	WAL	Province de Liège
+962	Tinlot		4557	50.47490	5.37760	WAL	Province de Liège
+963	Bois-et-Borsu		4560	50.39800	5.33620	WAL	Province de Liège
+964	Clavier		4560	50.40070	5.35150	WAL	Province de Liège
+965	Les Avins		4560	50.41550	5.30010	WAL	Province de Liège
+966	Ocquier		4560	50.39580	5.39410	WAL	Province de Liège
+967	Pailhe		4560	50.42340	5.25910	WAL	Province de Liège
+968	Terwagne		4560	50.44430	5.34830	WAL	Province de Liège
+969	Marchin		4570	50.46710	5.24280	WAL	Province de Liège
+970	Vyle-et-Tharoul		4570	50.44530	5.26250	WAL	Province de Liège
+971	Modave		4577	50.44610	5.29530	WAL	Province de Liège
+972	Outrelouxhe		4577	50.50340	5.33360	WAL	Province de Liège
+973	Strée-lez-Huy	Strée	4577	50.49040	5.32350	WAL	Province de Liège
+974	Vierset-Barse		4577	50.48370	5.29820	WAL	Province de Liège
+975	Ellemelle		4590	50.46750	5.44340	WAL	Province de Liège
+976	Ouffet		4590	50.43870	5.46570	WAL	Province de Liège
+977	Warzée		4590	50.45000	5.42620	WAL	Province de Liège
+978	Lanaye	Ternaaien	4600	50.77910	5.69620	WAL	Province de Liège
+979	Lixhe	Lieze	4600	50.75440	5.68030	WAL	Province de Liège
+980	Richelle		4600	50.71400	5.69560	WAL	Province de Liège
+981	Visé	Vise|Wezet	4600	50.73760	5.69910	WAL	Province de Liège
+982	Argenteau		4601	50.70210	5.68450	WAL	Province de Liège
+983	Cheratte		4602	50.68240	5.66950	WAL	Province de Liège
+984	Saint-André		4606	50.69540	5.75340	WAL	Province de Liège
+985	Berneau		4607	50.74240	5.73060	WAL	Province de Liège
+986	Bombaye	Bolbeek	4607	50.73020	5.74530	WAL	Province de Liège
+987	Dalhem		4607	50.71310	5.72770	WAL	Province de Liège
+988	Feneur		4607	50.70440	5.71480	WAL	Province de Liège
+989	Mortroux		4607	50.71160	5.75290	WAL	Province de Liège
+990	Neufchâteau		4608	50.71960	5.77550	WAL	Province de Liège
+991	Warsage	Weerst	4608	50.73520	5.76880	WAL	Province de Liège
+992	Bellaire		4610	50.64450	5.66580	WAL	Province de Liège
+993	Beyne-Heusay		4610	50.62250	5.66510	WAL	Province de Liège
+994	Queue-du-Bois		4610	50.63760	5.67990	WAL	Province de Liège
+995	Fléron	Fleron	4620	50.61520	5.68060	WAL	Province de Liège
+996	Retinne		4621	50.63080	5.69820	WAL	Province de Liège
+997	Magnée		4623	50.59980	5.68830	WAL	Province de Liège
+998	Romsée		4624	50.61090	5.66460	WAL	Province de Liège
+999	Ayeneux		4630	50.60800	5.71590	WAL	Province de Liège
+1000	Micheroux		4630	50.62470	5.71850	WAL	Province de Liège
+1001	Soumagne		4630	50.61390	5.74680	WAL	Province de Liège
+1002	Tignée		4630	50.65140	5.70270	WAL	Province de Liège
+1003	Evegnée	Évegnée	4631	50.64220	5.70740	WAL	Province de Liège
+1004	Cérexhe-Heuseux	Cerexhe|Cerexhe-Heuseux	4632	50.65410	5.72600	WAL	Province de Liège
+1005	Melen		4633	50.64620	5.73590	WAL	Province de Liège
+1006	Chaineux		4650	50.63180	5.83480	WAL	Province de Liège
+1007	Grand-Rechain		4650	50.60760	5.81110	WAL	Province de Liège
+1008	Herve		4650	50.64080	5.79350	WAL	Province de Liège
+1009	Julémont		4650	50.68550	5.77100	WAL	Province de Liège
+1010	Battice		4651	50.64730	5.82100	WAL	Province de Liège
+1011	Xhendelesse		4652	50.60490	5.77800	WAL	Province de Liège
+1012	Bolland		4653	50.66160	5.76040	WAL	Province de Liège
+1013	Charneux		4654	50.54710	5.95460	WAL	Province de Liège
+1014	Blégny	Blegny	4670	50.67260	5.72510	WAL	Province de Liège
+1015	Mortier		4670	50.68430	5.74330	WAL	Province de Liège
+1016	Trembleur		4670	50.69540	5.72600	WAL	Province de Liège
+1017	Barchon		4671	50.66890	5.70010	WAL	Province de Liège
+1018	Housse		4671	50.67850	5.69110	WAL	Province de Liège
+1019	Saive		4671	50.65320	5.68520	WAL	Province de Liège
+1020	Saint-Remy		4672	50.69560	5.70410	WAL	Province de Liège
+1021	Hermée		4680	50.70880	5.61830	WAL	Province de Liège
+1022	Oupeye		4680	50.71180	5.64680	WAL	Province de Liège
+1023	Hermalle-sous-Argenteau	Hermalle	4681	50.71230	5.67750	WAL	Province de Liège
+1024	Heure-le-Romain		4682	50.73160	5.63290	WAL	Province de Liège
+1025	Houtain-Saint-Siméon		4682	50.74030	5.61230	WAL	Province de Liège
+1026	Vivegnis		4683	50.69240	5.64760	WAL	Province de Liège
+1027	Haccourt		4684	50.73090	5.66960	WAL	Province de Liège
+1028	Bassenge	Bassange|Bitsingen	4690	50.75880	5.60990	WAL	Province de Liège
+1029	Boirs		4690	50.75280	5.57940	WAL	Province de Liège
+1030	Eben-Emael	Eben-Emaal	4690	50.79400	5.66690	WAL	Province de Liège
+1031	Glons	Glaaien|Glaen	4690	50.75310	5.54580	WAL	Province de Liège
+1032	Roclenge-sur-Geer	Rukkelingen-op-den-Jeker	4690	50.75690	5.59440	WAL	Province de Liège
+1033	Wonck	Wonek	4690	50.76690	5.63620	WAL	Province de Liège
+1034	Eupen		4700	50.62790	6.03650	WAL	Province de Liège
+1035	Kettenis		4701	50.64760	6.04690	WAL	Province de Liège
+1036	Lontzen	Sontzen	4710	50.68130	6.00710	WAL	Province de Liège
+1037	Walhorn		4711	50.67500	6.04610	WAL	Province de Liège
+1038	La Calamine	Kalmis|Kelmis	4720	50.71810	6.01110	WAL	Province de Liège
+1039	Neu-Moresnet		4721	50.71580	6.02120	WAL	Province de Liège
+1040	Hergenrath		4728	50.70910	6.03090	WAL	Province de Liège
+1041	Hauset		4730	50.71070	6.06970	WAL	Province de Liège
+1042	Raeren		4730	50.66720	6.11540	WAL	Province de Liège
+1043	Eynatten		4731	50.69240	6.08350	WAL	Province de Liège
+1044	Butgenbach	Buetgenbach|Bütgenbach	4750	50.42690	6.20500	WAL	Province de Liège
+1045	Elsenborn		4750	50.45800	6.21920	WAL	Province de Liège
+1046	Bullange	Buellingen|Bullingen|Büllingen	4760	50.40730	6.25750	WAL	Province de Liège
+1047	Manderfeld	Mamderseld|Manderfield	4760	50.33120	6.33920	WAL	Province de Liège
+1048	Rocherath		4761	50.43710	6.30050	WAL	Province de Liège
+1049	Amblève		4770	50.46430	6.02200	WAL	Province de Liège
+1050	Meyerode	Meyrode	4770	50.32820	6.18780	WAL	Province de Liège
+1051	Heppenbach		4771	50.36260	6.21830	WAL	Province de Liège
+1052	Recht		4780	50.33800	6.04880	WAL	Province de Liège
+1053	Saint-Vith	Sankt Vith|Sankt-Vith	4780	50.28150	6.12720	WAL	Province de Liège
+1054	Schoenberg	Schönberg|Schonburg|Shomberg	4782	50.28920	6.26500	WAL	Province de Liège
+1055	Lommersweiler		4783	50.24000	6.16500	WAL	Province de Liège
+1056	Crombach	Grombac|Krombach	4784	50.26000	6.06750	WAL	Province de Liège
+1057	Burg-Reuland	Reuland	4790	50.19570	6.13450	WAL	Liège
+1058	Reuland	Burg-Reuland	4790	50.19550	6.13550	WAL	Province de Liège
+1059	Thommen		4791	50.21920	6.07420	WAL	Province de Liège
+1060	Ensival		4800	50.58050	5.84930	WAL	Province de Liège
+1061	Lambermont		4800	50.59040	5.83250	WAL	Province de Liège
+1062	Petit-Rechain		4800	50.61490	5.83420	WAL	Province de Liège
+1063	Polleur		4800,4910	50.53940	5.88080	WAL	Province de Liège
+1064	Verviers		4800	50.58910	5.86240	WAL	Province de Liège
+1065	Stembert	Stemberg	4801	50.59110	5.89400	WAL	Province de Liège
+1066	Heusy		4802	50.57460	5.86620	WAL	Province de Liège
+1067	Dison		4820	50.61000	5.85340	WAL	Province de Liège
+1068	Andrimont		4821	50.43920	5.89070	WAL	Province de Liège
+1069	Limbourg	Limburg	4830	50.61220	5.94120	WAL	Province de Liège
+1070	Bilstain		4831	50.62210	5.92090	WAL	Province de Liège
+1071	Goé	Gulke	4834	50.60660	5.95610	WAL	Province de Liège
+1072	Baelen		4837	50.63130	5.97430	WAL	Province de Liège
+1073	Membach		4837	50.61910	5.99510	WAL	Province de Liège
+1074	Welkenraedt		4840	50.66050	5.97030	WAL	Province de Liège
+1075	Henri-Chapelle	Hendrik-Capelle|Hendrik-Kapelle	4841	50.67690	5.93010	WAL	Province de Liège
+1076	Jalhay		4845	50.55880	5.96760	WAL	Province de Liège
+1077	Sart-lez-Spa		4845	50.52870	5.88420	WAL	Province de Liège
+1078	Montzen		4850	50.70790	5.96220	WAL	Province de Liège
+1079	Moresnet		4850	50.72150	5.98990	WAL	Province de Liège
+1080	Plombières	Bleiberg|Bleyberg|Blieberg|Plombieres	4850	50.73660	5.95920	WAL	Liège
+1081	Gemmenich		4851	50.74610	5.99510	WAL	Province de Liège
+1082	Sippenaeken		4851	50.75130	5.93260	WAL	Province de Liège
+1083	Hombourg	Homburg	4852	50.72260	5.92050	WAL	Province de Liège
+1084	Cornesse		4860	50.57270	5.79610	WAL	Province de Liège
+1085	Pepinster		4860	50.57380	5.80490	WAL	Province de Liège
+1086	Wegnez		4860	50.57890	5.81710	WAL	Province de Liège
+1087	Soiron		4861	50.59130	5.79090	WAL	Province de Liège
+1088	Forêt		4870	50.58390	5.70000	WAL	Province de Liège
+1089	Fraipont		4870	50.56520	5.72220	WAL	Province de Liège
+1090	Nessonvaux		4870	50.57340	5.73640	WAL	Province de Liège
+1091	Trooz		4870	50.57030	5.69520	WAL	Liège
+1092	Olne		4877	50.58990	5.74660	WAL	Province de Liège
+1093	Aubel		4880	50.70190	5.85810	WAL	Province de Liège
+1094	Clermont		4890	50.65930	5.88460	WAL	Province de Liège
+1095	Thimister		4890	50.65540	5.86420	WAL	Province de Liège
+1096	Thimister-Clermont		4890	50.65370	5.86430	WAL	Liège
+1097	Spa	Spa La Sauvehiece	4900	50.48380	5.86670	WAL	Province de Liège
+1098	La Reid		4910	50.48910	5.79100	WAL	Province de Liège
+1099	Theux	Thieux	4910	50.53320	5.81250	WAL	Province de Liège
+1100	Aywaille		4920	50.47410	5.67680	WAL	Province de Liège
+1101	Ernonheid		4920	50.40370	5.66710	WAL	Province de Liège
+1102	Harzé		4920	50.44130	5.66710	WAL	Province de Liège
+1103	Sougné-Remouchamps		4920	50.48240	5.70760	WAL	Province de Liège
+1104	Faymonville		4950	50.40320	6.14060	WAL	Province de Liège
+1105	Robertville		4950	50.45410	6.12200	WAL	Province de Liège
+1106	Sourbrodt		4950	50.47920	6.11170	WAL	Province de Liège
+1107	Waimes	Weismes	4950	50.41490	6.11210	WAL	Province de Liège
+1108	Bellevaux-Ligneuville	Bellevaux	4960	50.38950	6.01090	WAL	Province de Liège
+1109	Bevercé	Bévercé	4960	50.44100	6.03530	WAL	Province de Liège
+1110	Malmedy	Malmédy	4960	50.42690	6.02790	WAL	Province de Liège
+1111	Francorchamps		4970	50.45350	5.95280	WAL	Province de Liège
+1112	Stavelot	Stablo	4970	50.39500	5.93120	WAL	Province de Liège
+1113	Fosse		4980	50.34000	5.84080	WAL	Province de Liège
+1114	Trois-Ponts	Trois Ponts	4980	50.37130	5.87150	WAL	Province de Liège
+1115	Wanne		4980	50.35500	5.92080	WAL	Province de Liège
+1116	Basse-Bodeux		4983	50.35770	5.82770	WAL	Province de Liège
+1117	Chevron		4987	50.38070	5.73140	WAL	Province de Liège
+1118	La Gleize		4987	50.41070	5.84700	WAL	Province de Liège
+1119	Lorcé		4987	50.41670	5.73510	WAL	Province de Liège
+1120	Rahier		4987	50.38500	5.78090	WAL	Province de Liège
+1121	Stoumont	Staumont	4987	50.40670	5.80840	WAL	Province de Liège
+1122	Arbrefontaine		4990	50.30190	5.83580	WAL	Province de Liège
+1123	Bra		4990	50.32410	5.73200	WAL	Province de Liège
+1124	Lierneux	Lieurneux	4990	50.28480	5.79240	WAL	Province de Liège
+1125	Beez		5000	50.46860	4.91170	WAL	Province de Namur
+1126	Namur	Namen|Namür	5000	50.46690	4.86750	WAL	Province de Namur
+1127	Belgrade		5001	50.47140	4.82930	WAL	Province de Namur
+1128	Saint-Servais		5002	50.47630	4.83660	WAL	Province de Namur
+1129	Saint-Marc		5003	50.49220	4.84750	WAL	Province de Namur
+1130	Bouge		5004	50.47190	4.89220	WAL	Province de Namur
+1131	Champion		5020	50.49530	4.90390	WAL	Province de Namur
+1132	Daussoulx		5020	50.51830	4.88800	WAL	Province de Namur
+1133	Flawinne		5020	50.45790	4.81050	WAL	Province de Namur
+1134	Malonne		5020	50.43970	4.79560	WAL	Province de Namur
+1135	Suarlée		5020	50.48140	4.77920	WAL	Province de Namur
+1136	Temploux		5020	50.48560	4.75470	WAL	Province de Namur
+1137	Vedrin		5020	50.50270	4.87600	WAL	Province de Namur
+1138	Boninne		5021	50.49440	4.93230	WAL	Province de Namur
+1139	Cognelée		5022	50.51450	4.90750	WAL	Province de Namur
+1140	Gelbressée		5024	50.50610	4.95550	WAL	Province de Namur
+1141	Marche-les-Dames		5024	50.48580	4.95970	WAL	Province de Namur
+1142	Beuzet		5030	50.53360	4.74520	WAL	Province de Namur
+1143	Ernage		5030	50.59480	4.67590	WAL	Province de Namur
+1144	Gembloux	Gembloers|Jembloux	5030	50.56150	4.69890	WAL	Province de Namur
+1145	Grand-Manil		5030	50.55700	4.67530	WAL	Province de Namur
+1146	Lonzée		5030	50.55370	4.72720	WAL	Province de Namur
+1147	Sauvenière	La Sauvenière	5030	50.47430	4.71260	WAL	Province de Namur
+1148	Grand-Leez		5031	50.58390	4.77510	WAL	Province de Namur
+1149	Bossière		5032	50.51850	4.69610	WAL	Province de Namur
+1150	Bothey		5032	50.52080	4.65010	WAL	Province de Namur
+1151	Corroy-le-Château		5032	50.53900	4.66280	WAL	Province de Namur
+1152	Isnes		5032	50.50610	4.72830	WAL	Province de Namur
+1153	Mazy		5032	50.51100	4.67370	WAL	Province de Namur
+1154	Arsimont		5060	50.42860	4.63870	WAL	Province de Namur
+1155	Auvelais		5060	50.45040	4.63230	WAL	Province de Namur
+1156	Falisolle		5060	50.41810	4.62100	WAL	Province de Namur
+1157	Keumiée		5060	50.46180	4.58230	WAL	Province de Namur
+1158	Moignelée		5060	50.44580	4.58370	WAL	Province de Namur
+1159	Sambreville		5060	50.43440	4.63260	WAL	Namur
+1160	Tamines		5060	50.43380	4.60710	WAL	Province de Namur
+1161	Velaine-sur-Sambre	Velaine	5060	50.47800	4.61030	WAL	Province de Namur
+1162	Aisemont		5070	50.40490	4.65190	WAL	Province de Namur
+1163	Fosses-la-Ville		5070	50.39520	4.69620	WAL	Province de Namur
+1164	Le Roux		5070	50.38880	4.62400	WAL	Province de Namur
+1165	Sart-Eustache		5070	50.37550	4.60480	WAL	Province de Namur
+1166	Sart-Saint-Laurent		5070	50.40240	4.74220	WAL	Province de Namur
+1167	Vitrival		5070	50.39280	4.65770	WAL	Province de Namur
+1168	Emines	Émines	5080	50.51300	4.84410	WAL	Province de Namur
+1169	La Bruyère	La Bruyere	5080	50.55010	4.79830	WAL	Namur
+1170	Rhisnes		5080	50.50680	4.80590	WAL	Province de Namur
+1171	Villers-lez-Heest		5080	50.53020	4.84560	WAL	Province de Namur
+1172	Warisoulx		5080	50.53690	4.86700	WAL	Province de Namur
+1173	Bovesse		5081	50.51940	4.78090	WAL	Province de Namur
+1174	Meux		5081	50.55220	4.80100	WAL	Province de Namur
+1175	Saint-Denis-Bovesse	Saint-Denis	5081	50.53570	4.78280	WAL	Province de Namur
+1176	Dave		5100	50.41470	4.88790	WAL	Province de Namur
+1177	Jambes		5100	50.45640	4.87170	WAL	Province de Namur
+1178	Naninne		5100	50.41890	4.92630	WAL	Province de Namur
+1179	Wépion		5100	50.42150	4.86400	WAL	Province de Namur
+1180	Wierde		5100	50.42610	4.95100	WAL	Province de Namur
+1181	Erpent		5101	50.45120	4.90560	WAL	Province de Namur
+1182	Lives-sur-Meuse	Lives	5101	50.46560	4.92420	WAL	Province de Namur
+1183	Loyers		5101	50.46320	4.95140	WAL	Province de Namur
+1184	Boignée		5140	50.50080	4.60900	WAL	Province de Namur
+1185	Ligny		5140	50.51240	4.57740	WAL	Province de Namur
+1186	Sombreffe		5140	50.52870	4.60090	WAL	Province de Namur
+1187	Tongrinne		5140	50.51560	4.62430	WAL	Province de Namur
+1188	Floreffe		5150	50.43450	4.75960	WAL	Province de Namur
+1189	Floriffoux		5150	50.45240	4.77000	WAL	Province de Namur
+1190	Franière		5150	50.43660	4.73220	WAL	Province de Namur
+1191	Soye		5150	50.44960	4.73030	WAL	Province de Namur
+1192	Arbre		5170	50.36610	4.82140	WAL	Province de Namur
+1193	Bois-de-Villers		5170	50.39030	4.82410	WAL	Province de Namur
+1194	Lesve		5170	50.37710	4.77790	WAL	Province de Namur
+1195	Lustin		5170	50.37880	4.89870	WAL	Province de Namur
+1196	Profondeville		5170	50.37580	4.86510	WAL	Province de Namur
+1197	Rivière		5170	50.35700	4.87390	WAL	Province de Namur
+1198	Balâtre		5190	50.49970	4.64350	WAL	Province de Namur
+1199	Ham-sur-Sambre		5190	50.44370	4.67430	WAL	Province de Namur
+1200	Jemeppe-sur-Sambre	Jemeppe	5190	50.46540	4.66550	WAL	Province de Namur
+1201	Mornimont		5190	50.45900	4.70450	WAL	Province de Namur
+1202	Moustier-sur-Sambre	Moustier	5190	50.46670	4.69610	WAL	Province de Namur
+1203	Onoz		5190	50.49220	4.66990	WAL	Province de Namur
+1204	Saint-Martin		5190	50.50120	4.64780	WAL	Province de Namur
+1205	Spy		5190	50.48140	4.70940	WAL	Province de Namur
+1206	Andenne		5300	50.48940	5.09510	WAL	Province de Namur
+1207	Bonneville		5300	50.47280	5.03870	WAL	Province de Namur
+1208	Coutisse		5300	50.46300	5.11680	WAL	Province de Namur
+1209	Landenne		5300	50.51530	5.06680	WAL	Province de Namur
+1210	Maizeret		5300	50.45970	4.97870	WAL	Province de Namur
+1211	Namêche	Namache	5300	50.47240	4.99760	WAL	Province de Namur
+1212	Sclayn		5300	50.48980	5.02830	WAL	Province de Namur
+1213	Seilles		5300	50.50070	5.09270	WAL	Province de Namur
+1214	Thon		5300	50.46360	5.01450	WAL	Province de Namur
+1215	Vezin		5300	50.49620	5.00900	WAL	Province de Namur
+1216	Aische-en-Refail	Aische	5310	50.60010	4.83770	WAL	Province de Namur
+1217	Bolinne		5310	50.60070	4.92890	WAL	Province de Namur
+1218	Boneffe		5310	50.62510	4.95610	WAL	Province de Namur
+1219	Branchon		5310	50.62900	4.97340	WAL	Province de Namur
+1220	Dhuy		5310	50.55940	4.85920	WAL	Province de Namur
+1221	Eghezée	Eghezee|Éghezée	5310	50.59080	4.91170	WAL	Province de Namur
+1222	Hanret		5310	50.58150	4.94840	WAL	Province de Namur
+1223	Leuze		5310	50.54640	4.90630	WAL	Province de Namur
+1224	Liernu		5310	50.58320	4.83100	WAL	Province de Namur
+1225	Longchamps		5310	50.57710	4.89540	WAL	Province de Namur
+1226	Mehaigne		5310	50.59480	4.87590	WAL	Province de Namur
+1227	Noville-sur-Mehaigne	Noville-sur-Méhaigne	5310	50.60870	4.89210	WAL	Province de Namur
+1228	Saint-Germain		5310	50.57310	4.84210	WAL	Province de Namur
+1229	Taviers		5310	50.61730	4.93070	WAL	Province de Namur
+1230	Upigny		5310	50.57170	4.87240	WAL	Province de Namur
+1231	Waret-la-Chaussée		5310	50.54290	4.92440	WAL	Province de Namur
+1232	Assesse		5330	50.36930	5.02200	WAL	Province de Namur
+1233	Maillen		5330	50.37780	4.97100	WAL	Province de Namur
+1234	Sart-Bernard		5330	50.40210	4.95930	WAL	Province de Namur
+1235	Crupet		5332	50.34960	4.96130	WAL	Province de Namur
+1236	Sorinne-la-Longue		5333	50.38930	5.02500	WAL	Province de Namur
+1237	Florée		5334	50.37480	5.06910	WAL	Province de Namur
+1238	Courrière		5336	50.38020	4.98610	WAL	Province de Namur
+1239	Faulx-les-Tombes	Faulx-Les Tombes	5340	50.42710	5.02080	WAL	Province de Namur
+1240	Gesves		5340	50.40150	5.07460	WAL	Province de Namur
+1241	Haltinne		5340	50.45120	5.07730	WAL	Province de Namur
+1242	Mozet		5340	50.44460	4.98540	WAL	Province de Namur
+1243	Sorée		5340	50.39920	5.12400	WAL	Province de Namur
+1244	Evelette		5350	50.41170	5.17440	WAL	Province de Namur
+1245	Ohey		5350	50.43570	5.12370	WAL	Province de Namur
+1246	Haillot		5351	50.44250	5.15410	WAL	Province de Namur
+1247	Perwez-Haillot		5352	50.45280	5.17210	WAL	Province de Namur
+1248	Goesnes		5353	50.44030	5.22070	WAL	Province de Namur
+1249	Jallet		5354	50.44320	5.18360	WAL	Province de Namur
+1250	Hamois		5360	50.34020	5.15620	WAL	Province de Namur
+1251	Natoye		5360	50.34290	5.05800	WAL	Province de Namur
+1252	Mohiville		5361	50.31810	5.19260	WAL	Province de Namur
+1253	Scy		5361	50.30610	5.20700	WAL	Province de Namur
+1254	Achet		5362	50.33350	5.17520	WAL	Province de Namur
+1255	Emptinne		5363	50.32520	5.12130	WAL	Province de Namur
+1256	Schaltin		5364	50.35950	5.12540	WAL	Province de Namur
+1257	Barvaux-Condroz		5370	50.32970	5.26220	WAL	Province de Namur
+1258	Flostoy		5370	50.38950	5.18370	WAL	Province de Namur
+1259	Havelange		5370	50.38930	5.23820	WAL	Province de Namur
+1260	Jeneffe		5370	50.35460	5.24140	WAL	Province de Namur
+1261	Porcheresse		5370	50.34010	5.24190	WAL	Province de Namur
+1262	Verlée		5370	50.36800	5.27890	WAL	Province de Namur
+1263	Méan		5372	50.36310	5.33550	WAL	Province de Namur
+1264	Maffe		5374	50.35380	5.31210	WAL	Province de Namur
+1265	Miécret		5376	50.36660	5.25160	WAL	Province de Namur
+1266	Baillonville		5377	50.29040	5.33870	WAL	Province de Namur
+1267	Bonsin		5377	50.37350	5.38090	WAL	Province de Namur
+1268	Heure		5377	50.29400	5.29700	WAL	Province de Namur
+1269	Hogne		5377	50.24920	5.28040	WAL	Province de Namur
+1270	Nettinne		5377	50.29090	5.25880	WAL	Province de Namur
+1271	Noiseux		5377	50.29980	5.37510	WAL	Province de Namur
+1272	Sinsin		5377	50.27500	5.25460	WAL	Province de Namur
+1273	Somme-Leuze		5377	50.33700	5.36710	WAL	Province de Namur
+1274	Waillet		5377	50.26060	5.30520	WAL	Province de Namur
+1275	Bierwart		5380	50.55600	5.03630	WAL	Province de Namur
+1276	Cortil-Wodon		5380	50.56800	4.95710	WAL	Province de Namur
+1277	Fernelmont		5380	50.55340	4.98610	WAL	Namur
+1278	Forville		5380	50.57420	4.99860	WAL	Province de Namur
+1279	Franc-Waret		5380	50.52100	4.98140	WAL	Province de Namur
+1280	Hemptinne		5380	50.60290	4.98850	WAL	Province de Namur
+1281	Hingeon		5380	50.52580	5.00720	WAL	Province de Namur
+1282	Marchovelette		5380	50.52300	4.94060	WAL	Province de Namur
+1283	Noville-les-Bois		5380	50.55700	4.98470	WAL	Province de Namur
+1284	Pontillas		5380	50.54920	5.02100	WAL	Province de Namur
+1285	Tillier		5380	50.54480	4.94570	WAL	Province de Namur
+1286	Anseremme		5500	50.24000	4.89900	WAL	Province de Namur
+1287	Bouvignes-sur-Meuse	Bouvignes	5500	50.27380	4.89790	WAL	Province de Namur
+1288	Dinant		5500	50.25810	4.91170	WAL	Province de Namur
+1289	Dréhance		5500	50.23710	4.94390	WAL	Province de Namur
+1290	Falmagne		5500	50.19950	4.89680	WAL	Province de Namur
+1291	Falmignoul		5500	50.20580	4.89300	WAL	Province de Namur
+1292	Furfooz		5500	50.22420	4.95930	WAL	Province de Namur
+1293	Lisogne		5501	50.28090	4.97080	WAL	Province de Namur
+1294	Thynes		5502	50.27990	4.99120	WAL	Province de Namur
+1295	Sorinnes	Sorinne	5503	50.25920	4.98130	WAL	Province de Namur
+1296	Foy-Notre-Dame	Notre-Dame-de-Foy	5504	50.24720	4.98990	WAL	Province de Namur
+1297	Anthée		5520	50.24020	4.76200	WAL	Province de Namur
+1298	Onhaye		5520	50.24150	4.84070	WAL	Province de Namur
+1299	Serville		5521	50.25030	4.78020	WAL	Province de Namur
+1300	Falaën		5522	50.27880	4.79380	WAL	Province de Namur
+1301	Sommière		5523	50.27540	4.84930	WAL	Province de Namur
+1302	Weillen		5523	50.26080	4.82660	WAL	Province de Namur
+1303	Gérin	Gerin	5524	50.24650	4.81550	WAL	Province de Namur
+1304	Dorinne		5530	50.31530	4.97600	WAL	Province de Namur
+1305	Durnal		5530	50.33650	4.98620	WAL	Province de Namur
+1306	Evrehailles		5530	50.32040	4.91260	WAL	Province de Namur
+1307	Godinne		5530	50.34810	4.87360	WAL	Province de Namur
+1308	Houx		5530	50.30220	4.89850	WAL	Province de Namur
+1309	Mont		5530	50.35320	4.90320	WAL	Province de Namur
+1310	Purnode		5530	50.31200	4.94410	WAL	Province de Namur
+1311	Spontin		5530	50.32260	5.00590	WAL	Province de Namur
+1312	Yvoir		5530	50.32790	4.88060	WAL	Province de Namur
+1313	Anhée	Anhee|Anhée sur Meuse	5537	50.31040	4.87830	WAL	Province de Namur
+1314	Annevoie-Rouillon		5537	50.34780	4.84960	WAL	Province de Namur
+1315	Bioul		5537	50.33150	4.79620	WAL	Province de Namur
+1316	Denée		5537	50.31890	4.75200	WAL	Province de Namur
+1317	Haut-le-Wastia		5537	50.30510	4.84170	WAL	Province de Namur
+1318	Sosoye		5537	50.29550	4.78210	WAL	Province de Namur
+1319	Warnant		5537	50.32330	4.84270	WAL	Province de Namur
+1320	Hastière	Hastiere	5540	50.21660	4.81640	WAL	Namur
+1321	Hastière-Lavaux		5540	50.21850	4.82450	WAL	Province de Namur
+1322	Hermeton-sur-Meuse		5540	50.19750	4.81690	WAL	Province de Namur
+1323	Waulsort		5540	50.20370	4.86630	WAL	Province de Namur
+1324	Hastière-par-Delà		5541	50.21490	4.82950	WAL	Province de Namur
+1325	Blaimont		5542	50.19230	4.84230	WAL	Province de Namur
+1326	Heer		5543	50.16370	4.83210	WAL	Province de Namur
+1327	Agimont		5544	50.16590	4.79580	WAL	Province de Namur
+1328	Alle		5550	49.84120	4.97010	WAL	Province de Namur
+1329	Bagimont		5550	49.82410	4.87510	WAL	Province de Namur
+1330	Bohan		5550	49.86390	4.88580	WAL	Province de Namur
+1331	Chairière		5550	49.86260	4.95160	WAL	Province de Namur
+1332	Laforêt		5550	49.86350	4.92990	WAL	Province de Namur
+1333	Membre		5550	49.86580	4.90200	WAL	Province de Namur
+1334	Mouzaive		5550	49.85350	4.96240	WAL	Province de Namur
+1335	Nafraiture		5550	49.91070	4.91780	WAL	Province de Namur
+1336	Orchimont		5550	49.89390	4.92770	WAL	Province de Namur
+1337	Pussemange		5550	49.81120	4.86810	WAL	Province de Namur
+1338	Sugny		5550	49.81490	4.90220	WAL	Province de Namur
+1339	Vresse-sur-Semois	Vresse	5550	49.86670	4.93330	WAL	Province de Namur
+1340	Baillamont		5555	49.89980	5.02640	WAL	Province de Namur
+1341	Bellefontaine		5555	49.91750	4.97350	WAL	Province de Namur
+1342	Bièvre	Bievre	5555	49.94090	5.01590	WAL	Province de Namur
+1343	Cornimont		5555	49.86370	4.99810	WAL	Province de Namur
+1344	Graide		5555	49.95040	5.06720	WAL	Province de Namur
+1345	Gros-Fays		5555	49.87050	4.98320	WAL	Province de Namur
+1346	Monceau-en-Ardenne		5555	49.90530	4.98770	WAL	Province de Namur
+1347	Naomé		5555	49.92200	5.08950	WAL	Province de Namur
+1348	Oizy		5555	49.89260	5.00740	WAL	Province de Namur
+1349	Petit-Fays		5555	49.90190	4.96810	WAL	Province de Namur
+1350	Ciergnon		5560	50.16770	5.09060	WAL	Province de Namur
+1351	Finnevaux		5560	50.15770	4.94290	WAL	Province de Namur
+1352	Houyet		5560	50.18620	5.00760	WAL	Province de Namur
+1353	Hulsonniaux		5560	50.20150	4.94670	WAL	Province de Namur
+1354	Mesnil-Eglise	Mesnil-Église	5560	50.16360	4.96280	WAL	Province de Namur
+1355	Mesnil-Saint-Blaise		5560	50.16760	4.88490	WAL	Province de Namur
+1356	Celles		5561	50.23050	5.00660	WAL	Province de Namur
+1357	Custinne		5562	50.21060	5.04890	WAL	Province de Namur
+1358	Hour		5563	50.16130	5.03880	WAL	Province de Namur
+1359	Wanlin		5564	50.15990	5.06200	WAL	Province de Namur
+1360	Baronville		5570	50.12710	4.94310	WAL	Province de Namur
+1361	Beauraing		5570	50.11040	4.95550	WAL	Province de Namur
+1362	Dion		5570	50.11780	4.88900	WAL	Province de Namur
+1363	Felenne		5570	50.06850	4.84740	WAL	Province de Namur
+1364	Feschaux		5570	50.15160	4.91480	WAL	Province de Namur
+1365	Honnay		5570	50.08130	5.03980	WAL	Province de Namur
+1366	Javingue		5570	50.10250	4.91930	WAL	Province de Namur
+1367	Vonêche		5570	50.06140	4.97960	WAL	Province de Namur
+1368	Wancennes		5570	50.09140	4.96130	WAL	Province de Namur
+1369	Winenne		5570	50.09750	4.89490	WAL	Province de Namur
+1370	Wiesme		5571	50.14840	4.97720	WAL	Province de Namur
+1371	Focant		5572	50.13190	5.03800	WAL	Province de Namur
+1372	Martouzin-Neuville	Martouzin	5573	50.11770	5.00630	WAL	Province de Namur
+1373	Pondrôme		5574	50.09920	5.00960	WAL	Province de Namur
+1374	Bourseigne-Neuve		5575	50.02530	4.85440	WAL	Province de Namur
+1375	Bourseigne-Vieille		5575	50.02260	4.87030	WAL	Province de Namur
+1376	Gedinne		5575	49.98040	4.93670	WAL	Province de Namur
+1377	Houdremont		5575	49.94160	4.94460	WAL	Province de Namur
+1378	Louette-Saint-Denis		5575	49.95940	4.95730	WAL	Province de Namur
+1379	Louette-Saint-Pierre		5575	49.96060	4.92730	WAL	Province de Namur
+1380	Malvoisin		5575	50.01150	4.96230	WAL	Province de Namur
+1381	Patignies		5575	50.00010	4.95150	WAL	Province de Namur
+1382	Rienne		5575	49.99280	4.88470	WAL	Province de Namur
+1383	Sart-Custinne		5575	50.00160	4.91680	WAL	Province de Namur
+1384	Vencimont		5575	50.03230	4.92010	WAL	Province de Namur
+1385	Willerzie		5575	49.98710	4.84820	WAL	Province de Namur
+1386	Froidfontaine		5576	50.06000	5.00030	WAL	Province de Namur
+1387	Ave-et-Auffe		5580	50.11300	5.14240	WAL	Province de Namur
+1388	Buissonville		5580	50.21670	5.20000	WAL	Province de Namur
+1389	Eprave	Éprave	5580	50.14420	5.16010	WAL	Province de Namur
+1390	Han-sur-Lesse		5580	50.12670	5.18620	WAL	Province de Namur
+1391	Jemelle		5580,5589	50.16320	5.26710	WAL	Province de Namur
+1392	Lavaux-Sainte-Anne		5580	50.11450	5.09380	WAL	Province de Namur
+1393	Lessive		5580	50.13950	5.14940	WAL	Province de Namur
+1394	Mont-Gauthier		5580	50.20970	5.12130	WAL	Province de Namur
+1395	Rochefort	Notre-Dame-de-Foy-de-Rochefort	5580	50.16310	5.22160	WAL	Province de Namur
+1396	Villers-sur-Lesse		5580	50.15280	5.11290	WAL	Province de Namur
+1397	Wavreille	Wavrielle	5580	50.12120	5.24830	WAL	Province de Namur
+1398	Achêne		5590	50.26700	5.04540	WAL	Province de Namur
+1399	Braibant		5590	50.31320	5.06130	WAL	Province de Namur
+1400	Chevetogne		5590	50.22400	5.12060	WAL	Province de Namur
+1401	Ciney		5590	50.29450	5.10010	WAL	Province de Namur
+1402	Conneux		5590	50.25040	5.06010	WAL	Province de Namur
+1403	Haversin		5590	50.24970	5.19440	WAL	Province de Namur
+1404	Leignon		5590	50.26860	5.11040	WAL	Province de Namur
+1405	Pessoux		5590	50.28330	5.17030	WAL	Province de Namur
+1406	Serinchamps		5590	50.23130	5.23020	WAL	Province de Namur
+1407	Sovet		5590	50.29690	5.03530	WAL	Province de Namur
+1408	Fagnolle		5600	50.10530	4.56600	WAL	Province de Namur
+1409	Franchimont		5600	50.18910	4.63810	WAL	Province de Namur
+1410	Jamagne		5600	50.21770	4.53040	WAL	Province de Namur
+1411	Jamiolle		5600	50.21040	4.50670	WAL	Province de Namur
+1412	Merlemont		5600	50.17460	4.60940	WAL	Province de Namur
+1413	Neuville	Neuville-le-Chaudron	5600	50.17330	4.51600	WAL	Province de Namur
+1414	Omezée		5600	50.19320	4.69850	WAL	Province de Namur
+1415	Philippeville	Phillippeville	5600	50.19610	4.54370	WAL	Province de Namur
+1416	Roly		5600	50.13550	4.53730	WAL	Province de Namur
+1417	Romedenne		5600	50.17130	4.69690	WAL	Province de Namur
+1418	Samart		5600	50.17790	4.53380	WAL	Province de Namur
+1419	Sart-en-Fagne		5600	50.15760	4.61990	WAL	Province de Namur
+1420	Sautour		5600	50.16980	4.55880	WAL	Province de Namur
+1421	Surice		5600	50.18160	4.69650	WAL	Province de Namur
+1422	Villers-en-Fagne		5600	50.14600	4.58410	WAL	Province de Namur
+1423	Villers-le-Gambon		5600	50.19050	4.60700	WAL	Province de Namur
+1424	Vodecée		5600	50.19720	4.59100	WAL	Province de Namur
+1425	Corenne		5620	50.25210	4.67820	WAL	Province de Namur
+1426	Flavion		5620	50.24940	4.71680	WAL	Province de Namur
+1427	Florennes		5620	50.25130	4.60640	WAL	Province de Namur
+1428	Hemptinne-lez-Florennes	Hemptinne	5620	50.22890	4.56250	WAL	Province de Namur
+1429	Morville		5620	50.23420	4.74130	WAL	Province de Namur
+1430	Rosée		5620	50.23290	4.68690	WAL	Province de Namur
+1431	Saint-Aubin		5620	50.24770	4.57740	WAL	Province de Namur
+1432	Hanzinelle		5621	50.29610	4.55630	WAL	Province de Namur
+1433	Hanzinne		5621	50.31100	4.54440	WAL	Province de Namur
+1434	Morialmé		5621	50.27560	4.56580	WAL	Province de Namur
+1435	Thy-Le-Baudouin		5621	50.29420	4.55550	WAL	Namur
+1436	Thy-le-Bauduin		5621	50.29580	4.52310	WAL	Province de Namur
+1437	Cerfontaine		5630	50.17050	4.41030	WAL	Province de Namur
+1438	Daussois		5630	50.21920	4.45680	WAL	Province de Namur
+1439	Senzeilles		5630	50.19910	4.44050	WAL	Province de Namur
+1440	Silenrieux		5630	50.22580	4.41650	WAL	Province de Namur
+1441	Soumoy		5630	50.19020	4.43780	WAL	Province de Namur
+1442	Villers-Deux-Eglises	Villers-Deux-Églises	5630	50.18990	4.48110	WAL	Province de Namur
+1443	Biesme		5640	50.34010	4.61050	WAL	Province de Namur
+1444	Biesmerée		5640	50.29780	4.68040	WAL	Province de Namur
+1445	Graux		5640	50.32490	4.71810	WAL	Province de Namur
+1446	Mettet		5640	50.32120	4.66230	WAL	Province de Namur
+1447	Oret		5640	50.30020	4.61720	WAL	Province de Namur
+1448	Saint-Gérard		5640	50.34650	4.74100	WAL	Province de Namur
+1449	Furnaux		5641	50.30810	4.70510	WAL	Province de Namur
+1450	Ermeton-sur-Biert		5644	50.29760	4.71940	WAL	Province de Namur
+1451	Stave		5646	50.28010	4.65910	WAL	Province de Namur
+1452	Castillon		5650	50.24720	4.35360	WAL	Province de Namur
+1453	Chastrès		5650	50.26700	4.45480	WAL	Province de Namur
+1454	Clermont		5650	50.26080	4.31720	WAL	Province de Namur
+1455	Fontenelle		5650	50.24800	4.38330	WAL	Province de Namur
+1456	Fraire		5650	50.26130	4.50760	WAL	Province de Namur
+1457	Pry		5650	50.27210	4.43910	WAL	Province de Namur
+1458	Vogenée		5650	50.23990	4.44920	WAL	Province de Namur
+1459	Walcourt	Walecurt	5650	50.25400	4.43800	WAL	Province de Namur
+1460	Yves-Gomezée		5650	50.23930	4.49340	WAL	Province de Namur
+1461	Berzée		5651	50.28920	4.40100	WAL	Province de Namur
+1462	Gourdinne		5651	50.29150	4.45430	WAL	Province de Namur
+1463	Laneffe		5651	50.27940	4.49340	WAL	Province de Namur
+1464	Rognée		5651	50.26910	4.38920	WAL	Province de Namur
+1465	Somzée		5651	50.29510	4.48210	WAL	Province de Namur
+1466	Tarcienne		5651	50.31200	4.49680	WAL	Province de Namur
+1467	Thy-le-Château		5651	50.28200	4.42960	WAL	Province de Namur
+1468	Aublain		5660	50.06640	4.40960	WAL	Province de Namur
+1469	Boussu-en-Fagne		5660	50.07660	4.47200	WAL	Province de Namur
+1470	Brûly		5660	49.96830	4.52900	WAL	Province de Namur
+1471	Brûly-de-Pesche		5660	50.00210	4.46470	WAL	Province de Namur
+1472	Couvin		5660	50.05280	4.49500	WAL	Province de Namur
+1473	Cul-des-Sarts		5660	49.96250	4.45430	WAL	Province de Namur
+1474	Dailly		5660	50.05770	4.43590	WAL	Province de Namur
+1475	Frasnes		5660	50.08020	4.51380	WAL	Province de Namur
+1476	Gonrieux		5660	50.03660	4.42640	WAL	Province de Namur
+1477	Mariembourg	Marienbourg	5660	50.09490	4.52160	WAL	Province de Namur
+1478	Pesche		5660	50.04270	4.45900	WAL	Province de Namur
+1479	Pétigny	Petigny	5660	50.05740	4.53310	WAL	Province de Namur
+1480	Petite-Chapelle		5660	49.95000	4.50580	WAL	Province de Namur
+1481	Presgaux		5660	50.02520	4.42000	WAL	Province de Namur
+1482	Dourbes		5670	50.09040	4.59120	WAL	Province de Namur
+1483	Le Mesnil		5670	50.03150	4.67200	WAL	Province de Namur
+1484	Mazée		5670	50.10090	4.69650	WAL	Province de Namur
+1485	Nismes		5670	50.07520	4.54770	WAL	Province de Namur
+1486	Oignies-en-Thiérache		5670	50.02290	4.63940	WAL	Province de Namur
+1487	Olloy-Sur-Viroin	Olloy	5670	50.07290	4.60810	WAL	Province de Namur
+1488	Treignes		5670	50.09240	4.67030	WAL	Province de Namur
+1489	Vierves-sur-Viroin		5670	50.08110	4.63440	WAL	Province de Namur
+1490	Viroinval		5670	50.00730	4.66770	WAL	Namur
+1491	Doische		5680	50.13360	4.73550	WAL	Province de Namur
+1492	Gimnée		5680	50.13130	4.71190	WAL	Province de Namur
+1493	Gochenée		5680	50.18430	4.75630	WAL	Province de Namur
+1494	Matagne-la-Grande		5680	50.11830	4.62230	WAL	Province de Namur
+1495	Matagne-la-Petite		5680	50.11870	4.64670	WAL	Province de Namur
+1496	Niverlée		5680	50.11800	4.70230	WAL	Province de Namur
+1497	Romerée		5680	50.13530	4.67480	WAL	Province de Namur
+1498	Soulme		5680	50.18830	4.73620	WAL	Province de Namur
+1499	Vaucelles		5680	50.11350	4.74330	WAL	Province de Namur
+1500	Vodelée		5680	50.17020	4.73270	WAL	Province de Namur
+1501	Charleroi		6000	50.41140	4.44450	WAL	Province du Hainaut
+1502	Marcinelle		6001	50.39220	4.44390	WAL	Province du Hainaut
+1503	Couillet		6010	50.39140	4.45910	WAL	Province du Hainaut
+1504	Dampremy		6020	50.41710	4.43090	WAL	Province du Hainaut
+1505	Goutroux		6030	50.41330	4.36230	WAL	Province du Hainaut
+1506	Marchienne-au-Pont		6030	50.40570	4.39530	WAL	Province du Hainaut
+1507	Monceau-sur-Sambre		6031	50.41690	4.37670	WAL	Province du Hainaut
+1508	Mont-sur-Marchienne		6032	50.39000	4.40730	WAL	Province du Hainaut
+1509	Jumet		6040	50.44220	4.43740	WAL	Province du Hainaut
+1510	Gosselies		6041	50.46940	4.43320	WAL	Province du Hainaut
+1511	Lodelinsart		6042	50.43140	4.44890	WAL	Province du Hainaut
+1512	Ransart		6043	50.46170	4.47620	WAL	Province du Hainaut
+1513	Roux		6044	50.44110	4.39170	WAL	Province du Hainaut
+1514	Gilly		6060	50.42450	4.47890	WAL	Province du Hainaut
+1515	Montignies-sur-Sambre		6061	50.41080	4.49110	WAL	Province du Hainaut
+1516	Montigny-le-Tilleul	Montignies-le-Tilleul	6110	50.38060	4.37580	WAL	Province du Hainaut
+1517	Landelies		6111	50.38000	4.35080	WAL	Province du Hainaut
+1518	Cour-sur-Heure		6120	50.30120	4.38920	WAL	Province du Hainaut
+1519	Ham-sur-Heure		6120	50.32300	4.38840	WAL	Province du Hainaut
+1520	Jamioulx		6120	50.35300	4.41280	WAL	Province du Hainaut
+1521	Marbaix		6120	50.32620	4.37090	WAL	Province du Hainaut
+1522	Nalinnes		6120	50.32430	4.44570	WAL	Province du Hainaut
+1523	Fontaine-L'Evêque	Fontaine-L'Eveque|Fontaine-l'Évêque	6140	50.40910	4.32430	WAL	Province du Hainaut
+1524	Forchies-La-Marche		6141	50.43690	4.32110	WAL	Province du Hainaut
+1525	Leernes		6142	50.39810	4.33240	WAL	Province du Hainaut
+1526	Anderlues		6150	50.40700	4.27140	WAL	Province du Hainaut
+1527	Courcelles		6180	50.46380	4.37470	WAL	Province du Hainaut
+1528	Gouy-lez-Piéton		6181	50.49070	4.32890	WAL	Province du Hainaut
+1529	Souvret		6182	50.44860	4.34570	WAL	Province du Hainaut
+1530	Trazegnies		6183	50.46380	4.33290	WAL	Province du Hainaut
+1531	Bouffioulx		6200	50.39120	4.51550	WAL	Province du Hainaut
+1532	Châtelet	Chatelet	6200	50.40340	4.52830	WAL	Province du Hainaut
+1533	Châtelineau		6200	50.41500	4.52020	WAL	Province du Hainaut
+1534	Frasnes-lez-Gosselies		6210	50.53840	4.45230	WAL	Province du Hainaut
+1535	Les Bons Villers		6210	50.53210	4.43500	WAL	Hainaut
+1536	Rèves		6210	50.53810	4.41080	WAL	Province du Hainaut
+1537	Villers-Perwin		6210	50.52780	4.47970	WAL	Province du Hainaut
+1538	Wayaux		6210	50.48960	4.47320	WAL	Province du Hainaut
+1539	Mellet		6211	50.50570	4.47860	WAL	Province du Hainaut
+1540	Fleurus		6220	50.48350	4.55010	WAL	Province du Hainaut
+1541	Heppignies		6220	50.48460	4.49530	WAL	Province du Hainaut
+1542	Lambusart		6220	50.45430	4.55260	WAL	Province du Hainaut
+1543	Wangenies		6220	50.48020	4.52020	WAL	Province du Hainaut
+1544	Saint-Amand		6221	50.50610	4.54990	WAL	Province du Hainaut
+1545	Brye		6222	50.52440	4.55670	WAL	Province du Hainaut
+1546	Wagnelée		6223	50.52330	4.53330	WAL	Province du Hainaut
+1547	Wanfercée-Baulet		6224	50.47290	4.58750	WAL	Province du Hainaut
+1548	Buzet		6230	50.54040	4.37000	WAL	Province du Hainaut
+1549	Obaix		6230	50.53000	4.36090	WAL	Province du Hainaut
+1550	Pont-à-Celles	Pont-A-Celles	6230	50.50520	4.36890	WAL	Province du Hainaut
+1551	Thiméon		6230	50.48950	4.42880	WAL	Province du Hainaut
+1552	Viesville		6230	50.49090	4.40850	WAL	Province du Hainaut
+1553	Liberchies		6238	50.51420	4.42120	WAL	Province du Hainaut
+1554	Luttre		6238	50.51010	4.39710	WAL	Province du Hainaut
+1555	Farciennes		6240	50.43010	4.54150	WAL	Province du Hainaut
+1556	Pironchamps		6240	50.43180	4.52020	WAL	Province du Hainaut
+1557	Aiseau		6250	50.41160	4.58670	WAL	Province du Hainaut
+1558	Aiseau-Presles		6250	50.40820	4.58220	WAL	Hainaut
+1559	Pont-de-Loup		6250	50.41660	4.54590	WAL	Province du Hainaut
+1560	Presles		6250	50.38420	4.57840	WAL	Province du Hainaut
+1561	Roselies		6250	50.43030	4.57200	WAL	Province du Hainaut
+1562	Acoz		6280	50.35900	4.53260	WAL	Province du Hainaut
+1563	Gerpinnes		6280	50.33790	4.52730	WAL	Province du Hainaut
+1564	Gougnies		6280	50.35540	4.57610	WAL	Province du Hainaut
+1565	Joncret		6280	50.35370	4.51350	WAL	Province du Hainaut
+1566	Loverval		6280	50.37520	4.47330	WAL	Province du Hainaut
+1567	Villers-Poterie		6280	50.35380	4.54890	WAL	Province du Hainaut
+1568	Boussu-lez-Walcourt		6440	50.22850	4.37750	WAL	Province du Hainaut
+1569	Fourbechies		6440	50.16430	4.31320	WAL	Province du Hainaut
+1570	Froidchapelle	Froid-Chapelle	6440	50.15110	4.32740	WAL	Province du Hainaut
+1571	Vergnies		6440	50.19920	4.30330	WAL	Province du Hainaut
+1572	Erpion		6441	50.21190	4.35560	WAL	Province du Hainaut
+1573	Bailièvre		6460	50.06940	4.23870	WAL	Province du Hainaut
+1574	Chimay		6460	50.04860	4.31710	WAL	Province du Hainaut
+1575	Robechies		6460	50.07290	4.27760	WAL	Province du Hainaut
+1576	Saint-Remy	St-Remy-lez-Chimay	6460	50.04560	4.29230	WAL	Province du Hainaut
+1577	Salles		6460	50.05530	4.24500	WAL	Province du Hainaut
+1578	Villers-la-Tour		6460	50.03640	4.26130	WAL	Province du Hainaut
+1579	Virelles		6461	50.06390	4.33510	WAL	Province du Hainaut
+1580	Vaulx-lez-Chimay	Vaulx	6462	50.06170	4.36510	WAL	Province du Hainaut
+1581	Lompret		6463	50.06440	4.37900	WAL	Province du Hainaut
+1582	Baileux		6464	50.02880	4.37530	WAL	Province du Hainaut
+1583	Bourlers		6464	50.02750	4.34120	WAL	Province du Hainaut
+1584	Forges		6464	50.02570	4.32760	WAL	Province du Hainaut
+1585	l'Escaillère		6464	49.94500	4.43070	WAL	Province du Hainaut
+1586	Rièzes		6464	49.95950	4.36870	WAL	Province du Hainaut
+1587	Grandrieu		6470	50.20010	4.17420	WAL	Province du Hainaut
+1588	Montbliart		6470	50.13450	4.22370	WAL	Province du Hainaut
+1589	Rance		6470	50.14250	4.27920	WAL	Province du Hainaut
+1590	Sautin		6470	50.16340	4.22650	WAL	Province du Hainaut
+1591	Sivry		6470	50.16640	4.18420	WAL	Province du Hainaut
+1592	Sivry-Rance		6470	50.16680	4.16650	WAL	Hainaut
+1593	Barbençon		6500	50.22320	4.28340	WAL	Province du Hainaut
+1594	Beaumont		6500	50.23700	4.23930	WAL	Province du Hainaut
+1595	Leugnies		6500	50.21960	4.19720	WAL	Province du Hainaut
+1596	Leval-Chaudeville		6500	50.23570	4.21000	WAL	Province du Hainaut
+1597	Renlies		6500	50.19080	4.26680	WAL	Province du Hainaut
+1598	Solre-Saint-Géry		6500	50.21640	4.24830	WAL	Province du Hainaut
+1599	Thirimont		6500	50.25960	4.23610	WAL	Province du Hainaut
+1600	Strée		6511	50.28080	4.29390	WAL	Province du Hainaut
+1601	Leers-et-Fosteau		6530	50.30400	4.24580	WAL	Province du Hainaut
+1602	Thuin		6530	50.33930	4.28600	WAL	Province du Hainaut
+1603	Biesme-sous-Thuin		6531	50.32210	4.30900	WAL	Province du Hainaut
+1604	Ragnies		6532	50.30800	4.28450	WAL	Province du Hainaut
+1605	Biercée		6533	50.32420	4.25940	WAL	Province du Hainaut
+1606	Gozée		6534	50.33460	4.35270	WAL	Province du Hainaut
+1607	Donstiennes		6536	50.28560	4.31170	WAL	Province du Hainaut
+1608	Thuillies		6536	50.29900	4.33270	WAL	Province du Hainaut
+1609	Lobbes		6540	50.35260	4.26720	WAL	Province du Hainaut
+1610	Mont-Sainte-Geneviève		6540	50.37460	4.23660	WAL	Province du Hainaut
+1611	Sars-la-Buissière		6542	50.33980	4.20940	WAL	Province du Hainaut
+1612	Bienne-lez-Happart		6543	50.35210	4.21620	WAL	Province du Hainaut
+1613	Bersillies-l'Abbaye		6560	50.26190	4.14850	WAL	Province du Hainaut
+1614	Erquelinnes		6560	50.30690	4.11130	WAL	Province du Hainaut
+1615	Grand-Reng		6560	50.33080	4.07550	WAL	Province du Hainaut
+1616	Hantes-Wihéries		6560	50.30650	4.17700	WAL	Province du Hainaut
+1617	Montignies-Saint-Christophe		6560	50.28160	4.19010	WAL	Province du Hainaut
+1618	Solre-sur-Sambre		6560	50.30810	4.15430	WAL	Province du Hainaut
+1619	Fontaine-Valmont		6567	50.31990	4.21470	WAL	Province du Hainaut
+1620	Labuissière		6567	50.31940	4.18090	WAL	Province du Hainaut
+1621	Merbes-le-Château	Merbes-Le-Chateau	6567	50.32450	4.16490	WAL	Province du Hainaut
+1622	Merbes-Sainte-Marie		6567	50.35280	4.17780	WAL	Province du Hainaut
+1623	Momignies		6590	50.02710	4.16520	WAL	Province du Hainaut
+1624	Macon		6591	50.05070	4.20920	WAL	Province du Hainaut
+1625	Monceau-Imbrechies		6592	50.03790	4.22510	WAL	Province du Hainaut
+1626	Macquenoise		6593	49.97570	4.17890	WAL	Province du Hainaut
+1627	Beauwelz		6594	50.01430	4.15680	WAL	Province du Hainaut
+1628	Forge-Philippe		6596	49.96730	4.25310	WAL	Province du Hainaut
+1629	Seloignes		6596	50.01510	4.25520	WAL	Province du Hainaut
+1630	Bastogne	Bastenaken	6600	50.00350	5.71840	WAL	Province du Luxembourg
+1631	Longvilly		6600	50.02630	5.83830	WAL	Province du Luxembourg
+1632	Noville		6600	50.06390	5.76100	WAL	Province du Luxembourg
+1633	Villers-la-Bonne-Eau		6600	49.93520	5.74630	WAL	Province du Luxembourg
+1634	Wardin		6600	49.99210	5.79120	WAL	Province du Luxembourg
+1635	Martelange	Martelarge|Nartelange	6630	49.83190	5.73650	WAL	Province du Luxembourg
+1636	Fauvillers	Feitweiler	6637	49.85120	5.66410	WAL	Province du Luxembourg
+1637	Hollange		6637	49.90650	5.68830	WAL	Province du Luxembourg
+1638	Tintange		6637	49.87830	5.75180	WAL	Province du Luxembourg
+1639	Hompré		6640	49.94430	5.68690	WAL	Province du Luxembourg
+1640	Morhet		6640	49.96240	5.58450	WAL	Province du Luxembourg
+1641	Nives		6640	49.91280	5.60140	WAL	Province du Luxembourg
+1642	Sibret		6640	49.97070	5.63450	WAL	Province du Luxembourg
+1643	Vaux-lez-Rosières		6640	49.91300	5.56780	WAL	Province du Luxembourg
+1644	Vaux-sur-Sûre	Vaux-Sur-Sure	6640	49.91100	5.57850	WAL	Province du Luxembourg
+1645	Juseret		6642	49.88020	5.54930	WAL	Province du Luxembourg
+1646	Houffalize	Hohenfels	6660	50.13240	5.78960	WAL	Province du Luxembourg
+1647	Nadrin		6660	50.16390	5.67760	WAL	Province du Luxembourg
+1648	Mont		6661	50.00220	5.74400	WAL	Province du Luxembourg
+1649	Tailles		6661	50.22670	5.74660	WAL	Province du Luxembourg
+1650	Tavigny		6662	50.10850	5.83790	WAL	Province du Luxembourg
+1651	Mabompré		6663	50.09900	5.73980	WAL	Province du Luxembourg
+1652	Wibrin		6666	50.16550	5.72110	WAL	Province du Luxembourg
+1653	Gouvy	Geilich	6670	50.18600	5.93920	WAL	Province du Luxembourg
+1654	Limerlé		6670	50.15800	5.92390	WAL	Province du Luxembourg
+1655	Bovigny		6671	50.22420	5.91690	WAL	Province du Luxembourg
+1656	Beho		6672	50.22060	5.99810	WAL	Province du Luxembourg
+1657	Cherain		6673	50.18000	5.86520	WAL	Province du Luxembourg
+1658	Montleban		6674	50.18950	5.83540	WAL	Province du Luxembourg
+1659	Amberloup		6680	50.03120	5.52980	WAL	Province du Luxembourg
+1660	Sainte-Ode	Saint-Ode	6680	50.01720	5.51930	WAL	Luxembourg
+1661	Tillet		6680	50.01010	5.52860	WAL	Province du Luxembourg
+1662	Lavacherie		6681	50.05280	5.51090	WAL	Province du Luxembourg
+1663	Flamierge		6686	50.03320	5.60290	WAL	Province du Luxembourg
+1664	Bertogne		6687	50.08360	5.66690	WAL	Province du Luxembourg
+1665	Longchamps		6688	50.05340	5.69030	WAL	Province du Luxembourg
+1666	Bihain		6690	50.23950	5.80850	WAL	Province du Luxembourg
+1667	Vielsalm		6690	50.28410	5.91500	WAL	Province du Luxembourg
+1668	Petit-Thier		6692	50.30710	5.96780	WAL	Province du Luxembourg
+1669	Grand-Halleux		6698	50.32580	5.90720	WAL	Province du Luxembourg
+1670	Arlon	Aarlen|Arel	6700	49.68330	5.81670	WAL	Province du Luxembourg
+1671	Bonnert		6700	49.71130	5.81860	WAL	Province du Luxembourg
+1672	Heinsch		6700	49.69990	5.74670	WAL	Province du Luxembourg
+1673	Toernich		6700	49.65180	5.77740	WAL	Province du Luxembourg
+1674	Guirsch		6704	49.71830	5.85210	WAL	Province du Luxembourg
+1675	Autelbas		6706	49.64810	5.86800	WAL	Province du Luxembourg
+1676	Attert		6717	49.75030	5.78630	WAL	Province du Luxembourg
+1677	Nobressart		6717	49.73900	5.72010	WAL	Province du Luxembourg
+1678	Nothomb		6717	49.77160	5.78770	WAL	Province du Luxembourg
+1679	Thiaumont		6717	49.71520	5.73060	WAL	Province du Luxembourg
+1680	Tontelange		6717	49.72650	5.81120	WAL	Province du Luxembourg
+1681	Habay	Habay-la-Vieille	6720	49.72330	5.62000	WAL	Luxembourg
+1682	Habay-la-Neuve		6720	49.72820	5.64740	WAL	Province du Luxembourg
+1683	Hachy		6720	49.70160	5.68030	WAL	Province du Luxembourg
+1684	Anlier		6721	49.77140	5.62010	WAL	Province du Luxembourg
+1685	Habay-la-Vieille	Habay	6723	49.72330	5.62000	WAL	Province du Luxembourg
+1686	Houdemont		6724	49.71870	5.58380	WAL	Province du Luxembourg
+1687	Rulles		6724	49.71810	5.55960	WAL	Province du Luxembourg
+1688	Bellefontaine		6730	49.66430	5.49610	WAL	Province du Luxembourg
+1689	Rossignol		6730	49.71790	5.48590	WAL	Province du Luxembourg
+1690	Saint-Vincent		6730	49.67700	5.47520	WAL	Province du Luxembourg
+1691	Tintigny		6730	49.68330	5.51350	WAL	Province du Luxembourg
+1692	Etalle	Étalle	6740	49.67380	5.60020	WAL	Province du Luxembourg
+1693	Sainte-Marie-sur-Semois	Sainte-Marie	6740	49.67120	5.56380	WAL	Province du Luxembourg
+1694	Villers-sur-Semois		6740	49.69810	5.56000	WAL	Province du Luxembourg
+1695	Vance		6741	49.67160	5.66570	WAL	Province du Luxembourg
+1696	Chantemelle		6742	49.65270	5.65230	WAL	Province du Luxembourg
+1697	Buzenol	Buzenel	6743	49.64390	5.59470	WAL	Province du Luxembourg
+1698	Châtillon		6747	49.62360	5.69840	WAL	Province du Luxembourg
+1699	Meix-le-Tige		6747	49.61620	5.71810	WAL	Province du Luxembourg
+1700	Saint-Léger	Saint-Leger	6747	49.61200	5.65690	WAL	Province du Luxembourg
+1701	Musson		6750	49.55830	5.70530	WAL	Province du Luxembourg
+1702	Mussy-la-Ville		6750	49.57010	5.66190	WAL	Province du Luxembourg
+1703	Signeulx		6750	49.55260	5.63860	WAL	Province du Luxembourg
+1704	Bleid		6760	49.56870	5.62680	WAL	Province du Luxembourg
+1705	Ethe	Éthe	6760	49.58000	5.58210	WAL	Province du Luxembourg
+1706	Ruette		6760	49.53670	5.59580	WAL	Province du Luxembourg
+1707	Virton	Wirten	6760	49.56820	5.53260	WAL	Province du Luxembourg
+1708	Latour		6761	49.55740	5.57060	WAL	Province du Luxembourg
+1709	Saint-Mard		6762	49.55400	5.53430	WAL	Province du Luxembourg
+1710	Dampicourt		6767	49.55430	5.49830	WAL	Province du Luxembourg
+1711	Harnoncourt		6767	49.53620	5.49880	WAL	Province du Luxembourg
+1712	Lamorteau		6767	49.52610	5.48180	WAL	Province du Luxembourg
+1713	Rouvroy		6767	49.53770	5.49030	WAL	Luxembourg
+1714	Torgny		6767	49.50760	5.47390	WAL	Province du Luxembourg
+1715	Gérouville		6769	49.61900	5.42650	WAL	Province du Luxembourg
+1716	Meix-devant-Virton		6769	49.60580	5.48040	WAL	Province du Luxembourg
+1717	Robelmont		6769	49.59480	5.50840	WAL	Province du Luxembourg
+1718	Sommethonne		6769	49.57780	5.44770	WAL	Province du Luxembourg
+1719	Villers-la-Loue		6769	49.57410	5.48150	WAL	Province du Luxembourg
+1720	Hondelange		6780	49.63330	5.83330	WAL	Province du Luxembourg
+1721	Messancy		6780	49.59200	5.81880	WAL	Province du Luxembourg
+1722	Wolkrange		6780	49.62880	5.79880	WAL	Province du Luxembourg
+1723	Sélange		6781	49.60930	5.85050	WAL	Province du Luxembourg
+1724	Habergy		6782	49.61470	5.76010	WAL	Province du Luxembourg
+1725	Aubange		6790	49.56650	5.80490	WAL	Province du Luxembourg
+1726	Athus		6791	49.56480	5.83740	WAL	Province du Luxembourg
+1727	Halanzy		6792	49.56050	5.74430	WAL	Province du Luxembourg
+1728	Rachecourt		6792	49.59190	5.72530	WAL	Province du Luxembourg
+1729	Bras		6800	49.97090	5.39480	WAL	Province du Luxembourg
+1730	Freux		6800	49.97110	5.44940	WAL	Province du Luxembourg
+1731	Libramont-Chevigny	Libramont	6800	49.94960	5.42920	WAL	Province du Luxembourg
+1732	Moircy		6800	49.98940	5.46720	WAL	Province du Luxembourg
+1733	Recogne		6800	49.91230	5.35370	WAL	Province du Luxembourg
+1734	Remagne		6800	49.97670	5.49420	WAL	Province du Luxembourg
+1735	Saint-Pierre		6800	49.90380	5.38750	WAL	Province du Luxembourg
+1736	Sainte-Marie-Chevigny		6800	49.92270	5.45730	WAL	Province du Luxembourg
+1737	Chiny		6810	49.73830	5.34100	WAL	Province du Luxembourg
+1738	Izel		6810	49.69370	5.37380	WAL	Province du Luxembourg
+1739	Jamoigne		6810	49.69330	5.40910	WAL	Province du Luxembourg
+1740	Les Bulles		6811	49.70460	5.42380	WAL	Province du Luxembourg
+1741	Suxy		6812	49.76440	5.39970	WAL	Province du Luxembourg
+1742	Termes		6813	49.70660	5.45740	WAL	Province du Luxembourg
+1743	Florenville		6820	49.69980	5.30740	WAL	Province du Luxembourg
+1744	Fontenoille	Fontenoile	6820	49.71520	5.23340	WAL	Province du Luxembourg
+1745	Muno		6820	49.71640	5.17200	WAL	Province du Luxembourg
+1746	Sainte-Cécile		6820	49.72860	5.24240	WAL	Province du Luxembourg
+1747	Lacuisine		6821	49.71590	5.31770	WAL	Province du Luxembourg
+1748	Villers-devant-Orval		6823	49.61950	5.33050	WAL	Province du Luxembourg
+1749	Chassepierre		6824	49.70730	5.26180	WAL	Province du Luxembourg
+1750	Bouillon	Bulen	6830	49.79320	5.06700	WAL	Province du Luxembourg
+1751	Les Hayons		6830	49.81280	5.14560	WAL	Province du Luxembourg
+1752	Poupehan		6830	49.81160	5.00290	WAL	Province du Luxembourg
+1753	Rochehaut		6830	49.84040	5.00600	WAL	Province du Luxembourg
+1754	Noirfontaine		6831	49.96190	5.51360	WAL	Province du Luxembourg
+1755	Sensenruth		6832	49.82490	5.07460	WAL	Province du Luxembourg
+1756	Ucimont		6833	49.83080	5.05440	WAL	Province du Luxembourg
+1757	Vivy		6833	49.86720	5.03800	WAL	Province du Luxembourg
+1758	Bellevaux		6834	49.84030	5.11040	WAL	Province du Luxembourg
+1759	Dohan		6836	49.79580	5.14160	WAL	Province du Luxembourg
+1760	Corbion	Corbillon|Corbion-sur-Semois|Corbulon	6838	49.79770	5.00740	WAL	Province du Luxembourg
+1761	Grandvoir		6840	49.85860	5.37290	WAL	Province du Luxembourg
+1762	Grapfontaine		6840	49.82150	5.40750	WAL	Province du Luxembourg
+1763	Hamipré		6840	49.83730	5.45690	WAL	Province du Luxembourg
+1764	Longlier		6840	49.85380	5.45010	WAL	Province du Luxembourg
+1765	Neufchâteau	Neufchateau	6840	49.84070	5.43530	WAL	Province du Luxembourg
+1766	Tournay		6840	49.85460	5.39830	WAL	Province du Luxembourg
+1767	Carlsbourg		6850	49.89500	5.08100	WAL	Province du Luxembourg
+1768	Offagne	Offange	6850	49.88500	5.17380	WAL	Province du Luxembourg
+1769	Paliseul		6850	49.90400	5.13540	WAL	Province du Luxembourg
+1770	Nollevaux		6851	49.87130	5.12130	WAL	Province du Luxembourg
+1771	Maissin		6852	49.96480	5.17820	WAL	Province du Luxembourg
+1772	Opont		6852	49.93450	5.11850	WAL	Province du Luxembourg
+1773	Framont		6853	49.91920	5.16000	WAL	Province du Luxembourg
+1774	Fays-les-Veneurs		6856	49.86610	5.16120	WAL	Province du Luxembourg
+1775	Assenois		6860	49.87830	5.21130	WAL	Province du Luxembourg
+1776	Ebly		6860	49.85290	5.54070	WAL	Province du Luxembourg
+1777	Léglise	Leglise	6860	49.79980	5.53650	WAL	Province du Luxembourg
+1778	Mellier		6860	49.76600	5.51750	WAL	Province du Luxembourg
+1779	Witry		6860	49.85940	5.61280	WAL	Province du Luxembourg
+1780	Arville		6870	50.03200	5.31670	WAL	Province du Luxembourg
+1781	Awenne		6870	50.07400	5.30470	WAL	Province du Luxembourg
+1782	Hatrival		6870	50.00600	5.34820	WAL	Province du Luxembourg
+1783	Mirwart		6870	50.05650	5.26440	WAL	Province du Luxembourg
+1784	Saint-Hubert		6870	50.02670	5.37400	WAL	Province du Luxembourg
+1785	Vesqueville		6870	50.00570	5.39680	WAL	Province du Luxembourg
+1786	Auby-sur-Semois	Auby	6880	49.81560	5.18260	WAL	Province du Luxembourg
+1787	Bertrix		6880	49.85600	5.25540	WAL	Province du Luxembourg
+1788	Cugnon		6880	49.80220	5.20270	WAL	Province du Luxembourg
+1789	Jehonville		6880	49.90660	5.20030	WAL	Province du Luxembourg
+1790	Orgeo		6880	49.83390	5.30650	WAL	Province du Luxembourg
+1791	Herbeumont		6887	49.78090	5.23580	WAL	Province du Luxembourg
+1792	Saint-Médard		6887	49.81540	5.32790	WAL	Province du Luxembourg
+1793	Straimont		6887	49.79610	5.38040	WAL	Province du Luxembourg
+1794	Anloy		6890	49.94980	5.22190	WAL	Province du Luxembourg
+1795	Libin		6890	49.98110	5.25610	WAL	Province du Luxembourg
+1796	Ochamps		6890	49.92450	5.27680	WAL	Province du Luxembourg
+1797	Redu		6890	50.00690	5.16010	WAL	Province du Luxembourg
+1798	Smuid		6890	50.01840	5.26660	WAL	Province du Luxembourg
+1799	Transinne		6890	49.99970	5.20300	WAL	Province du Luxembourg
+1800	Villance		6890	49.97170	5.22140	WAL	Province du Luxembourg
+1801	Aye		6900	50.22470	5.30060	WAL	Province du Luxembourg
+1802	Hargimont		6900	50.18770	5.30830	WAL	Province du Luxembourg
+1803	Humain		6900	50.20490	5.25690	WAL	Province du Luxembourg
+1804	Marche-en-Famenne	Marche	6900	50.22680	5.34420	WAL	Province du Luxembourg
+1805	On		6900	50.17180	5.28940	WAL	Province du Luxembourg
+1806	Roy		6900	50.18490	5.40580	WAL	Province du Luxembourg
+1807	Waha		6900	50.20920	5.34170	WAL	Province du Luxembourg
+1808	Sohier		6920	50.06690	5.06430	WAL	Province du Luxembourg
+1809	Wellin		6920	50.08130	5.11410	WAL	Province du Luxembourg
+1810	Chanly		6921	50.07970	5.15290	WAL	Province du Luxembourg
+1811	Halma		6922	50.07600	5.13510	WAL	Province du Luxembourg
+1812	Lomprez		6924	50.07620	5.09140	WAL	Province du Luxembourg
+1813	Bure		6927	50.08900	5.26010	WAL	Province du Luxembourg
+1814	Grupont		6927	50.09130	5.28130	WAL	Province du Luxembourg
+1815	Resteigne		6927	50.08300	5.17690	WAL	Province du Luxembourg
+1816	Tellin		6927	50.08040	5.21640	WAL	Province du Luxembourg
+1817	Daverdisse		6929	50.02160	5.11810	WAL	Province du Luxembourg
+1818	Gembes		6929	49.99660	5.06260	WAL	Province du Luxembourg
+1819	Haut-Fays		6929	50.00160	5.01750	WAL	Province du Luxembourg
+1820	Porcheresse		6929	49.97740	5.08650	WAL	Province du Luxembourg
+1821	Barvaux-sur-Ourthe		6940	50.34830	5.49060	WAL	Province du Luxembourg
+1822	Durbuy	Durbui	6940	50.35290	5.45630	WAL	Province du Luxembourg
+1823	Grandhan		6940	50.32940	5.41000	WAL	Province du Luxembourg
+1824	Septon		6940	50.35610	5.42260	WAL	Province du Luxembourg
+1825	Wéris	Weris	6940	50.32640	5.53110	WAL	Province du Luxembourg
+1826	Bende		6941	50.41830	5.41460	WAL	Province du Luxembourg
+1827	Bomal-sur-Ourthe	Bomal	6941	50.37630	5.52380	WAL	Province du Luxembourg
+1828	Borlon		6941	50.37840	5.40630	WAL	Province du Luxembourg
+1829	Heyd		6941	50.34620	5.56250	WAL	Province du Luxembourg
+1830	Izier		6941	50.38400	5.57900	WAL	Province du Luxembourg
+1831	Tohogne		6941	50.38010	5.47900	WAL	Province du Luxembourg
+1832	Villers-Sainte-Gertrude		6941	50.36080	5.57990	WAL	Province du Luxembourg
+1833	Harsin		6950	50.17340	5.34770	WAL	Province du Luxembourg
+1834	Nassogne		6950	50.12850	5.34270	WAL	Province du Luxembourg
+1835	Bande		6951	50.16640	5.41440	WAL	Province du Luxembourg
+1836	Grune		6952	50.15520	5.38160	WAL	Province du Luxembourg
+1837	Ambly		6953	50.14450	5.31190	WAL	Province du Luxembourg
+1838	Forrières		6953	50.13130	5.28270	WAL	Province du Luxembourg
+1839	Lesterny		6953	50.11240	5.27900	WAL	Province du Luxembourg
+1840	Masbourg		6953	50.11370	5.31350	WAL	Province du Luxembourg
+1841	Dochamps		6960	50.23330	5.53330	WAL	Province du Luxembourg
+1842	Grandménil	Grandmenil	6960	50.29170	5.65910	WAL	Province du Luxembourg
+1843	Harre		6960	50.35160	5.65740	WAL	Province du Luxembourg
+1844	Malempré		6960	50.28160	5.71440	WAL	Province du Luxembourg
+1845	Manhay	Manhé	6960	50.28670	5.65650	WAL	Luxembourg
+1846	Odeigne		6960	50.25740	5.68250	WAL	Province du Luxembourg
+1847	Vaux-Chavanne		6960	50.30460	5.69250	WAL	Province du Luxembourg
+1848	Tenneville		6970	50.09500	5.52890	WAL	Province du Luxembourg
+1849	Champlon		6971	50.10820	5.50190	WAL	Province du Luxembourg
+1850	Erneuville		6972	50.11290	5.54950	WAL	Province du Luxembourg
+1851	Beausaint		6980	50.16810	5.54860	WAL	Province du Luxembourg
+1852	La Roche-en-Ardenne	Laroche	6980	50.18360	5.57550	WAL	Province du Luxembourg
+1853	Samrée		6982	50.21040	5.63440	WAL	Province du Luxembourg
+1854	Ortho		6983	50.12480	5.61320	WAL	Province du Luxembourg
+1855	Hives		6984	50.15070	5.57740	WAL	Province du Luxembourg
+1856	Halleux		6986	50.17320	5.50100	WAL	Province du Luxembourg
+1857	Beffe		6987	50.24650	5.52260	WAL	Province du Luxembourg
+1858	Hodister		6987	50.20080	5.49480	WAL	Province du Luxembourg
+1859	Marcourt	Marcour	6987	50.21530	5.52480	WAL	Province du Luxembourg
+1860	Rendeux		6987	50.23420	5.50410	WAL	Province du Luxembourg
+1861	Fronville		6990	50.29420	5.42210	WAL	Province du Luxembourg
+1862	Hampteau		6990	50.25830	5.47200	WAL	Province du Luxembourg
+1863	Hotton		6990	50.26740	5.44610	WAL	Province du Luxembourg
+1864	Marenne		6990	50.24130	5.41500	WAL	Province du Luxembourg
+1865	Amonines		6997	50.26490	5.55810	WAL	Province du Luxembourg
+1866	Erezée	Erezee|Érezée	6997	50.29290	5.55810	WAL	Province du Luxembourg
+1867	Mormont		6997	50.32570	5.59260	WAL	Province du Luxembourg
+1868	Soy		6997	50.28600	5.51150	WAL	Province du Luxembourg
+1869	Mons	Bergen	7000	50.45410	3.95230	WAL	Province du Hainaut
+1870	Ghlin		7011	50.47310	3.90290	WAL	Province du Hainaut
+1871	Flénu		7012	50.43670	3.88570	WAL	Province du Hainaut
+1872	Jemappes		7012	50.44910	3.89100	WAL	Province du Hainaut
+1873	Maisières		7020	50.48820	3.96560	WAL	Province du Hainaut
+1874	Nimy		7020	50.47670	3.95520	WAL	Province du Hainaut
+1875	Havré		7021	50.46400	4.04670	WAL	Province du Hainaut
+1876	Harmignies		7022	50.40610	4.01730	WAL	Province du Hainaut
+1877	Harveng		7022	50.39390	3.98780	WAL	Province du Hainaut
+1878	Hyon		7022	50.43800	3.96030	WAL	Province du Hainaut
+1879	Mesvin		7022	50.42580	3.95930	WAL	Province du Hainaut
+1880	Nouvelles		7022	50.40980	3.96750	WAL	Province du Hainaut
+1881	Ciply		7024	50.41870	3.94420	WAL	Province du Hainaut
+1882	Saint-Symphorien		7030	50.43900	4.00730	WAL	Province du Hainaut
+1883	Villers-Saint-Ghislain		7031	50.43030	4.03990	WAL	Province du Hainaut
+1884	Spiennes		7032	50.42500	3.98740	WAL	Province du Hainaut
+1885	Cuesmes		7033	50.43620	3.92320	WAL	Province du Hainaut
+1886	Obourg		7034	50.47380	4.00880	WAL	Province du Hainaut
+1887	Saint-Denis		7034	50.49050	4.02050	WAL	Province du Hainaut
+1888	Asquillies	Asquilies	7040	50.40190	3.95810	WAL	Province du Hainaut
+1889	Aulnois		7040	50.34010	3.90410	WAL	Province du Hainaut
+1890	Blaregnies		7040	50.35780	3.89160	WAL	Province du Hainaut
+1891	Bougnies		7040	50.38710	3.94130	WAL	Province du Hainaut
+1892	Genly		7040	50.38950	3.91240	WAL	Province du Hainaut
+1893	Goegnies-Chaussée	Gognies-Chaussée	7040	50.34120	3.94170	WAL	Province du Hainaut
+1894	Quévy	Quevy	7040	50.36840	3.92930	WAL	Hainaut
+1895	Quévy-le-Grand		7040	50.36070	3.94890	WAL	Province du Hainaut
+1896	Quévy-le-Petit		7040	50.36880	3.93600	WAL	Province du Hainaut
+1897	Givry		7041	50.37830	4.02930	WAL	Province du Hainaut
+1898	Havay		7041	50.36120	3.98370	WAL	Province du Hainaut
+1899	Erbaut		7050	50.53260	3.88380	WAL	Province du Hainaut
+1900	Erbisoeul		7050	50.51520	3.89570	WAL	Province du Hainaut
+1901	Herchies		7050	50.52790	3.85690	WAL	Province du Hainaut
+1902	Jurbise	Jurbeke	7050	50.53100	3.90940	WAL	Province du Hainaut
+1903	Masnuy-Saint-Jean		7050	50.53210	3.94030	WAL	Province du Hainaut
+1904	Masnuy-Saint-Pierre		7050	50.53700	3.96070	WAL	Province du Hainaut
+1905	Horrues		7060	50.60840	4.04280	WAL	Province du Hainaut
+1906	Soignies	Zinnik	7060	50.57900	4.07130	WAL	Province du Hainaut
+1907	Casteau		7061	50.51230	4.01120	WAL	Province du Hainaut
+1908	Thieusies		7061	50.51530	4.04930	WAL	Province du Hainaut
+1909	Naast		7062	50.55410	4.10080	WAL	Province du Hainaut
+1910	Chaussée-Notre-Dame-Louvignies		7063	50.59180	3.99800	WAL	Province du Hainaut
+1911	Neufvilles		7063	50.57110	4.00040	WAL	Province du Hainaut
+1912	Gottignies		7070	50.49530	4.06000	WAL	Province du Hainaut
+1913	Le Roeulx		7070	50.49410	4.09360	WAL	Province du Hainaut
+1914	Mignault		7070	50.53020	4.15760	WAL	Province du Hainaut
+1915	Thieu		7070	50.47430	4.09260	WAL	Province du Hainaut
+1916	Ville-sur-Haine		7070	50.47660	4.06430	WAL	Province du Hainaut
+1917	Eugies		7080	50.38890	3.88510	WAL	Province du Hainaut
+1918	Frameries		7080	50.40580	3.89600	WAL	Province du Hainaut
+1919	La Bouverie		7080	50.40520	3.87440	WAL	Province du Hainaut
+1920	Noirchain		7080	50.40280	3.92590	WAL	Province du Hainaut
+1921	Sars-la-Bruyère		7080	50.37160	3.87440	WAL	Province du Hainaut
+1922	Braine-le-Comte	s-Gravenbrakel	7090	50.60980	4.14660	WAL	Province du Hainaut
+1923	Hennuyères		7090	50.63860	4.16940	WAL	Province du Hainaut
+1924	Henripont		7090	50.59690	4.18480	WAL	Province du Hainaut
+1925	Petit-Roeulx-Lez-Braine		7090	50.62570	4.09390	WAL	Province du Hainaut
+1926	Ronquières		7090	50.60850	4.22080	WAL	Province du Hainaut
+1927	Steenkerque	Steenkerke	7090	50.64380	4.06910	WAL	Province du Hainaut
+1928	Haine-Saint-Paul		7100	50.46190	4.17670	WAL	Province du Hainaut
+1929	Haine-Saint-Pierre		7100	50.46030	4.20320	WAL	Province du Hainaut
+1930	La Louvière	La Louviere|Louvierre	7100	50.48660	4.18790	WAL	Province du Hainaut
+1931	Saint-Vaast		7100	50.45430	4.16040	WAL	Province du Hainaut
+1932	Trivières		7100	50.44830	4.14510	WAL	Province du Hainaut
+1933	Boussoit		7110	50.45950	4.08250	WAL	Province du Hainaut
+1934	Houdeng-Aimeries		7110	50.48130	4.14550	WAL	Province du Hainaut
+1935	Houdeng-Goegnies		7110	50.49030	4.17510	WAL	Province du Hainaut
+1936	Maurage		7110	50.45650	4.09700	WAL	Province du Hainaut
+1937	Strépy-Bracquegnies	Strépy	7110	50.47280	4.12020	WAL	Province du Hainaut
+1938	Croix-lez-Rouveroy		7120	50.36070	4.07820	WAL	Province du Hainaut
+1939	Estinnes		7120	50.37940	4.09720	WAL	Hainaut
+1940	Estinnes-au-Mont		7120	50.39690	4.09650	WAL	Province du Hainaut
+1941	Estinnes-au-Val		7120	50.41020	4.10480	WAL	Province du Hainaut
+1942	Fauroeulx		7120	50.37040	4.10520	WAL	Province du Hainaut
+1943	Haulchin		7120	50.38410	4.08300	WAL	Province du Hainaut
+1944	Peissant		7120	50.35140	4.11960	WAL	Province du Hainaut
+1945	Rouveroy		7120	50.36070	4.07820	WAL	Province du Hainaut
+1946	Vellereille-le-Sec		7120	50.40090	4.05790	WAL	Province du Hainaut
+1947	Vellereille-les-Brayeux		7120	50.37950	4.15110	WAL	Province du Hainaut
+1948	Battignies		7130	50.42200	4.13530	WAL	Province du Hainaut
+1949	Binche		7130	50.41160	4.16470	WAL	Province du Hainaut
+1950	Bray		7130	50.43240	4.10590	WAL	Province du Hainaut
+1951	Waudrez		7131	50.41350	4.15050	WAL	Province du Hainaut
+1952	Buvrinnes		7133	50.38870	4.20540	WAL	Province du Hainaut
+1953	Epinois	Épinois	7134	50.40600	4.20670	WAL	Province du Hainaut
+1954	Leval-Trahegnies		7134	50.42130	4.22560	WAL	Province du Hainaut
+1955	Péronnes-lez-Binche	Péronnes	7134	50.43780	4.14910	WAL	Province du Hainaut
+1956	Ressaix		7134	50.41230	4.16600	WAL	Province du Hainaut
+1957	Morlanwelz	Morlanwelz-Mariemont	7140	50.45500	4.24520	WAL	Hainaut
+1958	Morlanwelz-Mariemont	Morlanwelz	7140	50.45500	4.24520	WAL	Province du Hainaut
+1959	Carnières		7141	50.44430	4.25510	WAL	Province du Hainaut
+1960	Mont-Sainte-Aldegonde		7141	50.43010	4.23260	WAL	Province du Hainaut
+1961	Chapelle-lez-Herlaimont		7160	50.47130	4.28230	WAL	Province du Hainaut
+1962	Godarville		7160	50.49500	4.28700	WAL	Province du Hainaut
+1963	Piéton		7160	50.43970	4.29750	WAL	Province du Hainaut
+1964	Bellecourt		7170	50.48070	4.26790	WAL	Province du Hainaut
+1965	Bois-d'Haine		7170	50.50180	4.21560	WAL	Province du Hainaut
+1966	Fayt-lez-Manage	Fayt|Fayt-lez-Seneffe	7170	50.48700	4.22960	WAL	Province du Hainaut
+1967	La Hestre		7170	50.47560	4.24740	WAL	Province du Hainaut
+1968	Manage		7170	50.50310	4.23590	WAL	Province du Hainaut
+1969	Seneffe		7180	50.53130	4.26300	WAL	Province du Hainaut
+1970	Arquennes		7181	50.56760	4.27340	WAL	Province du Hainaut
+1971	Familleureux		7181	50.52390	4.21030	WAL	Province du Hainaut
+1972	Feluy		7181	50.56260	4.25100	WAL	Province du Hainaut
+1973	Petit-Roeulx-Lez-Nivelles		7181	50.55420	4.31350	WAL	Province du Hainaut
+1974	Ecaussinnes	Écaussinnes	7190	50.55710	4.17380	WAL	Hainaut
+1975	Ecaussinnes-D'Enghien	Écaussines-d'Enghien|Écaussinnes-d'Enghien	7190	50.56820	4.16580	WAL	Province du Hainaut
+1976	Marche-Lez-Ecaussinnes	Marche-lez Écaussines|Marche-lez-Écaussinnes	7190	50.54600	4.18180	WAL	Province du Hainaut
+1977	Ecaussinnes-Lalaing	Écaussines-Lalaing|Écaussinnes-Lalaing	7191	50.56870	4.18400	WAL	Province du Hainaut
+1978	Boussu	Boussu-lez-Mons	7300	50.43420	3.79440	WAL	Province du Hainaut
+1979	Hornu		7301	50.43280	3.82740	WAL	Province du Hainaut
+1980	Bernissart		7320	50.47460	3.64960	WAL	Province du Hainaut
+1981	Blaton		7321	50.50040	3.66010	WAL	Province du Hainaut
+1982	Harchies		7321	50.47960	3.69350	WAL	Province du Hainaut
+1983	Pommeroeul		7322	50.46190	3.71250	WAL	Province du Hainaut
+1984	Ville-Pommeroeul		7322	50.47150	3.73060	WAL	Province du Hainaut
+1985	Saint-Ghislain	Sint-Guilin	7330	50.44820	3.81890	WAL	Province du Hainaut
+1986	Baudour		7331	50.48300	3.83320	WAL	Province du Hainaut
+1987	Neufmaison		7332	50.52910	3.79410	WAL	Province du Hainaut
+1988	Sirault		7332	50.50550	3.78910	WAL	Province du Hainaut
+1989	Tertre	Tetre	7333	50.46920	3.81240	WAL	Province du Hainaut
+1990	Hautrage		7334	50.48190	3.76520	WAL	Province du Hainaut
+1991	Villerot		7334	50.48630	3.79050	WAL	Province du Hainaut
+1992	Colfontaine		7340	50.41410	3.85570	WAL	Province du Hainaut
+1993	Pâturages		7340	50.40720	3.85500	WAL	Province du Hainaut
+1994	Warquignies		7340	50.40150	3.82240	WAL	Province du Hainaut
+1995	Wasmes		7340	50.41460	3.84710	WAL	Province du Hainaut
+1996	Hainin		7350	50.42950	3.76660	WAL	Province du Hainaut
+1997	Hensies		7350	50.43260	3.68410	WAL	Province du Hainaut
+1998	Montroeul-Sur-Haine	Montroeul	7350	50.43820	3.70590	WAL	Province du Hainaut
+1999	Thulin		7350	50.43010	3.74010	WAL	Province du Hainaut
+2000	Blaugies		7370	50.37220	3.80580	WAL	Province du Hainaut
+2001	Dour		7370	50.39580	3.77790	WAL	Province du Hainaut
+2002	Elouges	Élouges	7370	50.40240	3.75170	WAL	Province du Hainaut
+2003	Wihéries		7370	50.38540	3.75370	WAL	Province du Hainaut
+2004	Baisieux		7380	50.38740	3.69550	WAL	Province du Hainaut
+2005	Quiévrain	Quievrain	7380	50.40740	3.68350	WAL	Province du Hainaut
+2006	Audregnies		7382	50.38320	3.72130	WAL	Province du Hainaut
+2007	Angre		7387	50.36580	3.69540	WAL	Province du Hainaut
+2008	Angreau		7387	50.35080	3.69150	WAL	Province du Hainaut
+2009	Athis		7387	50.36350	3.77450	WAL	Province du Hainaut
+2010	Autreppe		7387	50.34830	3.73330	WAL	Province du Hainaut
+2011	Erquennes		7387	50.35940	3.79110	WAL	Province du Hainaut
+2012	Fayt-le-Franc		7387	50.35650	3.77500	WAL	Province du Hainaut
+2013	Honnelles		7387	50.35870	3.72710	WAL	Hainaut
+2014	Marchipont		7387	50.37810	3.66620	WAL	Province du Hainaut
+2015	Montignies-sur-Roc		7387	50.37000	3.73170	WAL	Province du Hainaut
+2016	Onnezies		7387	50.36190	3.71630	WAL	Province du Hainaut
+2017	Roisin		7387	50.33240	3.69550	WAL	Province du Hainaut
+2018	Quaregnon		7390	50.44070	3.86530	WAL	Province du Hainaut
+2019	Wasmuel		7390	50.44490	3.84810	WAL	Province du Hainaut
+2020	Ere		7500	50.58230	3.36760	WAL	Province du Hainaut
+2021	Saint-Maur		7500	50.57270	3.39470	WAL	Province du Hainaut
+2022	Tournai	Doornik|Doornyk|Tournay	7500	50.60710	3.38930	WAL	Province du Hainaut
+2023	Orcq		7501	50.60320	3.34920	WAL	Province du Hainaut
+2024	Esplechin		7502	50.57360	3.30430	WAL	Province du Hainaut
+2025	Froyennes		7503	50.62190	3.35460	WAL	Province du Hainaut
+2026	Froidmont		7504	50.57720	3.32960	WAL	Province du Hainaut
+2027	Willemeau		7506	50.57440	3.35030	WAL	Province du Hainaut
+2028	Ramegnies-Chin		7520	50.65160	3.33700	WAL	Province du Hainaut
+2029	Templeuve		7520	50.64410	3.28010	WAL	Province du Hainaut
+2030	Chercq		7521	50.58840	3.42120	WAL	Province du Hainaut
+2031	Blandain		7522	50.62100	3.30520	WAL	Province du Hainaut
+2032	Hertain		7522	50.61350	3.28880	WAL	Province du Hainaut
+2033	Lamain		7522	50.60040	3.29170	WAL	Province du Hainaut
+2034	Marquain		7522	50.60680	3.32090	WAL	Province du Hainaut
+2035	Gaurain-Ramecroix		7530	50.58920	3.48800	WAL	Province du Hainaut
+2036	Havinnes		7531	50.61660	3.46340	WAL	Province du Hainaut
+2037	Béclers	Beclers	7532	50.62120	3.50420	WAL	Province du Hainaut
+2038	Thimougies		7533	50.63360	3.51040	WAL	Province du Hainaut
+2039	Barry		7534	50.58770	3.54270	WAL	Province du Hainaut
+2040	Maulde		7534	50.61680	3.54880	WAL	Province du Hainaut
+2041	Vaulx	Vaulx-lez-Tournai	7536	50.59410	3.42950	WAL	Province du Hainaut
+2042	Vezon		7538	50.56920	3.50470	WAL	Province du Hainaut
+2043	Kain		7540	50.63870	3.39690	WAL	Province du Hainaut
+2044	Melles		7540	50.64670	3.48160	WAL	Province du Hainaut
+2045	Quartes		7540	50.65050	3.51150	WAL	Province du Hainaut
+2046	Rumillies		7540	50.62100	3.44330	WAL	Province du Hainaut
+2047	Mont-Saint-Aubert		7542	50.65430	3.40070	WAL	Province du Hainaut
+2048	Mourcourt		7543	50.65320	3.44470	WAL	Province du Hainaut
+2049	Warchin		7548	50.60920	3.42400	WAL	Province du Hainaut
+2050	Péruwelz	Peruwelz	7600	50.50820	3.59370	WAL	Province du Hainaut
+2051	Roucourt		7601	50.52880	3.58630	WAL	Province du Hainaut
+2052	Bury		7602	50.54280	3.59390	WAL	Province du Hainaut
+2053	Bon-Secours		7603	50.49800	3.60820	WAL	Province du Hainaut
+2054	Baugnies		7604	50.56030	3.55200	WAL	Province du Hainaut
+2055	Braffe		7604	50.55240	3.58190	WAL	Province du Hainaut
+2056	Brasménil	Brasmenil	7604	50.54110	3.54530	WAL	Province du Hainaut
+2057	Callenelle		7604	50.53040	3.52270	WAL	Province du Hainaut
+2058	Wasmes-Audemez-Briffoeil		7604	50.54610	3.55050	WAL	Province du Hainaut
+2059	Wiers		7608	50.50860	3.53470	WAL	Province du Hainaut
+2060	Rumes		7610	50.55450	3.30540	WAL	Province du Hainaut
+2061	La Glanerie		7611	50.52990	3.30090	WAL	Province du Hainaut
+2062	Taintignies		7618	50.55280	3.34220	WAL	Province du Hainaut
+2063	Bléharies		7620	50.51260	3.41250	WAL	Province du Hainaut
+2064	Brunehaut		7620	50.53740	3.40030	WAL	Hainaut
+2065	Guignies		7620	50.54790	3.37020	WAL	Province du Hainaut
+2066	Hollain		7620	50.54160	3.42610	WAL	Province du Hainaut
+2067	Jollain-Merlin		7620	50.53910	3.40400	WAL	Province du Hainaut
+2068	Wez-Velvain	Wez-Welvain	7620	50.54610	3.38880	WAL	Province du Hainaut
+2069	Lesdain		7621	50.52130	3.38740	WAL	Province du Hainaut
+2070	Laplaigne		7622	50.52190	3.44730	WAL	Province du Hainaut
+2071	Rongy		7623	50.50720	3.38950	WAL	Province du Hainaut
+2072	Howardries		7624	50.50650	3.35600	WAL	Province du Hainaut
+2073	Antoing		7640	50.56770	3.44920	WAL	Province du Hainaut
+2074	Maubray		7640	50.55090	3.50400	WAL	Province du Hainaut
+2075	Péronnes-lez-Antoing		7640	50.55930	3.47660	WAL	Province du Hainaut
+2076	Bruyelle		7641	50.55800	3.42790	WAL	Province du Hainaut
+2077	Calonne		7642	50.57770	3.43510	WAL	Province du Hainaut
+2078	Fontenoy		7643	50.56760	3.47350	WAL	Province du Hainaut
+2079	Luingne		7700	50.73950	3.23600	WAL	Province du Hainaut
+2080	Mouscron	Moeskroen	7700	50.74500	3.20640	WAL	Province du Hainaut
+2081	Dottignies	Dottenijs	7711	50.73330	3.30000	WAL	Province du Hainaut
+2082	Herseaux		7712	50.71670	3.21670	WAL	Province du Hainaut
+2083	Bailleul		7730	50.66910	3.31930	WAL	Province du Hainaut
+2084	Estaimbourg		7730	50.68000	3.30790	WAL	Province du Hainaut
+2085	Estaimpuis	Steenput	7730	50.70490	3.26780	WAL	Province du Hainaut
+2086	Evregnies		7730	50.71260	3.28650	WAL	Province du Hainaut
+2087	Leers-Nord		7730	50.68750	3.27020	WAL	Province du Hainaut
+2088	Néchin		7730	50.66700	3.26650	WAL	Province du Hainaut
+2089	Saint-Léger		7730	50.70590	3.31440	WAL	Province du Hainaut
+2090	Pecq		7740	50.68620	3.33790	WAL	Province du Hainaut
+2091	Warcoing		7740	50.70450	3.34620	WAL	Province du Hainaut
+2092	Hérinnes-lez-Pecq	Hérinnes	7742	50.70060	3.36320	WAL	Province du Hainaut
+2093	Esquelmes		7743	50.66550	3.34830	WAL	Province du Hainaut
+2094	Obigies		7743	50.66180	3.36410	WAL	Province du Hainaut
+2095	Amougies		7750	50.74450	3.50670	WAL	Province du Hainaut
+2096	Anseroeul		7750	50.72740	3.52370	WAL	Province du Hainaut
+2097	Mont-De-L'Enclus		7750	50.74150	3.51070	WAL	Hainaut
+2098	Orroir		7750	50.74970	3.48100	WAL	Province du Hainaut
+2099	Russeignies	Rozenaken	7750	50.74450	3.53160	WAL	Province du Hainaut
+2100	Celles		7760	50.71230	3.45730	WAL	Province du Hainaut
+2101	Escanaffles		7760	50.75740	3.45290	WAL	Province du Hainaut
+2102	Molenbaix	Molembaix	7760	50.69380	3.43050	WAL	Province du Hainaut
+2103	Popuelles		7760	50.66140	3.51870	WAL	Province du Hainaut
+2104	Pottes		7760	50.73290	3.40700	WAL	Province du Hainaut
+2105	Velaines		7760	50.66800	3.48660	WAL	Province du Hainaut
+2106	Comines	Comines-Warneton|Komen|Komen-Waasten	7780	50.76070	3.00170	WAL	Hainaut
+2107	Comines-Warneton	Comines|Komen|Komen-Waasten	7780	50.76070	3.00170	WAL	Hainaut
+2108	Komen	Comines|Comines-Warneton|Komen-Waasten	7780	50.76670	3.00000	WAL	Province du Hainaut
+2109	Komen-Waasten	Comines|Comines-Warneton|Komen	7780	50.76670	3.00000	WAL	Province du Hainaut
+2110	Houthem		7781	50.78690	2.96380	WAL	Province du Hainaut
+2111	Ploegsteert		7782	50.72660	2.88020	WAL	Province du Hainaut
+2112	Bizet	Le Bizet	7783	50.70830	2.88450	WAL	Province du Hainaut
+2113	Bas-Warneton	Neer-Waasten	7784	50.75940	2.96000	WAL	Province du Hainaut
+2114	Warneton	Waasten	7784	50.75160	2.94640	WAL	Province du Hainaut
+2115	Ath	Aat	7800	50.62940	3.77800	WAL	Province du Hainaut
+2116	Lanquesaint		7800	50.65390	3.80430	WAL	Province du Hainaut
+2117	Irchonwelz	Archonwelz	7801	50.62070	3.75080	WAL	Province du Hainaut
+2118	Ormeignies		7802	50.59500	3.75180	WAL	Province du Hainaut
+2119	Bouvignies		7803	50.64630	3.76570	WAL	Province du Hainaut
+2120	Ostiches		7804	50.67860	3.75900	WAL	Province du Hainaut
+2121	Rebaix		7804	50.66000	3.78310	WAL	Province du Hainaut
+2122	Maffle		7810	50.61790	3.80320	WAL	Province du Hainaut
+2123	Arbre		7811	50.61040	3.81520	WAL	Province du Hainaut
+2124	Houtaing		7812	50.63790	3.68230	WAL	Province du Hainaut
+2125	Ligne		7812	50.62180	3.70590	WAL	Province du Hainaut
+2126	Mainvault		7812	50.64910	3.71750	WAL	Province du Hainaut
+2127	Moulbaix		7812	50.60080	3.71620	WAL	Province du Hainaut
+2128	Villers-Notre-Dame		7812	50.61850	3.73590	WAL	Province du Hainaut
+2129	Villers-Saint-Amand		7812	50.62250	3.73150	WAL	Province du Hainaut
+2130	Ghislenghien	Gellingen	7822	50.65650	3.87830	WAL	Province du Hainaut
+2131	Isières		7822	50.66320	3.81930	WAL	Province du Hainaut
+2132	Meslin-L'Evêque	Meslin-l'Évêque	7822	50.64860	3.84740	WAL	Province du Hainaut
+2133	Gibecq		7823	50.63790	3.88780	WAL	Province du Hainaut
+2134	Bassilly	Zullik	7830	50.67630	3.93390	WAL	Province du Hainaut
+2135	Fouleng		7830	50.61890	3.92690	WAL	Province du Hainaut
+2136	Gondregnies		7830	50.62640	3.91040	WAL	Province du Hainaut
+2137	Graty		7830	50.63170	3.99620	WAL	Province du Hainaut
+2138	Hellebecq		7830	50.66430	3.88840	WAL	Province du Hainaut
+2139	Hoves	Hove	7830	50.67120	4.03650	WAL	Province du Hainaut
+2140	Silly	Opzullik	7830	50.64880	3.92360	WAL	Province du Hainaut
+2141	Thoricourt		7830	50.61100	3.95040	WAL	Province du Hainaut
+2142	Enghien	Edingen	7850	50.68370	4.03280	WAL	Province du Hainaut
+2143	Marcq	Mark	7850	50.69140	4.01560	WAL	Province du Hainaut
+2144	Petit-Enghien	Lettelingen	7850	50.68330	4.08330	WAL	Province du Hainaut
+2145	Lessines	Lessen	7860	50.71100	3.83580	WAL	Province du Hainaut
+2146	Papignies		7861	50.61500	3.92820	WAL	Province du Hainaut
+2147	Wannebecq		7861	50.69350	3.79930	WAL	Province du Hainaut
+2148	Ogy		7862	50.72070	3.78050	WAL	Province du Hainaut
+2149	Ghoy		7863	50.72830	3.80980	WAL	Province du Hainaut
+2150	Deux-Acren	Les Deux-Acren|Twee Akren	7864	50.73030	3.85310	WAL	Province du Hainaut
+2151	Bois-de-Lessines	Lessenbos|Lessenbosch	7866	50.69660	3.89610	WAL	Province du Hainaut
+2152	Ollignies	Woelingen	7866	50.68790	3.86230	WAL	Province du Hainaut
+2153	Bauffe		7870	50.56980	3.85350	WAL	Province du Hainaut
+2154	Cambron-Saint-Vincent		7870	50.58490	3.92190	WAL	Province du Hainaut
+2155	Lens		7870	50.57970	3.91420	WAL	Province du Hainaut
+2156	Lombise		7870	50.59970	3.93890	WAL	Province du Hainaut
+2157	Montignies-lez-Lens	Montignies	7870	50.56420	3.94270	WAL	Province du Hainaut
+2158	Flobecq	Vloesberg	7880	50.73730	3.73880	WAL	Province du Hainaut
+2159	Ellezelles	Elzele	7890	50.73510	3.67980	WAL	Province du Hainaut
+2160	Lahamaide		7890	50.69500	3.72580	WAL	Province du Hainaut
+2161	Wodecq		7890	50.71800	3.74650	WAL	Province du Hainaut
+2162	Grandmetz		7900	50.62550	3.63140	WAL	Province du Hainaut
+2163	Leuze-en-Hainaut	Leuze	7900	50.62550	3.63140	WAL	Province du Hainaut
+2164	Thieulain		7901	50.61810	3.60510	WAL	Province du Hainaut
+2165	Blicquy		7903	50.58810	3.68560	WAL	Province du Hainaut
+2166	Chapelle-à-Oie		7903	50.59610	3.67170	WAL	Province du Hainaut
+2167	Chapelle-à-Wattines		7903	50.61250	3.65480	WAL	Province du Hainaut
+2168	Pipaix		7904	50.61520	3.44860	WAL	Province du Hainaut
+2169	Tourpes		7904	50.57330	3.65090	WAL	Province du Hainaut
+2170	Willaupuis		7904	50.56770	3.60270	WAL	Province du Hainaut
+2171	Gallaix		7906	50.60510	3.57370	WAL	Province du Hainaut
+2172	Anvaing		7910	50.68320	3.56140	WAL	Province du Hainaut
+2173	Arc-Ainières		7910	50.70150	3.55430	WAL	Province du Hainaut
+2174	Arc-Wattripont		7910	50.69060	3.55680	WAL	Province du Hainaut
+2175	Cordes		7910	50.68890	3.53140	WAL	Province du Hainaut
+2176	Ellignies-lez-Frasnes	Ellignies	7910	50.68030	3.60760	WAL	Province du Hainaut
+2177	Forest		7910	50.67330	3.53600	WAL	Province du Hainaut
+2178	Frasnes-Lez-Anvaing	Frasnes-lez-Buissenal	7910	50.69060	3.55680	WAL	Hainaut
+2179	Wattripont		7910	50.71670	3.55000	WAL	Province du Hainaut
+2180	Buissenal		7911	50.66480	3.65610	WAL	Province du Hainaut
+2181	Frasnes-lez-Buissenal	Frasnes|Frasnes-lez-Anvaing	7911	50.66780	3.62050	WAL	Province du Hainaut
+2182	Hacquegnies		7911	50.65330	3.59320	WAL	Province du Hainaut
+2183	Herquegies		7911	50.63560	3.57860	WAL	Province du Hainaut
+2184	Montroeul-Au-Bois		7911	50.64460	3.59560	WAL	Province du Hainaut
+2185	Moustier		7911	50.65600	3.61970	WAL	Province du Hainaut
+2186	Oeudeghien		7911	50.67810	3.71230	WAL	Province du Hainaut
+2187	Dergneau		7912	50.71400	3.58000	WAL	Province du Hainaut
+2188	Saint-Sauveur		7912	50.70600	3.59780	WAL	Province du Hainaut
+2189	Brugelette		7940	50.59580	3.85360	WAL	Province du Hainaut
+2190	Cambron-Casteau		7940	50.59110	3.88230	WAL	Province du Hainaut
+2191	Attre		7941	50.60730	3.83920	WAL	Province du Hainaut
+2192	Mévergnies-lez-Lens	Mévergnies	7942	50.60490	3.84850	WAL	Province du Hainaut
+2193	Gages		7943	50.60690	3.89140	WAL	Province du Hainaut
+2194	Chièvres	Chievres	7950	50.58790	3.80710	WAL	Province du Hainaut
+2195	Grosage		7950	50.54560	3.75750	WAL	Province du Hainaut
+2196	Huissignies		7950	50.56580	3.75560	WAL	Province du Hainaut
+2197	Ladeuze		7950	50.57140	3.77760	WAL	Province du Hainaut
+2198	Tongre-Saint-Martin	Tongres-Saint-Martin	7950	50.58640	3.79030	WAL	Province du Hainaut
+2199	Tongre-Notre-Dame	Tongres-Notre-Dame	7951	50.58200	3.77620	WAL	Province du Hainaut
+2200	Beloeil	Belœil	7970	50.55050	3.73480	WAL	Province du Hainaut
+2201	Basècles		7971	50.52550	3.64940	WAL	Province du Hainaut
+2202	Ramegnies	Rameignies	7971	50.54420	3.63480	WAL	Province du Hainaut
+2203	Thumaide		7971	50.54150	3.63010	WAL	Province du Hainaut
+2204	Wadelincourt		7971	50.53770	3.64870	WAL	Province du Hainaut
+2205	Aubechies		7972	50.57420	3.67650	WAL	Province du Hainaut
+2206	Ellignies-Sainte-Anne		7972	50.56180	3.67270	WAL	Province du Hainaut
+2207	Quevaucamps		7972	50.51890	3.68130	WAL	Province du Hainaut
+2208	Grandglise		7973	50.50570	3.69630	WAL	Province du Hainaut
+2209	Stambruges		7973	50.50940	3.71620	WAL	Province du Hainaut
+2210	Brugge	Bruges|Brügge	8000	51.20890	3.22420	VLG	Provincie West-Vlaanderen
+2211	Koolkerke	Coolkerke	8000	51.23930	3.24750	VLG	Provincie West-Vlaanderen
+2212	Hertsberge	Hertsberghe	8020	51.10730	3.26940	VLG	Provincie West-Vlaanderen
+2213	Oostkamp	Oostcamp	8020	51.15430	3.23130	VLG	Provincie West-Vlaanderen
+2214	Ruddervoorde		8020	51.09590	3.20740	VLG	Provincie West-Vlaanderen
+2215	Waardamme	Waerdamme	8020	51.11140	3.22290	VLG	Provincie West-Vlaanderen
+2216	Sint-Andries	Saint-André	8200	51.19700	3.17890	VLG	Provincie West-Vlaanderen
+2217	Sint-Michiels	Saint-Michel	8200	51.18810	3.21140	VLG	Provincie West-Vlaanderen
+2218	Loppem	Lophem	8210	51.15660	3.19600	VLG	Provincie West-Vlaanderen
+2219	Veldegem	Veldeghem	8210	51.10480	3.15910	VLG	Provincie West-Vlaanderen
+2220	Zedelgem	Zedelghem	8210	51.14240	3.13680	VLG	Provincie West-Vlaanderen
+2221	Aartrijke		8211	51.11910	3.09080	VLG	Provincie West-Vlaanderen
+2222	Knokke	Knocke|Knocke-sur-Mer|Knokke-aan-Zee|Knokke-Heist	8300	51.35110	3.28740	VLG	Provincie West-Vlaanderen
+2223	Knokke-Heist	Knocke|Knokke|Knokkne	8300	51.35000	3.26670	VLG	Flandre-Occidentale
+2224	Westkapelle	Westcapelle|Westcappelle	8300	51.31510	3.30170	VLG	Provincie West-Vlaanderen
+2225	Heist-aan-Zee	Heist|Heist-sur-Mer|Heyst	8301	51.33870	3.23880	VLG	Provincie West-Vlaanderen
+2226	Ramskapelle	Ramscappelle	8301,8620	51.31510	3.25060	VLG	Provincie West-Vlaanderen
+2227	Assebroek	Assebrouck	8310	51.19370	3.26230	VLG	Provincie West-Vlaanderen
+2228	Sint-Kruis	Sainte-Croix	8310	51.21400	3.24950	VLG	Provincie West-Vlaanderen
+2229	Damme		8340	51.25150	3.28140	VLG	Provincie West-Vlaanderen
+2230	Hoeke	Houcke	8340	51.29200	3.33490	VLG	Provincie West-Vlaanderen
+2231	Lapscheure		8340	51.27770	3.35660	VLG	Provincie West-Vlaanderen
+2232	Moerkerke		8340	51.24550	3.34250	VLG	Provincie West-Vlaanderen
+2233	Oostkerke		8340,8600	51.27720	3.29610	VLG	Provincie West-Vlaanderen
+2234	Sijsele	Sysseele	8340	51.20850	3.31710	VLG	Provincie West-Vlaanderen
+2235	Blankenberge	Blankenberghe	8370	51.31310	3.13230	VLG	Provincie West-Vlaanderen
+2236	Uitkerke	Uytkerke	8370	51.30680	3.13710	VLG	Provincie West-Vlaanderen
+2237	Houtave	Houttave	8377	51.23630	3.11080	VLG	Provincie West-Vlaanderen
+2238	Meetkerke		8377	51.23540	3.15170	VLG	Provincie West-Vlaanderen
+2239	Nieuwmunster		8377	51.27290	3.09930	VLG	Provincie West-Vlaanderen
+2240	Zuienkerke	Zuyenkerke	8377	51.26510	3.15510	VLG	Provincie West-Vlaanderen
+2241	Dudzele	Dudzeele	8380	51.27370	3.22530	VLG	Provincie West-Vlaanderen
+2242	Lissewege	Lisseweghe	8380	51.29430	3.19330	VLG	Provincie West-Vlaanderen
+2243	Zeebrugge	Seebrügge|Zeebruges	8380	51.32900	3.18190	VLG	Provincie West-Vlaanderen
+2244	Oostende	Ostend|Ostende	8400	51.21550	2.92700	VLG	Provincie West-Vlaanderen
+2245	Stene	Steene	8400	51.20440	2.91260	VLG	Provincie West-Vlaanderen
+2246	Zandvoorde		8400,8980	51.19940	2.97220	VLG	Provincie West-Vlaanderen
+2247	De Haan	Den Haan|Le Coq|Wenduyne	8420	51.27030	3.05310	VLG	Provincie West-Vlaanderen
+2248	Klemskerke	Clemskerke	8420	51.24220	3.02400	VLG	Provincie West-Vlaanderen
+2249	Wenduine	Wenduyne	8420	51.29830	3.08210	VLG	Provincie West-Vlaanderen
+2250	Vlissegem	Vlisseghem	8421	51.25530	3.05600	VLG	Provincie West-Vlaanderen
+2251	Middelkerke	Middelkerke Bains|Middelkerke-Baden	8430	51.18530	2.82080	VLG	Provincie West-Vlaanderen
+2252	Wilskerke		8431	51.18120	2.84000	VLG	Provincie West-Vlaanderen
+2253	Leffinge	Leffinghe	8432	51.17580	2.87580	VLG	Provincie West-Vlaanderen
+2254	Mannekensvere		8433	51.12600	2.81800	VLG	Provincie West-Vlaanderen
+2255	Schore	Schoore	8433	51.11140	2.84010	VLG	Provincie West-Vlaanderen
+2256	Sint-Pieters-Kapelle	Saint-Pierre-Cappelle	8433	51.12590	2.87660	VLG	Provincie West-Vlaanderen
+2257	Slijpe	Slype	8433	51.15510	2.84830	VLG	Provincie West-Vlaanderen
+2258	Lombardsijde	Lombaertzyde|Lombartzyde	8434	51.15000	2.75000	VLG	Provincie West-Vlaanderen
+2259	Westende	Westende-Baden|Westende-Bains	8434	51.15960	2.76870	VLG	Provincie West-Vlaanderen
+2260	Bredene	Breedene	8450	51.23490	2.97560	VLG	Provincie West-Vlaanderen
+2261	Ettelgem	Ettelghem	8460	51.17980	3.02920	VLG	Provincie West-Vlaanderen
+2262	Oudenburg		8460	51.18490	3.00040	VLG	Provincie West-Vlaanderen
+2263	Roksem	Roxem	8460	51.16880	3.03290	VLG	Provincie West-Vlaanderen
+2264	Westkerke		8460	51.16450	3.01080	VLG	Provincie West-Vlaanderen
+2265	Gistel	Ghistelles	8470	51.15610	2.96390	VLG	Provincie West-Vlaanderen
+2266	Moere		8470	51.12260	2.95580	VLG	Provincie West-Vlaanderen
+2267	Snaaskerke	Snaeskerke	8470	51.17740	2.93900	VLG	Provincie West-Vlaanderen
+2268	Zevekote	Zevecote	8470	51.13770	2.92060	VLG	Provincie West-Vlaanderen
+2269	Bekegem	Bekeghem	8480	51.15980	3.04570	VLG	Provincie West-Vlaanderen
+2270	Eernegem	Eerneghem|Erneghem	8480	51.13260	3.02560	VLG	Provincie West-Vlaanderen
+2271	Ichtegem	Ichteghem	8480	51.09570	3.01550	VLG	Provincie West-Vlaanderen
+2272	Jabbeke		8490	51.18180	3.08940	VLG	Provincie West-Vlaanderen
+2273	Snellegem	Smellegem|Snelleghem	8490	51.16780	3.11920	VLG	Provincie West-Vlaanderen
+2274	Stalhille		8490	51.21410	3.07200	VLG	Provincie West-Vlaanderen
+2275	Varsenare	Varssenaere	8490	51.18980	3.13920	VLG	Provincie West-Vlaanderen
+2276	Zerkegem	Zerkeghem	8490	51.16640	3.06990	VLG	Provincie West-Vlaanderen
+2277	Kortrijk	Courtrai	8500	50.82800	3.26490	VLG	Provincie West-Vlaanderen
+2278	Bissegem	Bisseghem	8501	50.82380	3.22840	VLG	Provincie West-Vlaanderen
+2279	Heule		8501	50.83750	3.23820	VLG	Provincie West-Vlaanderen
+2280	Bellegem	Belleghem	8510	50.77690	3.27930	VLG	Provincie West-Vlaanderen
+2281	Kooigem	Coyghem	8510	50.74010	3.33160	VLG	Provincie West-Vlaanderen
+2282	Marke	Marcke	8510	50.80680	3.23340	VLG	Provincie West-Vlaanderen
+2283	Rollegem	Rolleghem	8510	50.76560	3.26320	VLG	Provincie West-Vlaanderen
+2284	Aalbeke	Aelbeke	8511	50.77850	3.22950	VLG	Provincie West-Vlaanderen
+2285	Kuurne	Cuerne	8520	50.85140	3.28240	VLG	Provincie West-Vlaanderen
+2286	Harelbeke	Hailebeke|Harlebeke|Oarlbeke	8530	50.85340	3.30940	VLG	Provincie West-Vlaanderen
+2287	Bavikhove	Bavichove	8531	50.87530	3.31060	VLG	Provincie West-Vlaanderen
+2288	Hulste		8531	50.88220	3.29500	VLG	Provincie West-Vlaanderen
+2289	Deerlijk	Deerlyck	8540	50.85340	3.35420	VLG	Provincie West-Vlaanderen
+2290	Zwevegem	Sweveghem	8550	50.81270	3.33850	VLG	Provincie West-Vlaanderen
+2291	Heestert		8551	50.78200	3.41220	VLG	Provincie West-Vlaanderen
+2292	Moen		8552	50.77010	3.39480	VLG	Provincie West-Vlaanderen
+2293	Otegem	Ootegem|Ooteghem	8553	50.80690	3.42040	VLG	Provincie West-Vlaanderen
+2294	Sint-Denijs	Saint-Genois	8554	50.75200	3.36630	VLG	Provincie West-Vlaanderen
+2295	Gullegem	Gulleghem	8560	50.84300	3.20470	VLG	Provincie West-Vlaanderen
+2296	Moorsele	Moorseele	8560	50.84090	3.15970	VLG	Provincie West-Vlaanderen
+2297	Wevelgem	Wevelghem	8560	50.80000	3.16670	VLG	Provincie West-Vlaanderen
+2298	Anzegem	Anseghem	8570	50.83700	3.47790	VLG	Provincie West-Vlaanderen
+2299	Gijzelbrechtegem	Gyselbrechteghem	8570	50.82680	3.50140	VLG	Provincie West-Vlaanderen
+2300	Ingooigem	Ingoyghem	8570	50.82010	3.43370	VLG	Provincie West-Vlaanderen
+2301	Vichte		8570	50.83870	3.40130	VLG	Provincie West-Vlaanderen
+2302	Kaster	Caster	8572	50.81330	3.49590	VLG	Provincie West-Vlaanderen
+2303	Tiegem	Tieghem	8573	50.80900	3.47480	VLG	Provincie West-Vlaanderen
+2304	Avelgem	Avelghem	8580	50.77620	3.44500	VLG	Provincie West-Vlaanderen
+2305	Kerkhove		8581	50.79850	3.50270	VLG	Provincie West-Vlaanderen
+2306	Waarmaarde	Waermaerde	8581	50.79000	3.48660	VLG	Provincie West-Vlaanderen
+2307	Outrijve	Autryve	8582	50.75770	3.42960	VLG	Provincie West-Vlaanderen
+2308	Bossuit	Bossuyt	8583	50.74850	3.40820	VLG	Provincie West-Vlaanderen
+2309	Espierres	Spiere	8587	50.71890	3.35630	VLG	Provincie West-Vlaanderen
+2310	Espierres-Helchin	Spiere-Helkijn	8587	50.72550	3.37020	VLG	Flandre-Occidentale
+2311	Helchin	Helkijn	8587	50.73210	3.38410	VLG	Provincie West-Vlaanderen
+2312	Beerst	Berst	8600	51.05980	2.88500	VLG	Provincie West-Vlaanderen
+2313	Diksmuide	Diksmuiden|Dixmude|Dixmuide|Dixmuiden	8600	51.03250	2.86380	VLG	Provincie West-Vlaanderen
+2314	Driekapellen		8600	51.04310	2.84510	VLG	Provincie West-Vlaanderen
+2315	Esen	Eesen|Eessen	8600	51.02940	2.90190	VLG	Provincie West-Vlaanderen
+2316	Kaaskerke	Caeskerke	8600	51.03540	2.83870	VLG	Provincie West-Vlaanderen
+2317	Keiem	Keyem	8600	51.08140	2.88220	VLG	Provincie West-Vlaanderen
+2318	Lampernisse		8600	51.03290	2.76910	VLG	Provincie West-Vlaanderen
+2319	Leke		8600	51.10020	2.89100	VLG	Provincie West-Vlaanderen
+2320	Nieuwkapelle	Nieucappelle	8600	50.99960	2.79920	VLG	Provincie West-Vlaanderen
+2321	Oudekapelle	Oudecapelle|Oudecappelle	8600	51.01320	2.80840	VLG	Provincie West-Vlaanderen
+2322	Pervijze	Pervyse	8600	51.07320	2.79400	VLG	Provincie West-Vlaanderen
+2323	Sint-Jacobs-Kapelle	Saint-Jacques-Cappelle	8600	51.01670	2.83450	VLG	Provincie West-Vlaanderen
+2324	Stuivekenskerke	Stuyvekenskerke	8600	51.07680	2.82510	VLG	Provincie West-Vlaanderen
+2325	Vladslo	Vladsloo|Vlardselo	8600	51.04640	2.91600	VLG	Provincie West-Vlaanderen
+2326	Woumen		8600	51.00150	2.86970	VLG	Provincie West-Vlaanderen
+2327	Handzame	Handzaeme	8610	51.02540	3.00320	VLG	Provincie West-Vlaanderen
+2328	Kortemark	Cortemarck|Cortemarek|Cortemark	8610	51.02950	3.04110	VLG	Provincie West-Vlaanderen
+2329	Werken	Wercken|Werkin	8610	51.02940	2.96450	VLG	Provincie West-Vlaanderen
+2330	Zarren	Zarrelinge	8610	51.01840	2.95810	VLG	Provincie West-Vlaanderen
+2331	Nieuwpoort	Nieuport	8620	51.13010	2.75130	VLG	Provincie West-Vlaanderen
+2332	Sint-Joris	Saint-Georges|Sint-Jooris	8620,8730	51.13030	2.77820	VLG	Provincie West-Vlaanderen
+2333	Avekapelle	Avecappelle	8630	51.06620	2.73270	VLG	Provincie West-Vlaanderen
+2334	Booitshoeke	Boitshoucke	8630	51.09040	2.74210	VLG	Provincie West-Vlaanderen
+2335	Bulskamp	Bulscamp	8630	51.04230	2.64940	VLG	Provincie West-Vlaanderen
+2336	De Moeren	Moere|Moeres	8630	51.04370	2.59970	VLG	Provincie West-Vlaanderen
+2337	Eggewaartskapelle	Eggewaertscappelle	8630	51.04990	2.72230	VLG	Provincie West-Vlaanderen
+2338	Houtem	Houthem	8630	51.01080	2.60950	VLG	Provincie West-Vlaanderen
+2339	Steenkerke		8630	51.05740	2.68930	VLG	Provincie West-Vlaanderen
+2340	Veurne	Furnes	8630	51.07320	2.66800	VLG	Provincie West-Vlaanderen
+2341	Vinkem	Vinckem	8630	51.01570	2.66160	VLG	Provincie West-Vlaanderen
+2342	Wulveringem	Wulveringhem	8630	51.01490	2.65450	VLG	Provincie West-Vlaanderen
+2343	Zoutenaaie	Zoetenaey	8630	51.04820	2.75450	VLG	Provincie West-Vlaanderen
+2344	Oostvleteren		8640	50.93320	2.74120	VLG	Provincie West-Vlaanderen
+2345	Vleteren		8640	50.92010	2.74920	VLG	Flandre-Occidentale
+2346	Westvleteren		8640	50.92740	2.71690	VLG	Provincie West-Vlaanderen
+2347	Woesten		8640	50.89970	2.78960	VLG	Provincie West-Vlaanderen
+2348	Lo	Loo	8647	50.98040	2.74960	VLG	Provincie West-Vlaanderen
+2349	Lo-Reninge	Reninghe	8647	50.96350	2.77040	VLG	Flandre-Occidentale
+2350	Noordschote		8647	50.95480	2.81030	VLG	Provincie West-Vlaanderen
+2351	Pollinkhove	Pollinchove	8647	50.97120	2.73260	VLG	Provincie West-Vlaanderen
+2352	Reninge	Reninghe	8647	50.94780	2.78890	VLG	Provincie West-Vlaanderen
+2353	Houthulst	Houthuls	8650	50.97820	2.95050	VLG	Provincie West-Vlaanderen
+2354	Klerken	Clercken	8650	50.99640	2.90770	VLG	Provincie West-Vlaanderen
+2355	Merkem	Merckem	8650	50.95280	2.85230	VLG	Provincie West-Vlaanderen
+2356	Adinkerke	Adinkerque	8660	51.07410	2.59910	VLG	Provincie West-Vlaanderen
+2357	De Panne	La Panne|Panne	8660	51.09790	2.59370	VLG	Provincie West-Vlaanderen
+2358	Koksijde	Coxyde	8670	51.11640	2.63770	VLG	Provincie West-Vlaanderen
+2359	Oostduinkerke	Oost-Dunkerke|Oost-Dunkerke-Bains|Ostdunkerque|Ostdünkirchen	8670	51.11560	2.68220	VLG	Provincie West-Vlaanderen
+2360	Wulpen		8670	51.10000	2.70000	VLG	Provincie West-Vlaanderen
+2361	Bovekerke	Boevekerke|Bovekercke|Bovenkercke|Bovenkerke|Bovequerque	8680	51.05430	2.96320	VLG	Provincie West-Vlaanderen
+2362	Koekelare	Cockelers|Cokenlare|Couckelaere|Couckerlaere	8680	51.09050	2.97830	VLG	Provincie West-Vlaanderen
+2363	Zande	De Vlakte|Zandvlakte	8680	51.12040	2.92150	VLG	Provincie West-Vlaanderen
+2364	Alveringem	Alveringhem	8690	51.01240	2.71120	VLG	Provincie West-Vlaanderen
+2365	Hoogstade		8690	50.97960	2.69110	VLG	Provincie West-Vlaanderen
+2366	Oeren		8690	51.02360	2.70450	VLG	Provincie West-Vlaanderen
+2367	Sint-Rijkers	Saint-Ricquiers	8690	50.99610	2.70220	VLG	Provincie West-Vlaanderen
+2368	Beveren-aan-de-IJzer		8691	50.97380	2.65490	VLG	Provincie West-Vlaanderen
+2369	Gijverinkhove	Gyverinchove	8691	50.97610	2.67250	VLG	Provincie West-Vlaanderen
+2370	Izenberge	Isenberghe	8691	50.99390	2.65460	VLG	Provincie West-Vlaanderen
+2371	Leisele	Leysele	8691	50.98440	2.62000	VLG	Provincie West-Vlaanderen
+2372	Stavele		8691	50.94070	2.67240	VLG	Provincie West-Vlaanderen
+2373	Aarsele	Aerseele	8700	50.99660	3.41950	VLG	Provincie West-Vlaanderen
+2374	Kanegem	Caeneghem	8700	51.01290	3.40190	VLG	Provincie West-Vlaanderen
+2375	Schuiferskapelle	Schuyfferscappelle	8700	51.03240	3.33800	VLG	Provincie West-Vlaanderen
+2376	Tielt	Thielt	8700	50.99930	3.32710	VLG	Provincie West-Vlaanderen
+2377	Ooigem	Oyghem	8710	50.89330	3.33630	VLG	Provincie West-Vlaanderen
+2378	Sint-Baafs-Vijve	Vive-Saint-Bavon	8710	50.90000	3.38330	VLG	Provincie West-Vlaanderen
+2379	Wielsbeke		8710	50.90000	3.36670	VLG	Provincie West-Vlaanderen
+2380	Dentergem	Denterghem	8720	50.96430	3.41620	VLG	Provincie West-Vlaanderen
+2381	Markegem	Marckeghem	8720	50.94630	3.40030	VLG	Provincie West-Vlaanderen
+2382	Oeselgem	Oesselghem	8720	50.93790	3.43180	VLG	Provincie West-Vlaanderen
+2383	Wakken	Wacken	8720	50.93300	3.39740	VLG	Provincie West-Vlaanderen
+2384	Beernem		8730	51.13980	3.33900	VLG	Provincie West-Vlaanderen
+2385	Oedelem		8730	51.17030	3.33760	VLG	Provincie West-Vlaanderen
+2386	Egem	Eegem|Eeghem	8740	51.01530	3.25850	VLG	Provincie West-Vlaanderen
+2387	Pittem	Pitthem	8740	50.99280	3.26320	VLG	Provincie West-Vlaanderen
+2388	Wingene	Wynghene	8750	51.05780	3.27360	VLG	Provincie West-Vlaanderen
+2389	Zwevezele	Swevezeele	8750	51.03680	3.21190	VLG	Provincie West-Vlaanderen
+2390	Ruiselede	Ruysselede	8755	51.04040	3.39420	VLG	Provincie West-Vlaanderen
+2391	Meulebeke		8760	50.95140	3.28800	VLG	Provincie West-Vlaanderen
+2392	Ingelmunster		8770	50.92080	3.25570	VLG	Provincie West-Vlaanderen
+2393	Oostrozebeke	Oostroosebeke|Oostroozebeke	8780	50.92090	3.33800	VLG	Provincie West-Vlaanderen
+2394	Waregem	Waereghem	8790	50.88900	3.42760	VLG	Provincie West-Vlaanderen
+2395	Beveren	Beveren-Leie	8791,8800	50.87540	3.34030	VLG	Provincie West-Vlaanderen
+2396	Desselgem	Desselghem	8792	50.88610	3.35960	VLG	Provincie West-Vlaanderen
+2397	Sint-Eloois-Vijve	Vive-Saint-Éloi	8793	50.90910	3.41550	VLG	Provincie West-Vlaanderen
+2398	Oekene	Ouckene	8800	50.91790	3.15680	VLG	Provincie West-Vlaanderen
+2399	Roeselare	Roeselave|Roselare|Roulers|Rouselare|Russelaers	8800	50.94650	3.12270	VLG	Provincie West-Vlaanderen
+2400	Rumbeke		8800	50.93250	3.16720	VLG	Provincie West-Vlaanderen
+2401	Lichtervelde	Lichtervede|Lichterveld	8810	51.03330	3.15000	VLG	Provincie West-Vlaanderen
+2402	Torhout	Thouront|Thourout	8820	51.06560	3.10080	VLG	Provincie West-Vlaanderen
+2403	Gits		8830	50.99690	3.09560	VLG	Provincie West-Vlaanderen
+2404	Hooglede		8830	50.98330	3.08330	VLG	Provincie West-Vlaanderen
+2405	Oostnieuwkerke		8840	50.93960	3.05740	VLG	Provincie West-Vlaanderen
+2406	Staden		8840	50.97460	3.01470	VLG	Provincie West-Vlaanderen
+2407	Westrozebeke	Westroosebeke|Westroozebeke	8840	50.93180	3.01000	VLG	Provincie West-Vlaanderen
+2408	Ardooie	Ardoye	8850	50.97570	3.19740	VLG	Provincie West-Vlaanderen
+2409	Koolskamp	Coolscamp	8851	51.00230	3.21040	VLG	Provincie West-Vlaanderen
+2410	Lendelede		8860	50.88630	3.23750	VLG	Provincie West-Vlaanderen
+2411	Emelgem	Emelghem	8870	50.92380	3.23030	VLG	Provincie West-Vlaanderen
+2412	Izegem	Iseghem|Yseghem	8870	50.91400	3.21380	VLG	Provincie West-Vlaanderen
+2413	Kachtem	Cachtem	8870	50.93340	3.19420	VLG	Provincie West-Vlaanderen
+2414	Ledegem	Ledeghem	8880	50.85790	3.12410	VLG	Provincie West-Vlaanderen
+2415	Rollegem-Kapelle	Rolleghemcappelle	8880	50.86870	3.14640	VLG	Provincie West-Vlaanderen
+2416	Sint-Eloois-Winkel	Winkel-Saint-Éloi	8880	50.87590	3.18140	VLG	Provincie West-Vlaanderen
+2417	Dadizele	Dadizeele	8890	50.85140	3.09470	VLG	Provincie West-Vlaanderen
+2418	Moorslede	Moerslede	8890	50.89190	3.06120	VLG	Provincie West-Vlaanderen
+2419	Brielen		8900	50.86780	2.84800	VLG	Provincie West-Vlaanderen
+2420	Dikkebus	Dickebusch|Dikkebusch	8900	50.82130	2.82870	VLG	Provincie West-Vlaanderen
+2421	Ieper	Iper|Ypern|Ypres	8900	50.85110	2.88570	VLG	Provincie West-Vlaanderen
+2422	Sint-Jan	Saint-Jean	8900	50.86500	2.90480	VLG	Provincie West-Vlaanderen
+2423	Hollebeke	nieuwkerke	8902	50.80510	2.93660	VLG	Provincie West-Vlaanderen
+2424	Voormezele	Voormezeele	8902	50.81680	2.87620	VLG	Provincie West-Vlaanderen
+2425	Zillebeke		8902	50.83460	2.92250	VLG	Provincie West-Vlaanderen
+2426	Boezinge	Boesinghe	8904	50.89670	2.85420	VLG	Provincie West-Vlaanderen
+2427	Zuidschote	Zuydschoote	8904	50.91590	2.83740	VLG	Provincie West-Vlaanderen
+2428	Elverdinge	Elverdinghe	8906	50.88480	2.81710	VLG	Provincie West-Vlaanderen
+2429	Vlamertinge	Vlamertinghe	8908	50.85490	2.82020	VLG	Provincie West-Vlaanderen
+2430	Bikschote	Bixschoote	8920	50.92790	2.86270	VLG	Provincie West-Vlaanderen
+2431	Langemark	Langemarck	8920	50.91310	2.91960	VLG	Provincie West-Vlaanderen
+2432	Langemark-Poelkapelle	Langemarck	8920	50.91970	2.91300	VLG	Flandre-Occidentale
+2433	Poelkapelle	Poelcappelle	8920	50.91790	2.95680	VLG	Provincie West-Vlaanderen
+2434	Lauwe		8930	50.79480	3.18690	VLG	Provincie West-Vlaanderen
+2435	Menen	Meenen|Menin	8930	50.79720	3.12240	VLG	Provincie West-Vlaanderen
+2436	Rekkem	Reckem	8930	50.78370	3.16350	VLG	Provincie West-Vlaanderen
+2437	Geluwe	Gheluwe	8940	50.80980	3.07690	VLG	Provincie West-Vlaanderen
+2438	Wervik	Wervicq	8940	50.78070	3.03850	VLG	Provincie West-Vlaanderen
+2439	Heuvelland	Heuvellan	8950	50.77600	2.82230	VLG	Flandre-Occidentale
+2440	Nieuwkerke	Hollebeke|Neuve-Église	8950	50.74710	2.82860	VLG	Provincie West-Vlaanderen
+2441	Dranouter	Dranoutre	8951	50.76600	2.78390	VLG	Provincie West-Vlaanderen
+2442	Wulvergem	Wulverghem	8952	50.76020	2.85240	VLG	Provincie West-Vlaanderen
+2443	Wijtschate	Wytschaete	8953	50.78630	2.88370	VLG	Provincie West-Vlaanderen
+2444	Westouter	Westoutre	8954	50.79720	2.74650	VLG	Provincie West-Vlaanderen
+2445	Kemmel		8956	50.78330	2.82710	VLG	Provincie West-Vlaanderen
+2446	Messines	Meesen|Meessen|Mesen	8957	50.76580	2.89760	VLG	Provincie West-Vlaanderen
+2447	Loker	Locre	8958	50.78170	2.77230	VLG	Provincie West-Vlaanderen
+2448	Poperinge	Poperinghe	8970	50.85390	2.72660	VLG	Provincie West-Vlaanderen
+2449	Reningelst	Reninghelst	8970	50.81510	2.77070	VLG	Provincie West-Vlaanderen
+2450	Krombeke	Crombeke	8972	50.91490	2.68830	VLG	Provincie West-Vlaanderen
+2451	Proven		8972	50.88980	2.65720	VLG	Provincie West-Vlaanderen
+2452	Roesbrugge-Haringe	Roesbrugge|Rousbrügge-Haringhe	8972	50.91810	2.62540	VLG	Provincie West-Vlaanderen
+2453	Watou		8978	50.85860	2.62070	VLG	Provincie West-Vlaanderen
+2454	Beselare	Becelaere	8980	50.84810	3.02450	VLG	Provincie West-Vlaanderen
+2455	Geluveld	Gheluvelt	8980	50.83510	2.99340	VLG	Provincie West-Vlaanderen
+2456	Passendale	Passchendaele|Passchendale	8980	50.89980	3.02130	VLG	Provincie West-Vlaanderen
+2457	Zonnebeke		8980	50.87260	2.98730	VLG	Provincie West-Vlaanderen
+2458	Gent	Gand|Ghent	9000	51.05000	3.71670	VLG	Provincie Oost-Vlaanderen
+2459	Mariakerke		9030	51.07480	3.68290	VLG	Provincie Oost-Vlaanderen
+2460	Drongen	Tronchiennes	9031	51.05070	3.65650	VLG	Provincie Oost-Vlaanderen
+2461	Wondelgem	Wendelghem	9032	51.08700	3.70910	VLG	Provincie Oost-Vlaanderen
+2462	Sint-Amandsberg	Mont-Saint Amand|Mont-Saint-Amand	9040	51.05950	3.74940	VLG	Provincie Oost-Vlaanderen
+2463	Oostakker	Oostacker	9041	51.10120	3.76950	VLG	Provincie Oost-Vlaanderen
+2464	Desteldonk	Desteldonck	9042	51.12190	3.78700	VLG	Provincie Oost-Vlaanderen
+2465	Mendonk	Mendonck	9042	51.14700	3.82120	VLG	Provincie Oost-Vlaanderen
+2466	Sint-Kruis-Winkel	Winkel-Sainte-Croix	9042	51.15580	3.81630	VLG	Provincie Oost-Vlaanderen
+2467	Gentbrugge		9050	51.03690	3.76510	VLG	Provincie Oost-Vlaanderen
+2468	Ledeberg		9050	51.03860	3.74460	VLG	Provincie Oost-Vlaanderen
+2469	Afsnee	Afsné	9051	51.03170	3.66550	VLG	Provincie Oost-Vlaanderen
+2470	Sint-Denijs-Westrem	Saint Denis-Westrem|Saint-Denis-Westrem	9051	51.02130	3.67200	VLG	Provincie Oost-Vlaanderen
+2471	Zwijnaarde	Zwynaerde	9052	51.00080	3.70750	VLG	Provincie Oost-Vlaanderen
+2472	Zelzate	Selzaet|Selzaete	9060	51.18960	3.80780	VLG	Provincie Oost-Vlaanderen
+2473	Destelbergen		9070	51.05950	3.79900	VLG	Provincie Oost-Vlaanderen
+2474	Heusden		9070	51.02810	3.80430	VLG	Provincie Oost-Vlaanderen
+2475	Beervelde	Beirvelde	9080	51.08300	3.88640	VLG	Provincie Oost-Vlaanderen
+2476	Lochristi	Loochristi|Loochristy	9080	51.09640	3.83190	VLG	Provincie Oost-Vlaanderen
+2477	Zaffelare	Saffelaere	9080	51.13380	3.86360	VLG	Provincie Oost-Vlaanderen
+2478	Zeveneken	Zeveneeken	9080	51.10780	3.89050	VLG	Provincie Oost-Vlaanderen
+2479	Gontrode		9090	50.98380	3.79760	VLG	Provincie Oost-Vlaanderen
+2480	Melle		9090	51.00230	3.80530	VLG	Provincie Oost-Vlaanderen
+2481	Nieuwkerken-Waas	Nieuwkerken-Waes	9100	51.19360	4.17780	VLG	Provincie Oost-Vlaanderen
+2482	Sint-Niklaas	Saint-Nicolas	9100	51.16510	4.14370	VLG	Provincie Oost-Vlaanderen
+2483	Belsele	Belcele	9111	51.14600	4.08860	VLG	Provincie Oost-Vlaanderen
+2484	Sinaai-Waas	Sinaai|Sinay	9112	51.15790	4.04090	VLG	Provincie Oost-Vlaanderen
+2485	Beveren-Waas		9120	51.21190	4.25630	VLG	Provincie Oost-Vlaanderen
+2486	Haasdonk	Haesdonck	9120	51.18150	4.24140	VLG	Provincie Oost-Vlaanderen
+2487	Kallo	Calloo|Kalloo	9120,9130	51.25250	4.27550	VLG	Provincie Oost-Vlaanderen
+2488	Melsele		9120	51.22290	4.28200	VLG	Provincie Oost-Vlaanderen
+2489	Vrasene	Vracene	9120	51.22100	4.19090	VLG	Provincie Oost-Vlaanderen
+2490	Doel		9130	51.31100	4.26420	VLG	Provincie Oost-Vlaanderen
+2491	Kieldrecht		9130	51.28910	4.17590	VLG	Provincie Oost-Vlaanderen
+2492	Verrebroek		9130	51.25540	4.18880	VLG	Provincie Oost-Vlaanderen
+2493	Elversele		9140	51.11810	4.14900	VLG	Provincie Oost-Vlaanderen
+2494	Steendorp		9140	51.12680	4.27030	VLG	Provincie Oost-Vlaanderen
+2495	Temse	Tamise|Tamsch|Tamse|Temsche	9140	51.12790	4.21370	VLG	Provincie Oost-Vlaanderen
+2496	Tielrode	Thielrode	9140	51.11300	4.17710	VLG	Provincie Oost-Vlaanderen
+2497	Bazel	Basel	9150	51.14740	4.30130	VLG	Provincie Oost-Vlaanderen
+2498	Kruibeke	Cruybeke	9150	51.17050	4.31440	VLG	Provincie Oost-Vlaanderen
+2499	Rupelmonde		9150	51.12930	4.29430	VLG	Provincie Oost-Vlaanderen
+2500	Daknam	Dacknam	9160	51.12580	3.98240	VLG	Provincie Oost-Vlaanderen
+2501	Eksaarde	Exaerde	9160	51.14880	3.96810	VLG	Provincie Oost-Vlaanderen
+2502	Lokeren		9160	51.10360	3.99340	VLG	Provincie Oost-Vlaanderen
+2503	De Klinge	La Clinge	9170	51.25630	4.09040	VLG	Provincie Oost-Vlaanderen
+2504	Meerdonk	Meerdonck	9170	51.26670	4.15000	VLG	Provincie Oost-Vlaanderen
+2505	Sint-Gillis-Waas	Saint-Gilles-Waas|Saint-Gilles-Waes|Saint-Gillis-Waas	9170	51.21910	4.12370	VLG	Provincie Oost-Vlaanderen
+2506	Sint-Pauwels	Saint-Paul	9170	51.19390	4.09650	VLG	Provincie Oost-Vlaanderen
+2507	Moerbeke-Waas		9180	51.17410	3.93000	VLG	Provincie Oost-Vlaanderen
+2508	Wachtebeke		9185	51.16850	3.87180	VLG	Provincie Oost-Vlaanderen
+2509	Kemzeke	Kemseke	9190	51.20980	4.07430	VLG	Provincie Oost-Vlaanderen
+2510	Stekene		9190	51.20990	4.03650	VLG	Provincie Oost-Vlaanderen
+2511	Appels		9200	51.03220	4.06140	VLG	Provincie Oost-Vlaanderen
+2512	Baasrode	Baesrode	9200	51.03810	4.15460	VLG	Provincie Oost-Vlaanderen
+2513	Dendermonde	Termonde	9200	51.02870	4.10110	VLG	Provincie Oost-Vlaanderen
+2514	Grembergen		9200	51.05410	4.10460	VLG	Provincie Oost-Vlaanderen
+2515	Mespelare	Mespelaere	9200	50.99610	4.06880	VLG	Provincie Oost-Vlaanderen
+2516	Oudegem	Audegem	9200	51.01020	4.06190	VLG	Provincie Oost-Vlaanderen
+2517	Schoonaarde	Schoonaerde	9200	51.00390	4.01520	VLG	Provincie Oost-Vlaanderen
+2518	Sint-Gillis-Dendermonde		9200	51.01900	4.11150	VLG	Provincie Oost-Vlaanderen
+2519	Hamme		9220	51.09820	4.13700	VLG	Provincie Oost-Vlaanderen
+2520	Moerzeke	Moerseke	9220	51.06910	4.16140	VLG	Provincie Oost-Vlaanderen
+2521	Massemen		9230	50.98090	3.87390	VLG	Provincie Oost-Vlaanderen
+2522	Westrem		9230	50.96910	3.86200	VLG	Provincie Oost-Vlaanderen
+2523	Wetteren	Wetteran	9230	51.00530	3.88340	VLG	Provincie Oost-Vlaanderen
+2524	Zele		9240	51.06570	4.04030	VLG	Provincie Oost-Vlaanderen
+2525	Waasmunster	Waesmunster	9250	51.10570	4.08570	VLG	Provincie Oost-Vlaanderen
+2526	Buggenhout		9255	51.01590	4.20170	VLG	Provincie Oost-Vlaanderen
+2527	Opdorp		9255	51.02810	4.21800	VLG	Provincie Oost-Vlaanderen
+2528	Schellebelle		9260	51.01090	3.90850	VLG	Provincie Oost-Vlaanderen
+2529	Serskamp	Cherscamp	9260	50.98850	3.92660	VLG	Provincie Oost-Vlaanderen
+2530	Wichelen		9260	51.00530	3.97680	VLG	Provincie Oost-Vlaanderen
+2531	Kalken	Calcken	9270	51.03840	3.91860	VLG	Provincie Oost-Vlaanderen
+2532	Laarne	Laerne	9270	51.03080	3.85080	VLG	Provincie Oost-Vlaanderen
+2533	Denderbelle		9280	51.00140	4.09070	VLG	Provincie Oost-Vlaanderen
+2534	Lebbeke		9280	51.00460	4.13460	VLG	Provincie Oost-Vlaanderen
+2535	Wieze		9280	50.97690	4.07880	VLG	Provincie Oost-Vlaanderen
+2536	Berlare	Berlaere	9290	51.03330	4.00000	VLG	Provincie Oost-Vlaanderen
+2537	Overmere	Overmeire	9290	51.04690	3.94660	VLG	Provincie Oost-Vlaanderen
+2538	Uitbergen	Uytbergen	9290	51.02150	3.95510	VLG	Provincie Oost-Vlaanderen
+2539	Aalst	Alost	9300	50.93600	4.03550	VLG	Provincie Oost-Vlaanderen
+2540	Gijzegem	Gysegem	9308	50.98600	4.04940	VLG	Provincie Oost-Vlaanderen
+2541	Hofstade		9308	50.96130	4.02660	VLG	Provincie Oost-Vlaanderen
+2542	Baardegem	Baerdegem|Baerdeghem	9310	50.95480	4.14200	VLG	Provincie Oost-Vlaanderen
+2543	Herdersem		9310	50.97190	4.06670	VLG	Provincie Oost-Vlaanderen
+2544	Meldert		9310	50.93450	4.13500	VLG	Provincie Oost-Vlaanderen
+2545	Moorsel		9310	50.94740	4.09830	VLG	Provincie Oost-Vlaanderen
+2546	Erembodegem		9320	50.91900	4.05040	VLG	Provincie Oost-Vlaanderen
+2547	Nieuwerkerken		9320	50.92390	4.00430	VLG	Provincie Oost-Vlaanderen
+2548	Impe		9340	50.96050	3.95010	VLG	Provincie Oost-Vlaanderen
+2549	Lede		9340	50.96630	3.98590	VLG	Provincie Oost-Vlaanderen
+2550	Oordegem		9340	50.95730	3.90200	VLG	Provincie Oost-Vlaanderen
+2551	Smetlede		9340	50.96620	3.92800	VLG	Provincie Oost-Vlaanderen
+2552	Wanzele		9340	50.97420	3.95640	VLG	Provincie Oost-Vlaanderen
+2553	Appelterre-Eichem	Appelterre-Eychem	9400	50.81600	3.97810	VLG	Provincie Oost-Vlaanderen
+2554	Denderwindeke		9400	50.79730	4.02510	VLG	Provincie Oost-Vlaanderen
+2555	Lieferinge	Liefferinge	9400	50.79250	4.05190	VLG	Provincie Oost-Vlaanderen
+2556	Nederhasselt		9400	50.84650	3.97500	VLG	Provincie Oost-Vlaanderen
+2557	Ninove		9400	50.82780	4.02660	VLG	Provincie Oost-Vlaanderen
+2558	Okegem		9400	50.85560	4.05520	VLG	Provincie Oost-Vlaanderen
+2559	Voorde		9400	50.82310	3.94930	VLG	Provincie Oost-Vlaanderen
+2560	Pollare	Pollaere	9401	50.81710	4.00600	VLG	Provincie Oost-Vlaanderen
+2561	Meerbeke		9402	50.82440	4.03670	VLG	Provincie Oost-Vlaanderen
+2562	Neigem	Neyghem	9403	50.80270	4.05990	VLG	Provincie Oost-Vlaanderen
+2563	Aspelare	Aspelaere	9404	50.84190	3.95740	VLG	Provincie Oost-Vlaanderen
+2564	Outer	Oultre	9406	50.84190	3.99870	VLG	Provincie Oost-Vlaanderen
+2565	Aaigem		9420	50.88920	3.93670	VLG	Provincie Oost-Vlaanderen
+2566	Bambrugge		9420	50.92120	3.92990	VLG	Provincie Oost-Vlaanderen
+2567	Burst		9420	50.91500	3.91640	VLG	Provincie Oost-Vlaanderen
+2568	Erondegem		9420	50.94120	3.95610	VLG	Provincie Oost-Vlaanderen
+2569	Erpe		9420	50.93570	3.97220	VLG	Provincie Oost-Vlaanderen
+2570	Erpe-Mere		9420	50.92150	3.93200	VLG	Flandre-Orientale
+2571	Mere	Meere|Meire	9420	50.90000	3.86670	VLG	Provincie Oost-Vlaanderen
+2572	Ottergem		9420	50.93420	3.94710	VLG	Provincie Oost-Vlaanderen
+2573	Vlekkem	Vleckem	9420	50.93590	3.93060	VLG	Provincie Oost-Vlaanderen
+2574	Denderhoutem	Denderhautem	9450	50.87230	4.01820	VLG	Provincie Oost-Vlaanderen
+2575	Haaltert	Haeltert	9450	50.90630	4.00090	VLG	Provincie Oost-Vlaanderen
+2576	Heldergem		9450	50.87800	3.95790	VLG	Provincie Oost-Vlaanderen
+2577	Kerksken	Kerckxken|Kerkxken	9451	50.89070	3.99480	VLG	Provincie Oost-Vlaanderen
+2578	Denderleeuw		9470	50.88510	4.07600	VLG	Provincie Oost-Vlaanderen
+2579	Iddergem		9472	50.87630	4.04430	VLG	Provincie Oost-Vlaanderen
+2580	Welle		9473	50.89880	4.05600	VLG	Provincie Oost-Vlaanderen
+2581	Geraardsbergen	Geeraardsbergen|Grammont	9500	50.77340	3.88220	VLG	Provincie Oost-Vlaanderen
+2582	Goeferdinge	Goefferdinge	9500	50.76610	3.83980	VLG	Provincie Oost-Vlaanderen
+2583	Moerbeke		9500	50.75250	3.91720	VLG	Provincie Oost-Vlaanderen
+2584	Nederboelare	Nederboulaere	9500	50.77600	3.87150	VLG	Provincie Oost-Vlaanderen
+2585	Onkerzele	Onkerzeele	9500	50.78210	3.91140	VLG	Provincie Oost-Vlaanderen
+2586	Ophasselt		9500	50.81730	3.89290	VLG	Provincie Oost-Vlaanderen
+2587	Overboelare	Overboulaere	9500	50.76380	3.86370	VLG	Provincie Oost-Vlaanderen
+2588	Viane		9500	50.74230	3.92480	VLG	Provincie Oost-Vlaanderen
+2589	Zarlardinge	Sarlardinge	9500	50.76210	3.82850	VLG	Provincie Oost-Vlaanderen
+2590	Grimminge		9506	50.79430	3.95200	VLG	Provincie Oost-Vlaanderen
+2591	Idegem		9506	50.80180	3.92600	VLG	Provincie Oost-Vlaanderen
+2592	Nieuwenhove		9506	50.78890	3.99300	VLG	Provincie Oost-Vlaanderen
+2593	Schendelbeke		9506	50.79870	3.89880	VLG	Provincie Oost-Vlaanderen
+2594	Smeerebbe-Vloerzegem	Smeerhebbe-Vloersegem	9506	50.81700	3.92770	VLG	Provincie Oost-Vlaanderen
+2595	Waarbeke	Waerbeke	9506	50.77760	3.96800	VLG	Provincie Oost-Vlaanderen
+2596	Zandbergen	Santbergen	9506	50.80280	3.96640	VLG	Provincie Oost-Vlaanderen
+2597	Bavegem	Baevegem	9520	50.94440	3.86500	VLG	Provincie Oost-Vlaanderen
+2598	Oombergen		9520,9620	50.89860	3.83340	VLG	Provincie Oost-Vlaanderen
+2599	Sint-Lievens-Houtem	Hautem-Saint-Liévin|Hauthem-Saint-Liévin|Sint-Lievens-Hautem	9520	50.91970	3.86230	VLG	Provincie Oost-Vlaanderen
+2600	Vlierzele		9520	50.93170	3.89590	VLG	Provincie Oost-Vlaanderen
+2601	Zonnegem		9520	50.92680	3.90870	VLG	Provincie Oost-Vlaanderen
+2602	Letterhoutem	Letterhautem	9521	50.92770	3.87970	VLG	Provincie Oost-Vlaanderen
+2603	Herzele		9550	50.88680	3.89010	VLG	Provincie Oost-Vlaanderen
+2604	Hillegem		9550	50.89570	3.85310	VLG	Provincie Oost-Vlaanderen
+2605	Sint-Antelinks	Saint-Antelinckx|Saint-Antelinkx	9550	50.84980	3.92650	VLG	Provincie Oost-Vlaanderen
+2606	Sint-Lievens-Esse	Essche-Saint-Liévin|Sint-Lievens-Essche	9550	50.85660	3.88790	VLG	Provincie Oost-Vlaanderen
+2607	Steenhuize-Wijnhuize	Steenhuyze-Wynhuyze	9550	50.83970	3.88810	VLG	Provincie Oost-Vlaanderen
+2608	Woubrechtegem		9550	50.87360	3.91580	VLG	Provincie Oost-Vlaanderen
+2609	Ressegem		9551	50.89110	3.91130	VLG	Provincie Oost-Vlaanderen
+2610	Borsbeke		9552	50.90630	3.89000	VLG	Provincie Oost-Vlaanderen
+2611	Deftinge		9570	50.78660	3.83980	VLG	Provincie Oost-Vlaanderen
+2612	Lierde		9570	50.80410	3.84400	VLG	Flandre-Orientale
+2613	Sint-Maria-Lierde	Lierde-Sainte-Marie	9570	50.82170	3.84810	VLG	Provincie Oost-Vlaanderen
+2614	Hemelveerdegem	Hemelverdegem	9571	50.80730	3.85760	VLG	Provincie Oost-Vlaanderen
+2615	Sint-Martens-Lierde	Lierde-Saint-Martin	9572	50.80370	3.82540	VLG	Provincie Oost-Vlaanderen
+2616	Renaix	Ronse	9600	50.74570	3.60050	VLG	Provincie Oost-Vlaanderen
+2617	Elene		9620	50.89000	3.81000	VLG	Provincie Oost-Vlaanderen
+2618	Erwetegem		9620	50.85550	3.81440	VLG	Provincie Oost-Vlaanderen
+2619	Godveerdegem	Godverdegem	9620	50.85930	3.82090	VLG	Provincie Oost-Vlaanderen
+2620	Grotenberge	Grootenberge	9620	50.87330	3.82280	VLG	Provincie Oost-Vlaanderen
+2621	Leeuwergem		9620	50.88720	3.81160	VLG	Provincie Oost-Vlaanderen
+2622	Sint-Goriks-Oudenhove	Audenhove-Saint-Gery|Audenhove-Saint-Géry|Sint Goriks-Oudehove	9620	50.85280	3.78610	VLG	Provincie Oost-Vlaanderen
+2623	Sint-Maria-Oudenhove	Audenhove-Sainte-Marie	9620,9660	50.83360	3.79560	VLG	Provincie Oost-Vlaanderen
+2624	Strijpen	Strypen	9620	50.86800	3.78800	VLG	Provincie Oost-Vlaanderen
+2625	Velzeke-Ruddershove	Ruddershove|Velsique-Ruddershove|Velzeke	9620	50.88290	3.78290	VLG	Provincie Oost-Vlaanderen
+2626	Zottegem	Sottegem	9620	50.86960	3.81050	VLG	Provincie Oost-Vlaanderen
+2627	Beerlegem	Beirlegem	9630	50.90600	3.71700	VLG	Provincie Oost-Vlaanderen
+2628	Dikkele	Dickele	9630	50.90470	3.74030	VLG	Provincie Oost-Vlaanderen
+2629	Hundelgem		9630	50.88890	3.75120	VLG	Provincie Oost-Vlaanderen
+2630	Meilegem	Meylegem	9630	50.90540	3.69820	VLG	Provincie Oost-Vlaanderen
+2631	Munkzwalm	Munckzwalm	9630	50.87680	3.73500	VLG	Provincie Oost-Vlaanderen
+2632	Paulatem	Paulaethem	9630	50.89700	3.71770	VLG	Provincie Oost-Vlaanderen
+2633	Roborst	Rooborst	9630	50.86660	3.75300	VLG	Provincie Oost-Vlaanderen
+2634	Rozebeke	Roosebeke|Roozebeke	9630	50.84950	3.75220	VLG	Provincie Oost-Vlaanderen
+2635	Sint-Blasius-Boekel	Boucle-Saint-Blaise	9630	50.85230	3.72240	VLG	Provincie Oost-Vlaanderen
+2636	Sint-Denijs-Boekel	Boucle-Saint Denis	9630	50.86510	3.71160	VLG	Provincie Oost-Vlaanderen
+2637	Sint-Maria-Latem	Laethem-Sainte Marie	9630	50.89010	3.70640	VLG	Provincie Oost-Vlaanderen
+2638	Zwalm		9630	50.88200	3.72770	VLG	Flandre-Orientale
+2639	Nederzwalm-Hermelgem	Hermelgem|Nederzwalm	9636	50.88330	3.68330	VLG	Provincie Oost-Vlaanderen
+2640	Brakel	Nederbrakel	9660	50.80100	3.76260	VLG	Provincie Oost-Vlaanderen
+2641	Elst		9660	50.83020	3.73920	VLG	Provincie Oost-Vlaanderen
+2642	Everbeek	Everbecq	9660	50.76260	3.80850	VLG	Provincie Oost-Vlaanderen
+2643	Michelbeke		9660	50.83550	3.76250	VLG	Provincie Oost-Vlaanderen
+2644	Nederbrakel	Brakel	9660	50.80100	3.76260	VLG	Provincie Oost-Vlaanderen
+2645	Opbrakel		9660	50.79200	3.74860	VLG	Provincie Oost-Vlaanderen
+2646	Zegelsem	Segelsem	9660	50.81890	3.71780	VLG	Provincie Oost-Vlaanderen
+2647	Parike	Paricke	9661	50.78490	3.79750	VLG	Provincie Oost-Vlaanderen
+2648	Horebeke	Hoorebeke	9667	50.83670	3.69290	VLG	Flandre-Orientale
+2649	Sint-Kornelis-Horebeke	Hoorebeke-Saint-Corneille	9667	50.83450	3.69830	VLG	Provincie Oost-Vlaanderen
+2650	Sint-Maria-Horebeke	Hoorebeke-Sainte-Marie	9667	50.83880	3.68750	VLG	Provincie Oost-Vlaanderen
+2651	Etikhove	Etichove	9680	50.81160	3.62490	VLG	Provincie Oost-Vlaanderen
+2652	Maarke-Kerkem	Kerkem|Maarke|Maercke-Kerkhem	9680	50.82040	3.66530	VLG	Provincie Oost-Vlaanderen
+2653	Maarkedal	Markedal	9680	50.81600	3.64510	VLG	Flandre-Orientale
+2654	Nukerke		9681	50.79560	3.59490	VLG	Provincie Oost-Vlaanderen
+2655	Schorisse	Schoorisse	9688	50.80310	3.67630	VLG	Provincie Oost-Vlaanderen
+2656	Berchem	Kluisbergen|Kwaremont|Ruien|Zulzeke	9690	50.77900	3.52670	VLG	Provincie Oost-Vlaanderen
+2657	Kluisbergen	Berchem|Kwaremont|Ruien|Zulzeke	9690	50.77900	3.52670	VLG	Flandre-Orientale
+2658	Kwaremont	Berchem|Kluisbergen|Quaremont|Ruien|Zulzeke	9690	50.77680	3.52380	VLG	Provincie Oost-Vlaanderen
+2659	Ruien	Berchem|Kluisbergen|Kwaremont|Ruyen|Zulzeke	9690	50.76860	3.48580	VLG	Provincie Oost-Vlaanderen
+2660	Zulzeke	Berchem|Kluisbergen|Kwaremont|Ruien|Sulsique	9690	50.79170	3.57050	VLG	Provincie Oost-Vlaanderen
+2661	Bevere		9700	50.84960	3.58730	VLG	Provincie Oost-Vlaanderen
+2662	Edelare	Edelaere	9700	50.83300	3.62790	VLG	Provincie Oost-Vlaanderen
+2663	Eine	Eyne	9700	50.86730	3.61820	VLG	Provincie Oost-Vlaanderen
+2664	Ename	Eename	9700	50.85850	3.63660	VLG	Provincie Oost-Vlaanderen
+2665	Heurne		9700	50.88100	3.62600	VLG	Provincie Oost-Vlaanderen
+2666	Leupegem		9700	50.83620	3.61240	VLG	Provincie Oost-Vlaanderen
+2667	Mater	Maeter	9700	50.84320	3.66260	VLG	Provincie Oost-Vlaanderen
+2668	Melden		9700	50.81450	3.56540	VLG	Provincie Oost-Vlaanderen
+2669	Mullem		9700	50.89670	3.60530	VLG	Provincie Oost-Vlaanderen
+2670	Nederename	Nedereename	9700	50.86380	3.63680	VLG	Provincie Oost-Vlaanderen
+2671	Ooike	Oycke	9700,9790	50.87110	3.55240	VLG	Provincie Oost-Vlaanderen
+2672	Oudenaarde	Audenaarde|Audenarde|Oudenaerde	9700	50.85170	3.60890	VLG	Provincie Oost-Vlaanderen
+2673	Volkegem		9700	50.84110	3.64020	VLG	Provincie Oost-Vlaanderen
+2674	Welden		9700	50.87680	3.65450	VLG	Provincie Oost-Vlaanderen
+2675	Huise	Huysse	9750	50.90060	3.59100	VLG	Provincie Oost-Vlaanderen
+2676	Ouwegem	Auwegem	9750	50.91230	3.59980	VLG	Provincie Oost-Vlaanderen
+2677	Zingem	Syngem	9750	50.90410	3.65300	VLG	Provincie Oost-Vlaanderen
+2678	Kruisem	Cruyshautem|Kruishoutem	9770	50.90170	3.52590	VLG	Flandre-Orientale
+2679	Kruishoutem	Cruyshautem|Kruisem	9770	50.90170	3.52590	VLG	Provincie Oost-Vlaanderen
+2680	Nokere		9771	50.88540	3.51010	VLG	Provincie Oost-Vlaanderen
+2681	Wannegem-Lede		9772	50.89040	3.55140	VLG	Provincie Oost-Vlaanderen
+2682	Elsegem		9790	50.82360	3.53600	VLG	Provincie Oost-Vlaanderen
+2683	Moregem	Mooregem	9790	50.85070	3.56150	VLG	Provincie Oost-Vlaanderen
+2684	Petegem-aan-de-Schelde		9790	50.83340	3.55610	VLG	Provincie Oost-Vlaanderen
+2685	Wortegem		9790	50.85360	3.51000	VLG	Provincie Oost-Vlaanderen
+2686	Wortegem-Petegem		9790	50.84650	3.54320	VLG	Flandre-Orientale
+2687	Astene		9800	50.98510	3.56650	VLG	Provincie Oost-Vlaanderen
+2688	Bachte-Maria-Leerne		9800	51.01130	3.58150	VLG	Provincie Oost-Vlaanderen
+2689	Deinze	Deynze	9800	50.98170	3.53100	VLG	Provincie Oost-Vlaanderen
+2690	Gottem	Gotthem	9800	50.96420	3.46390	VLG	Provincie Oost-Vlaanderen
+2691	Grammene		9800	50.97780	3.46710	VLG	Provincie Oost-Vlaanderen
+2692	Meigem	Meygem	9800	51.01750	3.54110	VLG	Provincie Oost-Vlaanderen
+2693	Petegem-aan-de-Leie		9800	50.96670	3.53330	VLG	Provincie Oost-Vlaanderen
+2694	Sint-Martens-Leerne	Leerne-Saint-Martin	9800	51.01200	3.60600	VLG	Provincie Oost-Vlaanderen
+2695	Vinkt	Vynckt	9800	51.00860	3.47880	VLG	Provincie Oost-Vlaanderen
+2696	Wontergem		9800	50.97910	3.44030	VLG	Provincie Oost-Vlaanderen
+2697	Zeveren		9800	50.99640	3.49900	VLG	Provincie Oost-Vlaanderen
+2698	Eke	Eecke|Eeke	9810	50.95930	3.63960	VLG	Provincie Oost-Vlaanderen
+2699	Nazareth	Petit Nazareth	9810	51.00000	3.65000	VLG	Provincie Oost-Vlaanderen
+2700	Bottelare	Bottelaere	9820	50.96410	3.75490	VLG	Provincie Oost-Vlaanderen
+2701	Lemberge		9820	50.97630	3.77050	VLG	Provincie Oost-Vlaanderen
+2702	Melsen		9820	50.95620	3.69570	VLG	Provincie Oost-Vlaanderen
+2703	Merelbeke	Meirelbeke	9820	50.99450	3.74620	VLG	Provincie Oost-Vlaanderen
+2704	Munte		9820	50.94440	3.74270	VLG	Provincie Oost-Vlaanderen
+2705	Schelderode		9820	50.96920	3.71330	VLG	Provincie Oost-Vlaanderen
+2706	Sint-Martens-Latem	Laethem-Saint-Martin|Sint-Martens-Laethem	9830	51.01460	3.63780	VLG	Provincie Oost-Vlaanderen
+2707	Deurle		9831	51.00410	3.61470	VLG	Provincie Oost-Vlaanderen
+2708	De Pinte	La Pinte	9840	50.99340	3.64750	VLG	Provincie Oost-Vlaanderen
+2709	Zevergem	Seevergem|Zeevergem	9840	50.97930	3.69320	VLG	Provincie Oost-Vlaanderen
+2710	Hansbeke		9850	51.07440	3.53570	VLG	Provincie Oost-Vlaanderen
+2711	Landegem		9850	51.05520	3.57670	VLG	Provincie Oost-Vlaanderen
+2712	Merendree	Meerendré	9850	51.07660	3.57600	VLG	Provincie Oost-Vlaanderen
+2713	Nevele		9850	51.03530	3.54570	VLG	Provincie Oost-Vlaanderen
+2714	Poesele		9850	51.03450	3.51690	VLG	Provincie Oost-Vlaanderen
+2715	Vosselare	Vosselaere	9850	51.02890	3.55660	VLG	Provincie Oost-Vlaanderen
+2716	Balegem	Baelegem	9860	50.92570	3.79080	VLG	Provincie Oost-Vlaanderen
+2717	Gijzenzele	Gysenzeele	9860	50.97100	3.81700	VLG	Provincie Oost-Vlaanderen
+2718	Landskouter	Landscauter	9860	50.96950	3.79340	VLG	Provincie Oost-Vlaanderen
+2719	Moortsele	Moortzeele	9860	50.95860	3.77750	VLG	Provincie Oost-Vlaanderen
+2720	Oosterzele	Oosterzeele	9860	50.95260	3.79830	VLG	Provincie Oost-Vlaanderen
+2721	Scheldewindeke		9860	50.93440	3.78660	VLG	Provincie Oost-Vlaanderen
+2722	Machelen	Machelen-aan-de-Leie	9870	50.95970	3.49050	VLG	Provincie Oost-Vlaanderen
+2723	Olsene		9870	50.93420	3.46390	VLG	Provincie Oost-Vlaanderen
+2724	Zulte		9870	50.91950	3.44860	VLG	Provincie Oost-Vlaanderen
+2725	Aalter	Aeltre	9880	51.09020	3.44690	VLG	Provincie Oost-Vlaanderen
+2726	Lotenhulle	Lootenhulle	9880	51.05020	3.46160	VLG	Provincie Oost-Vlaanderen
+2727	Poeke	Poucques	9880	51.03940	3.44540	VLG	Provincie Oost-Vlaanderen
+2728	Bellem		9881	51.09400	3.49280	VLG	Provincie Oost-Vlaanderen
+2729	Asper		9890	50.91370	3.65130	VLG	Provincie Oost-Vlaanderen
+2730	Baaigem	Baeygem	9890	50.93200	3.72030	VLG	Provincie Oost-Vlaanderen
+2731	Dikkelvenne	Dickelvenne	9890	50.91930	3.69510	VLG	Provincie Oost-Vlaanderen
+2732	Gavere		9890	50.92920	3.66180	VLG	Provincie Oost-Vlaanderen
+2733	Semmerzake	Semmersaeke	9890	50.94370	3.66320	VLG	Provincie Oost-Vlaanderen
+2734	Vurste		9890	50.94320	3.68310	VLG	Provincie Oost-Vlaanderen
+2735	Eeklo	Eecloo|Eekloo	9900	51.18700	3.55650	VLG	Provincie Oost-Vlaanderen
+2736	Knesselare	Knesselaere	9910	51.13930	3.41280	VLG	Provincie Oost-Vlaanderen
+2737	Ursel		9910	51.12900	3.48650	VLG	Provincie Oost-Vlaanderen
+2738	Lovendegem		9920	51.10170	3.61300	VLG	Provincie Oost-Vlaanderen
+2739	Vinderhoute	Vinderhaute|Vindorbaute	9921	51.08760	3.64160	VLG	Provincie Oost-Vlaanderen
+2740	Lievegem		9930	51.11990	3.56500	VLG	Flandre-Orientale
+2741	Zomergem	Somergein|Somergem	9930	51.11990	3.56500	VLG	Provincie Oost-Vlaanderen
+2742	Oostwinkel		9931	51.15150	3.53200	VLG	Provincie Oost-Vlaanderen
+2743	Ronsele		9932	51.13060	3.55180	VLG	Provincie Oost-Vlaanderen
+2744	Ertvelde		9940	51.17920	3.74720	VLG	Provincie Oost-Vlaanderen
+2745	Evergem	Everghem Rabot	9940	51.11310	3.70980	VLG	Provincie Oost-Vlaanderen
+2746	Kluizen	Cluysen	9940	51.15820	3.73190	VLG	Provincie Oost-Vlaanderen
+2747	Sleidinge	Sleydinge	9940	51.13360	3.67400	VLG	Provincie Oost-Vlaanderen
+2748	Waarschoot	Waerschoot	9950	51.15250	3.60500	VLG	Provincie Oost-Vlaanderen
+2749	Assenede		9960	51.22600	3.75090	VLG	Provincie Oost-Vlaanderen
+2750	Boekhoute	Bouchaute	9961	51.25860	3.71780	VLG	Provincie Oost-Vlaanderen
+2751	Bassevelde		9968	51.23100	3.67800	VLG	Provincie Oost-Vlaanderen
+2752	Oosteeklo	Oost-Eecloo|Oosteekloo	9968	51.19300	3.68930	VLG	Provincie Oost-Vlaanderen
+2753	Kaprijke	Caprycke|Capryeke	9970	51.21720	3.61520	VLG	Provincie Oost-Vlaanderen
+2754	Lembeke		9971	51.19490	3.63330	VLG	Provincie Oost-Vlaanderen
+2755	Sint-Laureins	Saint Lawrence|Saint-Laurent|Sint-Laureis|St-Laureins	9980	51.24200	3.52440	VLG	Provincie Oost-Vlaanderen
+2756	Sint-Margriete	Sainte-Marguerite|Sint Margriet	9981	51.28220	3.54640	VLG	Provincie Oost-Vlaanderen
+2757	Sint-Jan-in-Eremo	Saint-Jean-in-Eremo	9982	51.27160	3.58060	VLG	Provincie Oost-Vlaanderen
+2758	Waterland-Oudeman		9988	51.28870	3.58990	VLG	Provincie Oost-Vlaanderen
+2759	Watervliet		9988	51.27490	3.62600	VLG	Provincie Oost-Vlaanderen
+2760	Maldegem		9990	51.20740	3.44510	VLG	Provincie Oost-Vlaanderen
+2761	Adegem		9991	51.20510	3.49540	VLG	Provincie Oost-Vlaanderen
+2762	Middelburg	Middelbourg	9992	51.25610	3.41600	VLG	Provincie Oost-Vlaanderen

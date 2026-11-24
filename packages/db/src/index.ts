@@ -20,8 +20,22 @@ export {
   runMigrations,
   type MigrateOptions,
 } from './migrate';
+export {
+  LOCALITIES_SHA256,
+  loadLocalities,
+  type LocalityRow,
+  parseLocalities,
+  readLocalities,
+} from './localities';
 export { MIGRATION_COUNT } from './migrations';
-export { createOffers, findHistoryPostings, type HistoryPosting, refreshOffers } from './offers';
+export {
+  createOffers,
+  findHistoryPostings,
+  type HistoryPosting,
+  type OfferGeo,
+  refreshOffers,
+  updateDistances,
+} from './offers';
 export { queueOptions } from './queue';
 export { withUser } from './scope';
 export * as schema from './schema';

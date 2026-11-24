@@ -8,7 +8,7 @@ import { query } from './http-query';
 // Forem (docs/SOURCES.md, section 2.1): open data of the ODWB, without a key, under CC BY-SA 4.0
 // (the source is cited on every offer). Probed on 23/11/2026: 24 237 offers, updated daily,
 // results[] with lists for places and languages, no description (one is composed from the
-// fields, the languages above all). Searched around the centre of the configuration.
+// fields, the languages above all). Searched around the profile's base city (ADR 0017).
 
 const ENDPOINT =
   'https://www.odwb.be/api/explore/v2.1/catalog/datasets/offres-d-emploi-forem/records';
@@ -101,11 +101,11 @@ export function foremOffer(item: ForemRecord, context: ConnectorContext): RawOff
   };
 }
 
-/** The ODSQL filter: the keyword, the distance around the centre, the age of the ad. */
+/** The ODSQL filter: the keyword, the distance around the base city, the age of the ad. */
 export function foremWhere(keyword: string, context: ConnectorContext): string {
   // Quotes and backslashes would end the ODSQL string: they go.
   const term = keyword.replace(/["\\]/g, ' ').replace(/\s+/g, ' ').trim();
-  const { lat, lon } = context.area;
+  const { lat, lon } = context.center;
   const parts = [
     `search("${term}")`,
     `within_distance(lieuxtravailgeo, geom'POINT(${lon} ${lat})', ${context.radiusKm}km)`,

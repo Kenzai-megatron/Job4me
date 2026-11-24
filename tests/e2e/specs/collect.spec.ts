@@ -16,6 +16,18 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await enrollAccount(page, state().collectLink);
   const stack = Boolean(process.env.E2E_BASE_URL);
 
+  // The base city, read in the Belgian localities (ADR 0017): distances start from it.
+  await page.getByRole('link', { name: 'Profil' }).first().click();
+  const practical = page.locator('#profile-practical');
+  await practical.getByLabel('Ville de base').fill('Bruxelles');
+  await practical.getByLabel('Code postal').fill('1000');
+  await practical.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(practical).toContainText('Ville de base trouvée : Bruxelles (1000).');
+  await expect(practical.getByRole('link', { name: 'GeoNames' })).toHaveAttribute(
+    'href',
+    'https://www.geonames.org',
+  );
+
   await page.getByRole('link', { name: 'Offres' }).first().click();
   await expect(page.getByRole('heading', { name: 'Offres', level: 1 })).toBeVisible();
   await expect(page.getByText("Aucune offre pour l'instant")).toBeVisible();
@@ -34,12 +46,14 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await form.getByLabel('Intitulé').fill(title);
   await form.getByLabel("Lien de l'annonce").fill('https://example.org/offres/42');
   await form.getByLabel('Employeur').fill('Exemple SA');
+  await form.getByLabel('Lieu').fill('Malines');
   await form.getByLabel("Texte de l'annonce").fill('Texte collé de l’annonce.');
   await form.getByRole('button', { name: 'Ajouter' }).click();
   await expect(page.getByRole('status')).toHaveText('Offre ajoutée.');
   const offer = page.getByRole('listitem').filter({ hasText: 'Gestionnaire de dossiers' });
   await expect(offer.getByRole('heading', { name: title })).toBeVisible();
-  await expect(offer).toContainText('Exemple SA · ? · Ajout manuel');
+  // Malines is Mechelen, 27 km by road from Brussels.
+  await expect(offer).toContainText('Exemple SA · Mechelen, 27 km · Ajout manuel');
   const link = offer.getByRole('link', { name: "Voir l'annonce" });
   await expect(link).toHaveAttribute('href', 'https://example.org/offres/42');
   await expect(link).toHaveAttribute('rel', 'noopener noreferrer');

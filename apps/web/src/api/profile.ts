@@ -1,8 +1,8 @@
-import type { Completeness, Identity, ProfileDocument, ProfileRubric } from '@job4me/contracts';
+import type { Completeness, Identity, ProfileResponse, ProfileRubric } from '@job4me/contracts';
 import { queryOptions } from '@tanstack/react-query';
 import { api } from './client';
 
-export type ProfileResponse = ProfileDocument & { defaultRadiusKm: number };
+export type { ProfileResponse };
 export type RubricItem = Record<string, unknown> & { id: string };
 
 export const profileQuery = queryOptions({

@@ -281,8 +281,9 @@ export const settingsSchema = z
       /** Development and tests: the demo source (no request at all) replaces the real ones. */
       demoSource: z.boolean(),
       /**
-       * Centre of the searches around a point (Forem), with the profile's radius. Hypothèse:
-       * Brussels, until the geography of phase 3 places the profile's base city.
+       * The city of the sites searched by city name (StepStone, Talent.com), and the centre of
+       * the searches around a point (Forem) while the profile's base city is not found in the
+       * localities (ADR 0017).
        */
       area: z.object({
         name: z.string().min(1).max(100),
@@ -290,6 +291,16 @@ export const settingsSchema = z
         lon: z.number().min(2).max(7),
       }),
       sources: z.record(z.string().regex(/^[a-z][a-z0-9_]{1,31}$/), sourceSettingsSchema),
+    }),
+    /** Geography (ADR 0017; docs/SOURCES.md, section 1.7). */
+    geo: z.object({
+      /** Road distance from the straight line: 1.25 on average in Belgium. */
+      roadFactor: z.number().min(1).max(3),
+      /** A place name carried by two places further apart than this is not guessed. */
+      ambiguityKm: z.number().min(1).max(100),
+      /** Four figures in this range are years, not postal codes. */
+      yearsFrom: z.number().int().min(1000).max(9999),
+      yearsTo: z.number().int().min(1000).max(9999),
     }),
     backups: z.object({
       /** The most recent backups kept, then one a week for this many weeks (ADR 0012). */

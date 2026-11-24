@@ -29,6 +29,17 @@ export {
 } from './http';
 export { absoluteLink, oneHalf, parsePage, textOf } from './html';
 export { type CollectedOffer, cleanOffer, collectedOfferSchema, type RawOffer } from './offer';
+export {
+  Gazetteer,
+  type GazetteerEntry,
+  type GeoSettings,
+  type Place,
+  type PlaceStatus,
+  type Remote,
+  remoteOf,
+  roadKm,
+  straightKm,
+} from './places';
 export { compileTitleFilter, type TitleFilterRule } from './prefilter';
 export {
   assertSourceSettings,

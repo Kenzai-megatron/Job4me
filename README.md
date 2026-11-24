@@ -47,6 +47,7 @@ pnpm job4me user:create --email mehdi@example.org --name Mehdi
 | `pnpm test:e2e`          | tests de bout en bout Playwright sur l'interface construite et l'API                                                                                                                               |
 | `pnpm format`            | formatage Prettier                                                                                                                                                                                 |
 | `pnpm check:compose`     | contrôle de Compose : ports sur `127.0.0.1`, conteneurs durcis, images épinglées                                                                                                                   |
+| `pnpm geonames`          | régénère le fichier des localités belges depuis GeoNames et son empreinte (ADR 0017) ; relire le diff avant de le commiter                                                                         |
 
 ## Pile en conteneurs (machine de la maison, CI)
 
@@ -60,3 +61,7 @@ pnpm job4me user:create --email mehdi@example.org --name Mehdi
 | `pnpm test:e2e:stack`                                      | tests de bout en bout contre les conteneurs, en mode production (jamais sur la machine de la maison) |
 
 Une seule image sert l'API, le worker, les migrations et la CLI (`infra/docker/Dockerfile`). La base n'est joignable que sur un réseau Docker interne ; l'API n'écoute que sur `127.0.0.1`, et Tailscale la sert en HTTPS à tes appareils.
+
+## Données
+
+Localités belges : [GeoNames](https://www.geonames.org), sous licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Le fichier dérivé `packages/db/drizzle/data/localities.tsv` (noms, codes postaux, coordonnées) est versionné, régénéré par `pnpm geonames` et chargé en base par la migration après contrôle de son empreinte (ADR 0017).

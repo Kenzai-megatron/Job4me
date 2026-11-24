@@ -4,6 +4,7 @@ import {
   boolean,
   check,
   date,
+  doublePrecision,
   index,
   integer,
   pgTable,
@@ -133,10 +134,41 @@ export const sourceRuns = pgTable(
 );
 
 /**
+ * Where a posting or an announcement is (ADR 0017): `found` with the locality's name and
+ * coordinates, `unknown` (kept, shown without a distance) or `abroad`; null until the worker has
+ * read the place (postings of phase 2). `remote` says what the offer announces: full or hybrid.
+ */
+const place = () => ({
+  placeStatus: text('place_status'),
+  placeName: text('place_name'),
+  postalCode: text('postal_code'),
+  latitude: doublePrecision('latitude'),
+  longitude: doublePrecision('longitude'),
+  remote: text('remote'),
+});
+
+const placeChecks = (
+  table: string,
+  t: { placeStatus: AnyPgColumn; remote: AnyPgColumn; postalCode: AnyPgColumn },
+) => [
+  check(
+    `${table}_place_status_check`,
+    sql`${t.placeStatus} is null or ${t.placeStatus} in ('found', 'unknown', 'abroad')`,
+  ),
+  check(`${table}_remote_check`, sql`${t.remote} is null or ${t.remote} in ('full', 'hybrid')`),
+  check(
+    `${table}_postal_code_check`,
+    sql`${t.postalCode} is null or ${t.postalCode} ~ '^[0-9]{4}$'`,
+  ),
+];
+
+/**
  * The announcement (ADR 0016): one offer, however many sites carry it. Its postings are the
  * job_offer rows; it shows the retained one, which names the employer, then has the longest
  * description, then comes from the first source called. First and last sight are those of its
- * postings; it is deleted 90 days after the last one (ADR 0015), its postings with it.
+ * postings; it is deleted 90 days after the last one (ADR 0015), its postings with it. Its place
+ * is the most precise of its postings', its distance the road distance from the profile's base
+ * city (ADR 0017), recomputed when the base city changes.
  */
 export const offers = pgTable(
   'offer',
@@ -147,10 +179,15 @@ export const offers = pgTable(
     }),
     firstSeenAt: at('first_seen_at').notNull().defaultNow(),
     lastSeenAt: at('last_seen_at').notNull().defaultNow(),
+    ...place(),
+    /** Kilometres by road from the base city; null when either place is unknown. */
+    distanceKm: integer('distance_km'),
   },
   (t) => [
     index('offer_user_first_seen_idx').on(t.userId, t.firstSeenAt),
     index('offer_user_last_seen_idx').on(t.userId, t.lastSeenAt),
+    ...placeChecks('offer', t),
+    check('offer_distance_check', sql`${t.distanceKm} is null or ${t.distanceKm} >= 0`),
     ownerPolicy('offer'),
   ],
 );
@@ -191,6 +228,7 @@ export const jobOffers = pgTable(
     dedupVersion: integer('dedup_version').notNull().default(0),
     /** How it joined its announcement; null for the posting that started it. */
     mergeReason: text('merge_reason'),
+    ...place(),
   },
   (t) => [
     uniqueIndex('job_offer_user_source_external_idx').on(t.userId, t.source, t.externalId),
@@ -201,6 +239,7 @@ export const jobOffers = pgTable(
     index('job_offer_user_bare_idx').on(t.userId, t.bareTitle),
     index('job_offer_user_version_idx').on(t.userId, t.dedupVersion),
     check('job_offer_source_check', sql`${t.source} ~ '^[a-z][a-z0-9_]{1,31}$'`),
+    ...placeChecks('job_offer', t),
     check(
       'job_offer_merge_reason_check',
       sql`${t.mergeReason} is null or ${t.mergeReason} in ('key', 'reference', 'url', 'employer', 'no_employer')`,

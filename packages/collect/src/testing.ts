@@ -68,6 +68,8 @@ export interface RunOptions {
   now?: Date;
   /** The HTTP settings of the configuration, for a run against a real site. */
   http?: typeof TEST_HTTP;
+  /** The base city of the profile, for the searches around a point. */
+  center?: { name: string; lat: number; lon: number };
 }
 
 /** Runs a connector on the fake network and returns what it handed over. */
@@ -97,6 +99,7 @@ export async function runConnector(connector: Connector, options: RunOptions) {
     http,
     secrets: options.secrets ?? {},
     area: { name: 'Bruxelles', lat: 50.8467, lon: 4.3517 },
+    center: options.center ?? { name: 'Bruxelles', lat: 50.8467, lon: 4.3517 },
     maxAgeDays: options.maxAgeDays === undefined ? null : options.maxAgeDays,
     params: options.params ?? {},
     // Monday 23 November 2026, 10:00 in Brussels.

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import pg from 'pg';
+import { loadLocalities } from './localities';
 
 export const APP_ROLE = 'job4me_app';
 /** Role of the isolated extractor (ADR 0010): the import tables, a few columns, nothing else. */
@@ -89,6 +90,16 @@ async function applyGrants(client: pg.Client): Promise<void> {
     `GRANT UPDATE (status, error_code, attempts, claimed_at, extracted_at, extracted, stats, updated_at) ON "import_run" TO ${extractor}`,
   ];
   for (const statement of statements) await client.query(statement);
+  // Public data loaded by the migration (ADR 0017): read only for the application.
+  for (const table of ['locality', 'dataset']) {
+    const exists = await client.query<{ name: string | null }>(
+      'select to_regclass($1)::text as name',
+      [`public.${table}`],
+    );
+    if (exists.rows[0]?.name) {
+      await client.query(`REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON "${table}" FROM ${role}`);
+    }
+  }
 }
 
 /** Applies pending migrations, then the role and grants. Idempotent. */
@@ -107,9 +118,10 @@ export async function runMigrations(options: MigrateOptions): Promise<void> {
         ? passwordFor(options.extractorUrl, EXTRACTOR_ROLE, 'extractor')
         : undefined,
     );
-    await migrate(drizzle(client), {
-      migrationsFolder: options.migrationsFolder ?? defaultMigrationsFolder(),
-    });
+    const folder = options.migrationsFolder ?? defaultMigrationsFolder();
+    await migrate(drizzle(client), { migrationsFolder: folder });
+    // The Belgian localities (ADR 0017): loaded when their file changed, after its fingerprint.
+    await loadLocalities(client, folder);
     await applyGrants(client);
   } finally {
     await client.end();

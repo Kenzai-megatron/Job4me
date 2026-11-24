@@ -22,8 +22,13 @@ export interface ConnectorContext {
   http: PoliteClient;
   /** Only the secrets this connector declares, all present (otherwise it is skipped). */
   secrets: Readonly<Record<string, string>>;
-  /** Centre of the searches around a point (configuration, until the geography of phase 3). */
+  /** The city of the configuration, for the sites searched by city name (StepStone, Talent.com). */
   area: { name: string; lat: number; lon: number };
+  /**
+   * Centre of the searches around a point (the Forem): the profile's base city once found in the
+   * localities (ADR 0017), the configured area otherwise.
+   */
+  center: { name: string; lat: number; lon: number };
   /** Ads older than this are neither asked for nor kept; null: no limit. */
   maxAgeDays: number | null;
   /** The source's own values from the configuration (collect.sources.<name>.params). */

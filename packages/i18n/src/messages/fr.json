@@ -452,6 +452,14 @@
         "ai_invalid_output": "La réponse de l'IA était inexploitable : réessayez.",
         "ai_failed": "L'IA n'a pas répondu : réessayez dans un moment."
       }
+    },
+    "base": {
+      "found": "Ville de base trouvée : {{name}} ({{postalCode}}). Les distances des offres partent d'elle.",
+      "unknown": "Ville de base introuvable dans les localités belges : vérifiez l'orthographe ou ajoutez le code postal. Sans elle, les distances ne sont pas calculées.",
+      "abroad": "Ville de base hors de Belgique : les distances ne sont pas calculées.",
+      "attribution": "Localités belges :",
+      "geonames": "GeoNames",
+      "license": "(licence CC BY 4.0)"
     }
   },
   "imports": {
@@ -684,6 +692,15 @@
     "open": "Voir l'annonce",
     "posted": "publiée le {{date}}",
     "seen": "vue le {{date}}",
+    "place": {
+      "distance": "{{name}}, {{km}} km",
+      "abroad": "{{location}} (à l'étranger)",
+      "unknown": "lieu inconnu"
+    },
+    "remote": {
+      "full": "télétravail",
+      "hybrid": "télétravail partiel"
+    },
     "postingCount_one": "Vue sur {{count}} parution",
     "postingCount_other": "Vue sur {{count}} parutions : ouvrez l'offre pour les voir toutes.",
     "add": {

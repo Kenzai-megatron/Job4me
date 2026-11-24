@@ -29,7 +29,8 @@
     "stack:backup": "tsx scripts/backup.ts",
     "stack:restore-test": "tsx scripts/restore-test.ts",
     "test:scripts": "vitest run --config scripts/vitest.config.ts",
-    "probe:linkedin": "tsx scripts/probe-linkedin.ts"
+    "probe:linkedin": "tsx scripts/probe-linkedin.ts",
+    "geonames": "tsx scripts/geonames.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

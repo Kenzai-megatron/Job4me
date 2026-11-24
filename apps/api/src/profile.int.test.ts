@@ -154,7 +154,12 @@ describe('profile document and identity', () => {
   it('returns defaults, then keeps what a change leaves out', async () => {
     const { browser } = await signedInBrowser(ctx, 'document');
     const empty = (await browser.get('/api/profile')).json<Record<string, unknown>>();
-    expect(empty).toMatchObject({ baseCity: null, contractTypes: [], defaultRadiusKm: 40 });
+    expect(empty).toMatchObject({
+      baseCity: null,
+      contractTypes: [],
+      defaultRadiusKm: 40,
+      baseLocation: { status: 'missing', name: null, postalCode: null },
+    });
     await browser.send('PATCH', '/api/profile', {
       baseCity: 'Bruxelles',
       basePostalCode: '1000',
@@ -165,6 +170,19 @@ describe('profile document and identity', () => {
       baseCity: 'Bruxelles',
       contractTypes: ['permanent'],
       workRegimes: ['full_time'],
+      // The base city read in the localities (ADR 0017): « Bruxelles, 1000 : trouvée ».
+      baseLocation: { status: 'found', name: 'Bruxelles', postalCode: '1000' },
+    });
+    const malines = await browser.send('PATCH', '/api/profile', {
+      baseCity: 'Malines',
+      basePostalCode: null,
+    });
+    expect(malines.json()).toMatchObject({
+      baseLocation: { status: 'found', name: 'Mechelen', postalCode: '2800' },
+    });
+    const nowhere = await browser.send('PATCH', '/api/profile', { baseCity: 'Nulle part' });
+    expect(nowhere.json()).toMatchObject({
+      baseLocation: { status: 'unknown', name: null, postalCode: null },
     });
   });
 
