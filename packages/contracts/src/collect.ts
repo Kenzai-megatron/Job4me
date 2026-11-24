@@ -374,6 +374,8 @@ export const offersQuerySchema = z.object({
   band: z.enum(scoreBands).optional(),
   /** Announcements first seen within the last seven days. */
   fresh: z.stringbool().optional(),
+  /** Announcements at most this many kilometres away by road, or fully remote. */
+  within: z.coerce.number().int().min(1).max(300).optional(),
   /** Cursor: the id of the last offer of the previous page. */
   before: z.uuid().optional(),
   limit: z.coerce.number().int().min(1).max(100).optional(),

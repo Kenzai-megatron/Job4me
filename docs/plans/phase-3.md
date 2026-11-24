@@ -172,3 +172,17 @@ Exigé par `CLAUDE.md` avant tout agent d'IA ; il complétera le [modèle de men
 | D8 | Claude fusionne chaque pull request après une CI verte |
 
 **Conséquence de D5 à signaler** : le critère de fin « écart moyen sous 10 points » se mesurera d'abord sur la notation sans IA. Si elle reste au-dessus du seuil, la mesure le montrera chiffres à l'appui, et l'activation de Claude (2 $ par semaine au plus) sera la décision à prendre.
+
+## 16. Clôture du 24/11/2026
+
+Lots 1 à 7 livrés, chacun par sa pull request, CI verte ; [revue de sécurité](../security/review-phase-3.md) faite ; [modèle de menaces](../security/threat-model.md) complété (lignes 41 à 50). État des critères de fin (section 2) :
+
+| # | Critère | État |
+| --- | --- | --- |
+| 1 | Aucun doublon visible sur une semaine d'offres | outillé (annonce unique, journal des fusions) ; à relire par Mehdi sur une semaine réelle |
+| 2 | Écart moyen sous 10 points sur le jeu de référence | outillé (« Ma note », `scoring:benchmark`) ; à mesurer à la maison sur 30 offres notées, d'abord sans IA (décision D5) |
+| 3 | Coût par offre mesuré | outillé (`scoring:benchmark --claude`, dépense par usage) ; à mesurer seulement si Mehdi décide d'essayer Claude |
+| 4 | Pré-filtre de titre mesuré | outillé (même commande) ; à mesurer à la maison |
+| 5 | CI verte, plan de sécurité appliqué et testé, revue faite | fait |
+
+La démonstration suit le [guide de la phase 3](../guide/demonstration-phase-3.md).

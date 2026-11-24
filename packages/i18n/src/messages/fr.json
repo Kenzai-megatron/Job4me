@@ -797,6 +797,9 @@
       "40": "40 à 59 : faute de mieux",
       "0": "moins de 40 : hors sujet"
     },
+    "distanceFilter": "Distance",
+    "allDistances": "Toutes les distances",
+    "withinKm": "{{km}} km au plus, ou télétravail complet",
     "fresh": "Nouvelles (7 derniers jours)",
     "bands": {
       "80": "postuler aujourd'hui",

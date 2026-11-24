@@ -246,6 +246,9 @@ function OfferItem({ offer }: { offer: Offer }) {
   );
 }
 
+/** Distances offered by the filter of the list, in kilometres by road. */
+const DISTANCES = [10, 25, 50] as const;
+
 /**
  * Offers (phase 3 plan, section 10): one entry per announcement, by score then the freshest, with
  * its band and what made it, and the sites that carry it.
@@ -257,8 +260,9 @@ export function OffersPage() {
   const [view, setView] = useState<OfferView>('kept');
   const [band, setBand] = useState('');
   const [fresh, setFresh] = useState(false);
+  const [within, setWithin] = useState('');
   const sources = useQuery(sourcesQuery);
-  const offers = useInfiniteQuery(offersQuery(source, view, { band, fresh }));
+  const offers = useInfiniteQuery(offersQuery(source, view, { band, fresh, within }));
   const items = offers.data?.pages.flatMap((page) => page.offers) ?? [];
   const counts = offers.data?.pages[0]?.counts;
   const names = [...(sources.data?.sources.map((item) => item.name) ?? []), 'manual'];
@@ -300,6 +304,17 @@ export function OffersPage() {
           options={(['80', '60', '40', '0'] as const).map((value) => ({
             value,
             label: t(`offers.bandOptions.${value}`),
+          }))}
+          className="w-full max-w-xs"
+        />
+        <SelectField
+          label={t('offers.distanceFilter')}
+          value={within}
+          onChange={(event) => setWithin(event.target.value)}
+          emptyLabel={t('offers.allDistances')}
+          options={DISTANCES.map((km) => ({
+            value: String(km),
+            label: t('offers.withinKm', { km }),
           }))}
           className="w-full max-w-xs"
         />
