@@ -1,6 +1,6 @@
 # Phase 4 : documents de candidature, plan détaillé
 
-Proposition du 24/11/2026, à valider par Mehdi (section 13). Préparée pendant la démonstration de la phase 3, avec son accord (décision D12 du 24/11/2026). Sources : spécification, sections 4, 6, 9, 10, 11 et 14 ; `CLAUDE.md` (« l'IA n'invente rien »).
+Proposition du 24/11/2026, **validée par Mehdi le 24/11/2026** avec toutes les options recommandées (section 14). Préparée pendant la démonstration de la phase 3, avec son accord (décision D12 du 24/11/2026). Sources : spécification, sections 4, 6, 9, 10, 11 et 14 ; `CLAUDE.md` (« l'IA n'invente rien »).
 
 ## 1. Résumé
 
@@ -133,3 +133,16 @@ Exigé par `CLAUDE.md` avant tout agent d'IA ; il complétera le [modèle de men
 | D6 | Police des documents | **a.** Inter intégrée au PDF (licence OFL, versionnée dans le dépôt), Calibri pour le DOCX ; **b.** polices standard partout (Helvetica, Arial) | a |
 | D7 | CV maîtres | **a.** un par métier cible, construit à partir du profil, puis choisi et ordonné par toi ; **b.** un seul CV maître pour tous les métiers | a |
 | D8 | Fusion des pull requests | **a.** Claude fusionne après une CI verte, comme aux phases 0 à 3 ; **b.** tu relis chaque pull request | a |
+
+## 14. Décisions prises le 24/11/2026
+
+| # | Décision |
+| --- | --- |
+| D1 | La lettre et le mail sont rédigés par Claude Sonnet 5.5 à la demande (un clic par dossier), avec un modèle sans IA en repli ; le CV reste construit sans IA |
+| D2 | Contrôle anti-invention déterministe, puis Claude Haiku 5.5 sur les lignes reformulées ; une ligne qui échoue bloque le dossier |
+| D3 | Dossiers dans la langue de l'offre (français, néerlandais, anglais), traduction contrôlée ; en français sans IA |
+| D4 | Exports PDF et DOCX rendus à la demande, aucun fichier stocké |
+| D5 | Pas de photo en phase 4 |
+| D6 | Inter intégrée au PDF, Calibri pour le DOCX |
+| D7 | Un CV maître par métier cible, construit à partir du profil, choisi et ordonné par Mehdi |
+| D8 | Claude fusionne chaque pull request après une CI verte |
