@@ -52,6 +52,16 @@ export function watchConsole(page: Page) {
 }
 
 export async function expectAccessible(page: Page) {
+  // Colours are measured once settled: a button caught in its colour transition (just switched
+  // from one variant to the other) would read as a contrast failure. Spinners turn forever:
+  // only transitions are waited for.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every(
+        (animation) => !(animation instanceof CSSTransition) || animation.playState !== 'running',
+      ),
+  );
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
     .analyze();

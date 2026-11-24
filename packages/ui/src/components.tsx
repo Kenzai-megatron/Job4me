@@ -39,7 +39,7 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={clsx(
-        'inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
+        'inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors motion-reduce:transition-none',
         'disabled:cursor-not-allowed disabled:opacity-60',
         focusRing,
         block && 'w-full',
