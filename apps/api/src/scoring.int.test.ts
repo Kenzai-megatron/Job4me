@@ -112,6 +112,16 @@ describe('« Ma note » (the reference set)', () => {
     expect((await alice.browser.get(`/api/offers/${offerId}`)).json<Offer>().rating?.value).toBe(
       90,
     );
+    // Nor any measure of another account (threat 7 of the plan).
+    await withUser(ctx.deps.db, alice.userId, (tx) =>
+      tx
+        .insert(schema.scoringBenchmarks)
+        .values({ userId: alice.userId, status: 'done', rated: 1 }),
+    );
+    const theirs = (await bob.browser.get('/api/scoring/benchmarks')).json<BenchmarksResponse>();
+    expect(theirs.benchmarks).toEqual([]);
+    const mine = (await alice.browser.get('/api/scoring/benchmarks')).json<BenchmarksResponse>();
+    expect(mine.benchmarks).toHaveLength(1);
   });
 
   it('needs a session', async () => {

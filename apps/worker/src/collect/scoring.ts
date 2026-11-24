@@ -118,8 +118,9 @@ export interface OfferFacts {
   /** The sources of its postings, the retained one first. */
   sources: string[];
   rules: RulesOffer;
-  claude: ClaudeOffer;
-  claudeVersion: string;
+  /** Computed on first use: the redaction of the text is not free. */
+  readonly claude: ClaudeOffer;
+  readonly claudeVersion: string;
   current: {
     method: string;
     score: number;
@@ -211,7 +212,9 @@ export async function offerFactsOf(
       const retained = list.find((fact) => fact.id === row.retainedId) ?? list[0];
       if (!retained) continue;
       const dates = list.flatMap((fact) => (fact.postedOn ? [fact.postedOn] : [])).sort();
-      const claude = claudeOfferOf({
+      // The offer as Claude reads it, its contacts redacted: only when it is asked for (the
+      // scoring without AI asks only for the offers that Claude scored).
+      const claudeFacts = {
         title: retained.title,
         company: retained.company,
         location: retained.location,
@@ -222,7 +225,15 @@ export async function offerFactsOf(
         placeName: row.placeName,
         distanceKm: row.distanceKm,
         remote: row.remote,
-      });
+      };
+      let claude: { offer: ClaudeOffer; version: string } | null = null;
+      const claudeOf = () => {
+        if (!claude) {
+          const offer = claudeOfferOf(claudeFacts);
+          claude = { offer, version: claudeOfferVersion(offer) };
+        }
+        return claude;
+      };
       result.push({
         id: row.id,
         firstSeenAt: row.firstSeenAt,
@@ -238,8 +249,12 @@ export async function offerFactsOf(
           languages: [...new Set(list.flatMap((fact) => fact.languages))].sort(),
           postedOn: dates.at(-1) ?? localDate(row.firstSeenAt, 'Europe/Brussels'),
         },
-        claude,
-        claudeVersion: claudeOfferVersion(claude),
+        get claude() {
+          return claudeOf().offer;
+        },
+        get claudeVersion() {
+          return claudeOf().version;
+        },
         current:
           row.method !== null &&
           row.score !== null &&
@@ -337,7 +352,14 @@ export async function scoreOffers(
   const values = [];
   for (const facts of offers) {
     const current = facts.current;
-    if (current && isCurrentClaudeScore(current, context.claude, facts.claudeVersion)) continue;
+    // Only an offer Claude scored needs its version as Claude reads it.
+    if (
+      current &&
+      current.method !== 'rules' &&
+      isCurrentClaudeScore(current, context.claude, facts.claudeVersion)
+    ) {
+      continue;
+    }
     if (
       current?.method === 'rules' &&
       current.profileVersion === context.profileVersion &&

@@ -90,6 +90,16 @@ export async function purgeCollection(db: Database, settings: Settings, now: Dat
           ),
         )
         .returning({ id: schema.collectionPasses.id });
+      // The measures of the reference set name a few offers (their widest gaps): kept as long as
+      // the pass logs, never longer (security review of phase 3, finding 2).
+      await tx
+        .delete(schema.scoringBenchmarks)
+        .where(
+          and(
+            eq(schema.scoringBenchmarks.userId, account.id),
+            lt(schema.scoringBenchmarks.createdAt, passCutoff),
+          ),
+        );
       offers += gone.length;
       passes += old.length;
     });

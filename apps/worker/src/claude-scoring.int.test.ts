@@ -874,6 +874,30 @@ describe('the reference set (phase 3 plan, section 9)', () => {
     await purgeCollection(handle.db, base, later);
     expect([...(await scoresOf(userId)).keys()]).toEqual(['Comptable 0']);
   });
+
+  it('keeps a measure as long as the pass logs, never longer (review, finding 2)', async () => {
+    const userId = await account();
+    await collect(userId, [
+      giving(
+        'alpha',
+        many('a', 1, () => 'Comptable'),
+      ),
+    ]);
+    await rate(userId, { Comptable: 80 });
+    await measure(userId, base, null, false);
+    const measures = () =>
+      withUser(handle.db, userId, (tx) =>
+        tx
+          .select({ id: schema.scoringBenchmarks.id })
+          .from(schema.scoringBenchmarks)
+          .where(eq(schema.scoringBenchmarks.userId, userId)),
+      );
+    await purgeCollection(handle.db, base, new Date(Date.now() + 30 * 86_400_000));
+    expect(await measures()).toHaveLength(1);
+    const later = new Date(Date.now() + (base.collect.runs.retentionDays + 1) * 86_400_000);
+    await purgeCollection(handle.db, base, later);
+    expect(await measures()).toHaveLength(0);
+  });
 });
 
 describe('new offers of 80 or more (decision D7)', () => {

@@ -218,6 +218,13 @@ export interface ClaudeFacts {
   remote: string | null;
 }
 
+/**
+ * The longest text a prompt may carry, twice over for the spaces collapsed: the configuration
+ * caps `ai.scoring.*.descriptionChars` at 5,000. The rest is never read, nor redacted: the
+ * redaction's patterns cost the square of a long unbroken text (security review of phase 3).
+ */
+const TEXT_BOUND = 10_000;
+
 /** The offer as Claude reads it: its own words, the recruiter's contacts removed. */
 export function claudeOfferOf(facts: ClaudeFacts): ClaudeOffer {
   const where =
@@ -243,7 +250,7 @@ export function claudeOfferOf(facts: ClaudeFacts): ClaudeOffer {
     company: offerText(facts.company) || '?',
     place: `${offerText(where) || '?'} [${distance}]${remote}`,
     conditions: conditions === '' ? null : conditions,
-    description: offerText(facts.description),
+    description: offerText(facts.description.slice(0, TEXT_BOUND)),
   };
 }
 
