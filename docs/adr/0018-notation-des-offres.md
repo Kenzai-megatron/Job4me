@@ -47,7 +47,7 @@ La spécification (section 5) note chaque offre sur 100 avec Claude Haiku 5.5, p
 - **Lot suspect** (menace 1) : un lot de trois offres ou plus dont toutes les notes dépassent de 30 points ou plus la note sans IA est noté de nouveau offre par offre ; une consigne glissée dans une annonce ne touche alors plus que la sienne.
 - **Confiance** : une offre sans texte est notée sur son intitulé, en confiance basse, et n'a pas d'analyse détaillée ; aucun score ne déclenche d'envoi en phase 3.
 - **Écrans** : la fiche montre la grille (poids et notes), les éléments bloquants, les points forts, les écarts et les mots-clés ; Paramètres > IA montre la dépense par usage (notation rapide, analyse détaillée).
-- **Précisions par rapport au plan, à valider par Mehdi** :
+- **Précisions par rapport au plan** (les deux premières validées par Mehdi le 24/11/2026) :
   - les **intitulés des diplômes et des certifications** (sans établissement ni année) partent aussi : sans eux, Claude prendrait un diplôme exigé pour un élément bloquant ;
   - **un élément bloquant plafonne le score à 59** (`blockerCap`) : une offre qu'un critère explicite rend impossible n'est jamais « postuler aujourd'hui » ;
   - **un changement du profil** ne relance pas Claude tout de suite : les scores de Claude devenus obsolètes cèdent la place au score sans IA, et Claude note de nouveau au passage suivant, pour qu'une série de retouches du profil ne coûte qu'une notation ;
@@ -64,7 +64,7 @@ La spécification (section 5) note chaque offre sur 100 avec Claude Haiku 5.5, p
 - **Étalon de sévérité** (spécification, section 5) : jusqu'à 5 offres notées dans le prompt de la notation rapide, une par tranche d'abord (80, 60, 40, 0), les notes les plus anciennes d'abord, pour qu'une nouvelle note ne change rien une fois l'étalon complet.
 - `pnpm stack:cli scoring:run` lance la notation par Claude tout de suite plutôt qu'au passage suivant, si elle est activée.
 - **Nouvelles offres à 80 ou plus** (décision D7) : après un passage (après la notation par Claude quand elle est activée), une notification « N nouvelles offres à 80 ou plus » si des offres gardées, vues pour la première fois dans les sept jours, atteignent 80 ; chaque offre n'est nommée qu'une fois (`offer.alerted_at`), jamais une offre ajoutée à la main. L'accueil les liste toute la semaine, les meilleures d'abord. Seuil et fenêtre dans la configuration (`scoring.alert`).
-- **Précision par rapport à l'ADR 0015, à valider par Mehdi** : une offre que tu as notée n'est **jamais purgée** après 90 jours, sinon le jeu de référence s'effriterait ; retirer la note la rend à la règle commune.
+- **Conservation** (décision de Mehdi du 24/11/2026) : une offre notée est purgée comme les autres, 90 jours après sa dernière vue, sa note avec elle (ADR 0015). Le jeu de référence se renouvelle donc : mieux vaut noter des offres récentes avant une mesure. L'étalon envoyé à Claude (diplômes compris) est validé le même jour.
 
 ## Clôture (lot 7, 24/11/2026)
 

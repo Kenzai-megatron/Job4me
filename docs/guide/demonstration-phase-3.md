@@ -43,7 +43,7 @@ Après quelques passages (ou `pnpm stack:cli sources:run` pour ne pas attendre) 
 
 ## 4. Noter 30 offres et mesurer l'écart (critères 2 et 4)
 
-1. Sur la fiche d'une offre, **Ma note** : ta note sur 100 et, si tu veux, un mot d'explication. Note une trentaine d'offres **variées** : de très bonnes, des moyennes, des hors sujet.
+1. Sur la fiche d'une offre, **Ma note** : ta note sur 100 et, si tu veux, un mot d'explication. Note une trentaine d'offres **variées** : de très bonnes, des moyennes, des hors sujet. Une offre notée disparaît, avec sa note, 90 jours après sa dernière vue : note des offres récentes.
 2. **Paramètres > IA > Jeu de référence** suit le compte (« 12 offres notées sur 30 »).
 3. Mesure la notation sans IA :
 
@@ -82,4 +82,4 @@ Attendu : l'écart moyen de Claude sur les offres notées hors étalon, et le **
 
 - Le résultat de `scoring:benchmark` (et de `--claude` si tu l'as essayé) : écarts et coûts, sans le détail des offres si tu préfères.
 - Les doublons, fusions à tort ou distances fausses que tu as vus.
-- Tes réponses aux précisions des ADR 0016 à 0019 marquées « à valider » (dont : l'élément bloquant qui plafonne le score à 59, les offres notées jamais purgées, le plafond total de 10 $ de l'IA).
+- Tes réponses aux précisions des ADR 0016, 0017 et 0019 encore ouvertes, et, si tu actives Claude durablement, le plafond total de l'IA (10 $ aujourd'hui) à relever.

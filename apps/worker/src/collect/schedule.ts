@@ -1,7 +1,7 @@
 import type { Settings } from '@job4me/config';
 import { type Connector, sourceSettings } from '@job4me/collect';
 import { type CollectPassJob, QUEUES } from '@job4me/contracts';
-import { and, type Database, eq, lt, schema, sql, withUser } from '@job4me/db';
+import { and, type Database, eq, lt, schema, withUser } from '@job4me/db';
 import type { Logger } from '@job4me/logger';
 
 // The daily schedule (decision D3): every morning, one pass per active account with the
@@ -70,16 +70,10 @@ export async function purgeCollection(db: Database, settings: Settings, now: Dat
   let passes = 0;
   for (const account of accounts) {
     await withUser(db, account.id, async (tx) => {
-      // An offer Mehdi rated stays: the reference set measures the scorings (decision D1).
+      // A rated offer goes too, its rating with it (Mehdi's decision of 24/11/2026).
       const gone = await tx
         .delete(schema.offers)
-        .where(
-          and(
-            eq(schema.offers.userId, account.id),
-            lt(schema.offers.lastSeenAt, offerCutoff),
-            sql`not exists (select 1 from ${schema.offerRatings} where ${schema.offerRatings.offerId} = ${schema.offers.id})`,
-          ),
-        )
+        .where(and(eq(schema.offers.userId, account.id), lt(schema.offers.lastSeenAt, offerCutoff)))
         .returning({ id: schema.offers.id });
       const old = await tx
         .delete(schema.collectionPasses)

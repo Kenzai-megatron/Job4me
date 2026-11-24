@@ -324,7 +324,8 @@ export const offerScores = pgTable(
 /**
  * Mehdi's own rating of an announcement (phase 3 plan, section 9): the reference set that
  * measures the scorings, and a few of them the calibration of Claude's severity. Never in the
- * repository or the CI (decision D1); a rated announcement is never purged.
+ * repository or the CI (decision D1); purged with its announcement, 90 days after its last
+ * sighting (Mehdi's decision of 24/11/2026).
  */
 export const offerRatings = pgTable(
   'offer_rating',

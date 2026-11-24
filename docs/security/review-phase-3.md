@@ -20,8 +20,8 @@ Revue du 24/11/2026, par Claude, sur les lots 1 à 6 : annonce unique, géograph
 | 5 | Une erreur pendant la notation par Claude aurait fait rejouer la file par pg-boss, et payer deux fois les mêmes appels. | faible (coût) | corrigé au lot 5 : files de la notation et de la mesure sans nouvel essai, délai dans la configuration |
 | 6 | Un passage de test aurait déclenché une notation payante. | faible (coût) | corrigé au lot 5 : la notation suit les passages planifiés ou manuels seulement |
 | 7 | Les plafonds de l'IA ne sont pas atomiques : notation, mots-clés et structuration d'un CV peuvent passer le contrôle en même temps. | faible (coût) | accepté (risque de la phase 1, étendu) : écart borné au pire cas de quelques appels |
-| 8 | Quand Claude note, jusqu'à cinq offres notées partent avec la note et le mot d'explication de Mehdi (étalon de sévérité). | faible (confidentialité) | accepté, documenté (ADR 0018, guide d'installation) ; rien ne part tant que la notation est coupée |
-| 9 | Une offre notée n'est jamais purgée, contrairement à la règle des 90 jours (ADR 0015). | faible (minimisation) | accepté, à valider par Mehdi : sans cela, le jeu de référence s'effriterait ; retirer la note rend l'offre à la règle commune |
+| 8 | Quand Claude note, jusqu'à cinq offres notées partent avec la note et le mot d'explication de Mehdi (étalon de sévérité). | faible (confidentialité) | accepté par Mehdi le 24/11/2026, documenté (ADR 0018, guide d'installation) ; rien ne part tant que la notation est coupée |
+| 9 | Une offre notée n'était jamais purgée, contrairement à la règle des 90 jours (ADR 0015). | faible (minimisation) | corrigé sur décision de Mehdi (24/11/2026) : purgée comme les autres, sa note avec elle |
 
 ## Points vérifiés sans constat
 
@@ -38,6 +38,6 @@ Revue du 24/11/2026, par Claude, sur les lots 1 à 6 : annonce unique, géograph
 ## Reste à faire
 
 1. **Sur la machine de la maison** : suivre le [guide de démonstration](../guide/demonstration-phase-3.md) : une semaine d'offres relue, 30 offres notées, `pnpm stack:cli scoring:benchmark`, distances vérifiées.
-2. **Décisions de Mehdi** : les précisions marquées « à valider » des ADR 0016 à 0019 (dont les constats 8 et 9), et l'activation éventuelle de la notation par Claude au vu de la mesure.
+2. **Décisions de Mehdi** : les précisions marquées « à valider » des ADR 0016 à 0019 (les constats 8 et 9 sont tranchés), et l'activation éventuelle de la notation par Claude au vu de la mesure.
 3. **Phase 5** : le moteur de règles ne devra jamais envoyer sur la seule foi d'un score de Claude (constat 3).
 4. **LinkedIn « invité »** (phase 2, lot 4) attend toujours le sondage depuis la maison (`pnpm probe:linkedin`).

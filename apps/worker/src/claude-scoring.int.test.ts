@@ -861,7 +861,7 @@ describe('the reference set (phase 3 plan, section 9)', () => {
     expect(result).toMatchObject({ status: 'failed', errorCode: 'no_rating' });
   });
 
-  it('never purges a rated offer, even long after its last sighting', async () => {
+  it('purges a rated offer like the others, its rating with it (decision of 24/11/2026)', async () => {
     const userId = await account();
     await collect(userId, [
       giving(
@@ -872,7 +872,11 @@ describe('the reference set (phase 3 plan, section 9)', () => {
     await rate(userId, { 'Comptable 0': 80 });
     const later = new Date(Date.now() + (base.collect.offers.retentionDays + 5) * 86_400_000);
     await purgeCollection(handle.db, base, later);
-    expect([...(await scoresOf(userId)).keys()]).toEqual(['Comptable 0']);
+    expect([...(await scoresOf(userId)).keys()]).toEqual([]);
+    const ratings = await withUser(handle.db, userId, (tx) =>
+      tx.select().from(schema.offerRatings).where(eq(schema.offerRatings.userId, userId)),
+    );
+    expect(ratings).toEqual([]);
   });
 
   it('keeps a measure as long as the pass logs, never longer (review, finding 2)', async () => {
