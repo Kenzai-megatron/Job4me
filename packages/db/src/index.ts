@@ -49,6 +49,7 @@ export type {
   ImportRunRow,
   KeywordProposalRun,
   OfferRow,
+  OfferScoreRow,
   Passkey,
   Profile,
   PushSubscription,

@@ -3,6 +3,8 @@ import {
   errorCodes,
   exclusionReasons,
   mergeReasons,
+  scoreBands,
+  scoreMethods,
   scoringCriteria,
   sourceAlertKinds,
   passTriggers,
@@ -40,6 +42,9 @@ describe('translation files', () => {
       ...mergeReasons.map((reason) => `offer.reasons.${reason}`),
       ...exclusionReasons.map((reason) => `offers.exclusions.${reason}`),
       ...scoringCriteria.map((name) => `profile.scoringCriteria.${name}`),
+      ...scoreBands.map((band) => `offers.bands.${band}`),
+      ...scoreBands.map((band) => `offers.bandOptions.${band}`),
+      ...scoreMethods.map((method) => `offers.methods.${method}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

@@ -115,7 +115,7 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await expect(demo).toContainText('démonstration, sans requête · chaque jour');
   await expect(demo).toContainText('Pas encore interrogée.');
   await expect(demo).toContainText('Aucun passage planifié ou manuel sur les 28 derniers jours.');
-  await expect(demo).toContainText('Pertinence (part des offres notées 80 ou plus)');
+  await expect(demo).toContainText("Pertinence sur 28 jours : aucune offre notée pour l'instant.");
   await expectAccessible(page);
 
   // The switch holds across a reload.

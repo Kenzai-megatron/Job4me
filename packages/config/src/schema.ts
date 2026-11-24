@@ -296,6 +296,21 @@ export const settingsSchema = z
     }),
     /** Scoring (phase 3 plan, sections 7 to 9). */
     scoring: z.object({
+      /** The scoring without AI (plan, section 7): weights of its parts, 100 in all, and penalties. */
+      rules: z.object({
+        weights: z.object({
+          title: z.number().int().min(0).max(100),
+          skills: z.number().int().min(0).max(100),
+          languages: z.number().int().min(0).max(100),
+          distance: z.number().int().min(0).max(100),
+          contract: z.number().int().min(0).max(100),
+          freshness: z.number().int().min(0).max(100),
+        }),
+        penalties: z.object({
+          excludedSector: z.number().int().min(0).max(100),
+          rejectedTitle: z.number().int().min(0).max(100),
+        }),
+      }),
       /** The weights of the detailed grid, 100 in all (SPEC, section 5); the profile may change them. */
       defaultWeights: z.object({
         skills: z.number().int().min(0).max(100),

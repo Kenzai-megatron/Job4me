@@ -315,6 +315,21 @@ collect:
 # Encrypted backups (plan, section 9; ADR 0012): pnpm stack:backup, pnpm stack:restore-test.
 # Scoring (phase 3 plan, sections 7 to 9).
 scoring:
+  # The scoring without AI (decision D5: the default during the test phase): the title near a
+  # target job or a keyword, the skills cited, the languages asked, the distance, the contract
+  # and working time, the freshness (100 in all); an excluded sector or a rejected title word
+  # takes points away.
+  rules:
+    weights:
+      title: 35
+      skills: 20
+      languages: 10
+      distance: 15
+      contract: 10
+      freshness: 10
+    penalties:
+      excludedSector: 20
+      rejectedTitle: 15
   # The grid of the detailed analysis (SPEC, section 5), 100 in all; the profile may change it.
   defaultWeights:
     skills: 30

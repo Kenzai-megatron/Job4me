@@ -692,12 +692,13 @@
     "windowFailed": "dont {{count}} en échec",
     "windowEmpty": "Aucun passage planifié ou manuel sur les {{days}} derniers jours.",
     "quota": "Recherches restantes : {{remaining}} (au {{date}})",
-    "relevance": "Pertinence (part des offres notées 80 ou plus) : arrive en phase 3, avec la notation.",
-    "history": "Passages récents"
+    "relevance": "Pertinence sur {{days}} jours : {{percent}} % ({{top}} offres notées 80 ou plus sur {{scored}})",
+    "history": "Passages récents",
+    "relevanceNone": "Pertinence sur {{days}} jours : aucune offre notée pour l'instant."
   },
   "offers": {
     "title": "Offres",
-    "intro": "Une seule entrée par offre, même vue sur plusieurs sites, la plus récente d'abord. La notation et le tri par pertinence arrivent avec la suite de la phase 3.",
+    "intro": "Une seule entrée par offre, même vue sur plusieurs sites, classées par score puis par fraîcheur. Le score sans IA est indicatif : il dit ce qui l'a fait.",
     "sources": "Sources",
     "list": "Offres collectées",
     "filter": "Source",
@@ -751,6 +752,62 @@
       "excludedCount_one": "Écartée ({{count}})",
       "excludedCount_other": "Écartées ({{count}})",
       "hint": "Le filtre écarte sans IA ce qui est certain : employeur exclu, annonce trop ancienne, lieu au-delà du rayon (sauf télétravail accepté), langue ou contrat donnés par la source et exclus par votre profil. Un lieu inconnu reste gardé, une offre ajoutée à la main aussi."
+    },
+    "bandFilter": "Tranche de score",
+    "allBands": "Toutes les tranches",
+    "bandOptions": {
+      "80": "80 ou plus : postuler aujourd'hui",
+      "60": "60 à 79 : pertinent",
+      "40": "40 à 59 : faute de mieux",
+      "0": "moins de 40 : hors sujet"
+    },
+    "fresh": "Nouvelles (7 derniers jours)",
+    "bands": {
+      "80": "postuler aujourd'hui",
+      "60": "pertinent",
+      "40": "faute de mieux",
+      "0": "hors sujet"
+    },
+    "methods": {
+      "rules": "Score sans IA (gratuit) : indicatif, il ne déclenchera jamais d'envoi automatique.",
+      "claude_quick": "Score rapide de Claude Haiku.",
+      "claude_detailed": "Analyse détaillée de Claude Sonnet."
+    },
+    "languages": {
+      "fr": "français",
+      "nl": "néerlandais",
+      "en": "anglais",
+      "de": "allemand",
+      "es": "espagnol",
+      "it": "italien",
+      "pt": "portugais",
+      "ar": "arabe",
+      "tr": "turc",
+      "pl": "polonais",
+      "ru": "russe"
+    },
+    "factors": {
+      "title": {
+        "target": "intitulé de votre métier « {{match}} »",
+        "priority": "mot-clé prioritaire « {{match}} »",
+        "keyword": "mot-clé « {{match}} »",
+        "partial": "intitulé proche de « {{match}} »",
+        "none": "intitulé éloigné de vos métiers"
+      },
+      "skills_one": "{{count}} compétence citée : {{list}}",
+      "skills_other": "{{count}} compétences citées : {{list}}",
+      "language": "{{language}} demandé ({{level}} au profil)",
+      "languageMissing": "{{language}} demandé, absent du profil",
+      "km": "{{km}} km",
+      "abroad": "à l'étranger",
+      "placeUnknown": "lieu inconnu",
+      "contract": "{{contracts}}",
+      "contractUnwanted": "{{contracts}}, hors de vos contrats",
+      "regimeUnwanted": "{{regime}}, non souhaité",
+      "recent": "récente",
+      "old": "publiée il y a {{days}} jours",
+      "sector": "secteur exclu : {{sector}}",
+      "rejected": "mot rejeté : {{expression}}"
     }
   },
   "offer": {

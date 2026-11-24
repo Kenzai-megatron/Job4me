@@ -16,6 +16,11 @@ export interface TitleFilterRule {
 
 const WORD = /[\p{L}\p{N}]/u;
 
+/** True when the folded needle starts a word of the folded title (the title filter's rule). */
+export function startsAWord(title: string, needle: string): boolean {
+  return matcher(needle)(title);
+}
+
 function matcher(needle: string): (title: string) => boolean {
   // ".net" or "c#" start with a sign: they may follow a letter ("asp.net").
   const atWordStart = WORD.test(needle[0]!);

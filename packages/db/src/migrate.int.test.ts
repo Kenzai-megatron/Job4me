@@ -51,6 +51,7 @@ describe('migrations', () => {
       'language_level',
       'locality',
       'offer',
+      'offer_score',
       'one_time_token',
       'passkey',
       'past_application',
@@ -97,6 +98,7 @@ describe('migrations', () => {
       'source_run',
       'job_offer',
       'offer',
+      'offer_score',
     ]) {
       expect(guarded).toContain(table);
     }

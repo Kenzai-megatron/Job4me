@@ -644,6 +644,109 @@ describe('offers', () => {
     ).json<ManualOfferResponse>();
     expect(added.offer.excluded).toBeNull();
   });
+
+  it('list the kept offers by score, then the freshest, by band and page by page', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'scored-list');
+    const day = (count: number) => new Date(Date.now() - count * 86_400_000);
+    const made = await withUser(ctx.deps.db, userId, async (tx) => {
+      const rows: Record<string, string> = {};
+      for (const [id, score, age] of [
+        ['low', 30, 1],
+        ['top', 92, 20],
+        ['mid', 65, 2],
+        ['top2', 92, 1],
+        ['none', null, 1],
+      ] as const) {
+        const { offerId } = await collected(tx, userId, {
+          source: 'alpha',
+          externalId: id,
+          title: `Offre ${id}`,
+          seen: day(age),
+        });
+        rows[id] = offerId;
+        if (score !== null) {
+          await tx.insert(schema.offerScores).values({
+            userId,
+            offerId,
+            method: 'rules',
+            score,
+            confidence: 'low',
+            factors: [{ kind: 'title', strength: 'target', match: 'Comptable' }],
+            profileVersion: 'p',
+            offerVersion: 'o',
+          });
+        }
+      }
+      return rows;
+    });
+    const titles = (body: OffersResponse) => body.offers.map((offer) => offer.title.slice(6));
+    const all = (await browser.get('/api/offers')).json<OffersResponse>();
+    expect(titles(all)).toEqual(['top2', 'top', 'mid', 'low', 'none']);
+    expect(all.offers[0]!.score).toMatchObject({
+      value: 92,
+      method: 'rules',
+      confidence: 'low',
+      factors: [{ kind: 'title', strength: 'target', match: 'Comptable' }],
+    });
+    expect(all.offers[4]!.score).toBeNull();
+    // Page by page, in the same order.
+    const first = (await browser.get('/api/offers?limit=2')).json<OffersResponse>();
+    const next = (
+      await browser.get(`/api/offers?limit=2&before=${first.nextCursor}`)
+    ).json<OffersResponse>();
+    const last = (
+      await browser.get(`/api/offers?limit=2&before=${next.nextCursor}`)
+    ).json<OffersResponse>();
+    expect([...titles(first), ...titles(next), ...titles(last)]).toEqual(titles(all));
+    // By band, and the new ones of the week.
+    expect(titles((await browser.get('/api/offers?band=80')).json<OffersResponse>())).toEqual([
+      'top2',
+      'top',
+    ]);
+    expect(titles((await browser.get('/api/offers?band=0')).json<OffersResponse>())).toEqual([
+      'low',
+    ]);
+    expect(
+      titles((await browser.get('/api/offers?fresh=true')).json<OffersResponse>()),
+    ).not.toContain('top');
+    expect(made.top).toBeDefined();
+  });
+
+  it('give each source its relevance: the share of its offers scored 80 or more', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'relevance');
+    await withUser(ctx.deps.db, userId, async (tx) => {
+      for (const [id, score] of [
+        ['r1', 85],
+        ['r2', 50],
+        ['r3', 90],
+        ['r4', 20],
+      ] as const) {
+        const { offerId } = await collected(tx, userId, {
+          source: 'alpha',
+          externalId: id,
+          title: `Relevance ${id}`,
+        });
+        await tx.insert(schema.offerScores).values({
+          userId,
+          offerId,
+          method: 'rules',
+          score,
+          confidence: 'low',
+          profileVersion: 'p',
+          offerVersion: 'o',
+        });
+      }
+    });
+    const listed = (await browser.get('/api/sources')).json<SourcesResponse>();
+    expect(listed.sources.find((source) => source.name === 'alpha')!.relevance).toEqual({
+      scored: 4,
+      top: 2,
+    });
+    expect(listed.sources.find((source) => source.name === 'pages')!.relevance).toEqual({
+      scored: 0,
+      top: 0,
+    });
+  });
 });
 
 describe('command line', () => {

@@ -32,17 +32,23 @@ export function offerQuery(id: string) {
 }
 
 /**
- * Announcements, newest first, page by page: the ones the filter keeps, or the ones it sets
- * aside; `source` keeps those carried by one source.
+ * Announcements by score, then the freshest, page by page: the ones the filter keeps, or the ones
+ * it sets aside; `source`, `band` and `fresh` narrow them.
  */
-export function offersQuery(source: string, view: OfferView = 'kept') {
+export function offersQuery(
+  source: string,
+  view: OfferView = 'kept',
+  filters: { band?: string; fresh?: boolean } = {},
+) {
   return infiniteQueryOptions({
-    queryKey: ['offers', source, view],
+    queryKey: ['offers', source, view, filters.band ?? '', Boolean(filters.fresh)],
     initialPageParam: null as string | null,
     queryFn: ({ pageParam }) => {
       const params = new URLSearchParams();
       if (view !== 'kept') params.set('view', view);
       if (source) params.set('source', source);
+      if (filters.band) params.set('band', filters.band);
+      if (filters.fresh) params.set('fresh', 'true');
       if (pageParam) params.set('before', pageParam);
       const query = params.toString();
       return api.get<OffersResponse>(`/api/offers${query ? `?${query}` : ''}`);

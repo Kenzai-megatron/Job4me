@@ -7,7 +7,15 @@ import type {
   RemoteMode,
 } from '@job4me/contracts';
 import { formatDate, formatNumber } from '@job4me/i18n';
-import { Alert, Button, Card, SelectField, TextAreaField, TextField } from '@job4me/ui';
+import {
+  Alert,
+  Button,
+  Card,
+  CheckboxField,
+  SelectField,
+  TextAreaField,
+  TextField,
+} from '@job4me/ui';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
@@ -15,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { api } from '../../api/client';
 import { offersQuery, safeLink, sourcesQuery } from '../../api/collect';
 import { errorMessage } from '../../components/errors';
+import { OfferScoreBadge, useScoreExplanation } from './score';
 
 const EMPTY = { title: '', url: '', company: '', location: '', text: '' };
 
@@ -182,9 +191,16 @@ function OfferItem({ offer }: { offer: Offer }) {
   const { t } = useTranslation();
   const sourceNames = useSourceNames();
   const placeLabel = usePlaceLabel();
+  const explain = useScoreExplanation();
   const link = safeLink(offer.url);
   return (
     <li className="flex flex-col gap-1 py-4">
+      {offer.score ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <OfferScoreBadge score={offer.score} />
+          <span className="text-sm text-muted">{explain(offer.score)}</span>
+        </div>
+      ) : null}
       <h3 className="font-semibold">
         <Link
           to="/offers/$offerId"
@@ -231,16 +247,18 @@ function OfferItem({ offer }: { offer: Offer }) {
 }
 
 /**
- * Offers (phase 3 plan, section 10): one entry per announcement, newest first, with the sites that
- * carry it; scores come with lot 4.
+ * Offers (phase 3 plan, section 10): one entry per announcement, by score then the freshest, with
+ * its band and what made it, and the sites that carry it.
  */
 export function OffersPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [source, setSource] = useState('');
   const [view, setView] = useState<OfferView>('kept');
+  const [band, setBand] = useState('');
+  const [fresh, setFresh] = useState(false);
   const sources = useQuery(sourcesQuery);
-  const offers = useInfiniteQuery(offersQuery(source, view));
+  const offers = useInfiniteQuery(offersQuery(source, view, { band, fresh }));
   const items = offers.data?.pages.flatMap((page) => page.offers) ?? [];
   const counts = offers.data?.pages[0]?.counts;
   const names = [...(sources.data?.sources.map((item) => item.name) ?? []), 'manual'];
@@ -262,17 +280,35 @@ export function OffersPage() {
 
       <AddOffer onAdded={() => void queryClient.invalidateQueries({ queryKey: ['offers'] })} />
 
-      <SelectField
-        label={t('offers.filter')}
-        value={source}
-        onChange={(event) => setSource(event.target.value)}
-        emptyLabel={t('offers.allSources')}
-        options={names.map((name) => ({
-          value: name,
-          label: t(`sources.names.${name}`, { defaultValue: name }),
-        }))}
-        className="max-w-sm"
-      />
+      <div className="flex flex-wrap items-end gap-4">
+        <SelectField
+          label={t('offers.filter')}
+          value={source}
+          onChange={(event) => setSource(event.target.value)}
+          emptyLabel={t('offers.allSources')}
+          options={names.map((name) => ({
+            value: name,
+            label: t(`sources.names.${name}`, { defaultValue: name }),
+          }))}
+          className="w-full max-w-xs"
+        />
+        <SelectField
+          label={t('offers.bandFilter')}
+          value={band}
+          onChange={(event) => setBand(event.target.value)}
+          emptyLabel={t('offers.allBands')}
+          options={(['80', '60', '40', '0'] as const).map((value) => ({
+            value,
+            label: t(`offers.bandOptions.${value}`),
+          }))}
+          className="w-full max-w-xs"
+        />
+        <CheckboxField
+          label={t('offers.fresh')}
+          checked={fresh}
+          onChange={(event) => setFresh(event.target.checked)}
+        />
+      </div>
 
       {/* The deterministic filter (phase 3 plan, section 6): what it keeps, what it sets aside. */}
       <div role="group" aria-label={t('offers.views.label')} className="flex flex-wrap gap-2">

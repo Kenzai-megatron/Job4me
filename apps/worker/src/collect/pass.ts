@@ -25,6 +25,7 @@ import type { PushMessage } from '../notify';
 import { checkSilentSources } from './alerts';
 import { offerGeo, storePostings } from './postings';
 import { screenProfileOf } from './screen';
+import { type ScoringContext, scoringContextOf } from './scoring';
 
 // The orchestrator (ADR 0013): one pass, one source at a time in calling order, each in its own
 // try/catch and time budget within the pass budget. A source that fails never stops the others;
@@ -71,6 +72,8 @@ interface Profile {
   passes: (title: string) => boolean;
   /** The criteria of the deterministic filter (phase 3 plan, section 6). */
   screen: ScreenProfile;
+  /** What the scoring without AI reads (phase 3 plan, section 7). */
+  scoring: ScoringContext;
   settings: Map<string, typeof schema.sourceSettings.$inferSelect>;
 }
 
@@ -144,6 +147,7 @@ async function loadProfile(deps: CollectDeps, userId: string): Promise<Profile> 
       ),
       settings: new Map(settings.map((row) => [row.source, row])),
       screen: await screenProfileOf(tx, userId, deps.settings, deps.now?.() ?? new Date()),
+      scoring: await scoringContextOf(tx, userId, deps.settings, deps.now?.() ?? new Date()),
     };
   });
 }
@@ -366,6 +370,7 @@ async function runSource(
         gazetteer: deps.gazetteer,
         geo: offerGeo(profile.base, deps.settings),
         screen: profile.screen,
+        scoring: profile.scoring,
       },
       kept,
     ),

@@ -32,16 +32,29 @@ import { requireSession } from '../auth/guards';
 import { baseLocation, baseOf, gazetteerOf, offerGeo } from '../collect/geo';
 import { requestScreening } from '../collect/screening';
 
-/** The fields of the profile the deterministic filter reads (phase 3 plan, section 6). */
+/**
+ * The fields of the profile the deterministic filter or the scoring read (phase 3 plan, sections
+ * 6 and 7): a change of one has the worker screen and score the offers again.
+ */
 const SCREENED_FIELDS = [
   'baseCity',
   'basePostalCode',
   'radiusKm',
   'contractTypes',
+  'workRegimes',
   'remotePreference',
 ] as const;
-/** The rubrics the deterministic filter reads. */
-const SCREENED_RUBRICS = new Set(['excluded-companies', 'eliminations']);
+/** The rubrics the deterministic filter or the scoring read. */
+const SCREENED_RUBRICS = new Set([
+  'excluded-companies',
+  'eliminations',
+  'target-jobs',
+  'keywords',
+  'skills',
+  'languages',
+  'sectors',
+  'title-filters',
+]);
 import { type RubricDefinition, rubricDefinitions } from './rubrics';
 
 // Profile API (phase 1 plan, section 8): every handler runs inside withUser, so row-level
