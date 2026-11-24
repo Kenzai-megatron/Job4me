@@ -182,7 +182,7 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       { schema: { querystring: offersQuerySchema, response: { 200: offersResponseSchema } } },
       async (request) => {
         const { userId } = requireSession(request);
-        const { source, before, view, band, fresh } = request.query;
+        const { source, before, view, band, fresh, within } = request.query;
         const limit = request.query.limit ?? settings.collect.offers.listLimit;
         const offers = schema.offers;
         const postings = schema.jobOffers;
@@ -198,6 +198,10 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           }
           if (fresh) {
             scope.push(gte(offers.firstSeenAt, new Date(now().getTime() - 7 * DAY_MS)));
+          }
+          // Near enough to commute, or without a commute at all; an unknown place is left out.
+          if (within) {
+            scope.push(sql`(${offers.distanceKm} <= ${within} or ${offers.remote} = 'full')`);
           }
           const [counts] = await tx
             .select({

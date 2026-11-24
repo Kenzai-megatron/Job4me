@@ -786,6 +786,39 @@ describe('offers', () => {
     expect((await bob.browser.get(`/api/offers/${offerId}`)).statusCode).toBe(404);
   });
 
+  it('list the offers within a distance, full remote work included, unknown places aside', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'within');
+    await withUser(ctx.deps.db, userId, async (tx) => {
+      for (const [id, distanceKm, remote] of [
+        ['near', 8, null],
+        ['mid', 30, null],
+        ['unknown', null, null],
+        ['remote', 120, 'full'],
+      ] as const) {
+        const { offerId } = await collected(tx, userId, {
+          source: 'alpha',
+          externalId: id,
+          title: `Offre ${id}`,
+        });
+        await tx
+          .update(schema.offers)
+          .set({ distanceKm, remote, placeStatus: distanceKm === null ? 'unknown' : 'found' })
+          .where(eq(schema.offers.id, offerId));
+      }
+    });
+    const titles = async (query: string) =>
+      (await browser.get(`/api/offers${query}`))
+        .json<OffersResponse>()
+        .offers.map((offer) => offer.title.slice(6))
+        .sort();
+    expect(await titles('')).toEqual(['mid', 'near', 'remote', 'unknown']);
+    expect(await titles('?within=25')).toEqual(['near', 'remote']);
+    expect(await titles('?within=50')).toEqual(['mid', 'near', 'remote']);
+    const counts = (await browser.get('/api/offers?within=25')).json<OffersResponse>().counts;
+    expect(counts.kept).toBe(2);
+    expect((await browser.get('/api/offers?within=0')).statusCode).toBe(400);
+  });
+
   it('give each source its relevance: the share of its offers scored 80 or more', async () => {
     const { browser, userId } = await signedInBrowser(ctx, 'relevance');
     await withUser(ctx.deps.db, userId, async (tx) => {

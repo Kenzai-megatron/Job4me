@@ -66,3 +66,8 @@ La spécification (section 5) note chaque offre sur 100 avec Claude Haiku 5.5, p
 - **Nouvelles offres à 80 ou plus** (décision D7) : après un passage (après la notation par Claude quand elle est activée), une notification « N nouvelles offres à 80 ou plus » si des offres gardées, vues pour la première fois dans les sept jours, atteignent 80 ; chaque offre n'est nommée qu'une fois (`offer.alerted_at`), jamais une offre ajoutée à la main. L'accueil les liste toute la semaine, les meilleures d'abord. Seuil et fenêtre dans la configuration (`scoring.alert`).
 - **Précision par rapport à l'ADR 0015, à valider par Mehdi** : une offre que tu as notée n'est **jamais purgée** après 90 jours, sinon le jeu de référence s'effriterait ; retirer la note la rend à la règle commune.
 
+## Clôture (lot 7, 24/11/2026)
+
+- La liste des offres gagne le filtre de **distance** prévu par le plan (section 10) : 10, 25 ou 50 km au plus par la route, télétravail complet compris ; un lieu inconnu en est écarté.
+- Revue de sécurité de la phase 3 : texte d'une offre borné avant caviardage et caviardé seulement quand Claude le lit ; mesures du jeu de référence purgées avec les journaux de passage.
+
