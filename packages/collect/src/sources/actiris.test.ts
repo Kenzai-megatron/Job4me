@@ -46,6 +46,7 @@ describe('Actiris', () => {
         postedAt: '2026-11-23',
         url: 'https://www.actiris.brussels/fr/citoyens/offres-demploi/?keywords=9000001',
         details: 'Durée indéterminée',
+        contracts: ['permanent'],
         description: '',
       }),
       expect.objectContaining({
@@ -54,6 +55,7 @@ describe('Actiris', () => {
         location: 'Bruxelles (1000)',
         postedAt: '2026-11-23',
         details: 'Interim · temps partiel',
+        contracts: ['interim'],
       }),
       // Relayed from another region: Actiris' own address is not the place of work.
       expect.objectContaining({ externalId: '9000003', company: '?', location: 'Tielt-Winge' }),
@@ -61,6 +63,7 @@ describe('Actiris', () => {
         externalId: '9000004',
         location: 'Groot-Bijgaarden (1702)',
         details: 'Durée déterminée · 6 mois',
+        contracts: ['fixed_term'],
       }),
       expect.objectContaining({ externalId: '9000005', postedAt: '2026-08-01' }),
     ]);

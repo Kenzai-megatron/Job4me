@@ -30,6 +30,18 @@ import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
 import { baseLocation, baseOf, gazetteerOf, offerGeo } from '../collect/geo';
+import { requestScreening } from '../collect/screening';
+
+/** The fields of the profile the deterministic filter reads (phase 3 plan, section 6). */
+const SCREENED_FIELDS = [
+  'baseCity',
+  'basePostalCode',
+  'radiusKm',
+  'contractTypes',
+  'remotePreference',
+] as const;
+/** The rubrics the deterministic filter reads. */
+const SCREENED_RUBRICS = new Set(['excluded-companies', 'eliminations']);
 import { type RubricDefinition, rubricDefinitions } from './rubrics';
 
 // Profile API (phase 1 plan, section 8): every handler runs inside withUser, so row-level
@@ -46,6 +58,8 @@ const EMPTY_PROFILE: ProfileDocument = {
   remotePreference: null,
   salaryMinMonthly: null,
   availableFrom: null,
+  scoringInstructions: null,
+  scoringWeights: null,
 };
 
 const EMPTY_IDENTITY: Identity = {
@@ -90,6 +104,8 @@ function profileFromRow(row: typeof schema.profiles.$inferSelect | undefined): P
     remotePreference: row.remotePreference,
     salaryMinMonthly: row.salaryMinMonthly,
     availableFrom: row.availableFrom,
+    scoringInstructions: row.scoringInstructions,
+    scoringWeights: row.scoringWeights,
   });
 }
 
@@ -224,6 +240,7 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           await audit(tx, userId, request.id, { rubric: definition.slug, op: 'created' });
           return created!;
         });
+        if (SCREENED_RUBRICS.has(definition.slug)) await requestScreening(deps, userId);
         return toItem(row);
       },
     );
@@ -254,6 +271,7 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           await audit(tx, userId, request.id, { rubric: definition.slug, op: 'updated' });
           return updated;
         });
+        if (SCREENED_RUBRICS.has(definition.slug)) await requestScreening(deps, userId);
         return toItem(row);
       },
     );
@@ -271,6 +289,7 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           if (deleted.length === 0) throw new HttpError(404, 'not_found');
           await audit(tx, userId, request.id, { rubric: definition.slug, op: 'deleted' });
         });
+        if (SCREENED_RUBRICS.has(definition.slug)) await requestScreening(deps, userId);
         return { ok: true as const };
       },
     );
@@ -291,6 +310,7 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           return {
             ...profileFromRow(row),
             defaultRadiusKm: settings.profile.defaultRadiusKm,
+            defaultScoringWeights: settings.scoring.defaultWeights,
             baseLocation: baseLocation(await baseOf(tx, userId, gazetteer)),
           };
         });
@@ -303,7 +323,7 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       async (request) => {
         const { userId } = requireSession(request);
         const gazetteer = await gazetteerOf(deps.db, settings);
-        return withUser(deps.db, userId, async (tx) => {
+        const response = await withUser(deps.db, userId, async (tx) => {
           const at = now();
           const [saved] = await tx
             .insert(schema.profiles)
@@ -322,9 +342,15 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           return {
             ...profileFromRow(saved),
             defaultRadiusKm: settings.profile.defaultRadiusKm,
+            defaultScoringWeights: settings.scoring.defaultWeights,
             baseLocation: baseLocation(base),
           };
         });
+        // A criterion of the deterministic filter changed: the worker reads the offers again.
+        if (SCREENED_FIELDS.some((field) => field in request.body)) {
+          await requestScreening(deps, userId);
+        }
+        return response;
       },
     );
 

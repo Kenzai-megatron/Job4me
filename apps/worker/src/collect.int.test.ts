@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { judgeRun } from './collect/alerts';
 import { closeStalePasses, type CollectDeps, keywordsFor, runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
+import { screenOffers, screenProfileOf } from './collect/screen';
 import { dueSources, isoWeekday, purgeCollection, schedulePasses } from './collect/schedule';
 
 let database: TestDatabase;
@@ -746,7 +747,7 @@ describe('announcements (ADR 0016)', () => {
     expect(comptable.lastSeenAt.getTime()).toBe(byId.get('l2')!.lastSeenAt.getTime());
 
     // Once only: the next start-up finds nothing to do.
-    expect(await prepare()).toEqual({ identified: 0, regrouped: 0, located: 0 });
+    expect(await prepare()).toEqual({ identified: 0, regrouped: 0, located: 0, screened: 0 });
   });
 });
 
@@ -816,6 +817,156 @@ describe('geography (ADR 0017)', () => {
     await runPass(deps([spy]), { userId: nowhere, passId: await pass(nowhere, ['alpha']) });
     expect(centres[0]).toMatchObject({ name: 'Mechelen', lat: 51.0257 });
     expect(centres[1]).toEqual(settings.collect.area);
+  });
+});
+
+describe('deterministic filter (phase 3 plan, section 6)', () => {
+  it('sets aside what is certain after a pass, keeps the rest, and says why', async () => {
+    const userId = await account();
+    await withUser(handle.db, userId, async (tx) => {
+      await tx.insert(schema.profiles).values({
+        userId,
+        baseCity: 'Bruxelles',
+        radiusKm: 30,
+        contractTypes: ['permanent'],
+      });
+      await tx.insert(schema.excludedCompanies).values({ userId, name: 'Deloitte' });
+      await tx
+        .insert(schema.eliminationRules)
+        .values({ userId, kind: 'language', value: 'Allemand' });
+    });
+    const day = (offset: number) =>
+      new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
+    const alpha = connector({
+      name: 'alpha',
+      run(context) {
+        context.add([
+          {
+            externalId: 'f1',
+            title: 'Comptable',
+            company: 'Exemple',
+            location: 'Mechelen',
+            url: 'https://jobs.example.org/f1',
+          },
+          {
+            externalId: 'f2',
+            title: 'Juriste',
+            company: 'Deloitte Legal',
+            location: 'Bruxelles',
+            url: 'https://jobs.example.org/f2',
+          },
+          {
+            externalId: 'f3',
+            title: 'Analyste',
+            company: 'Exemple',
+            location: 'Bruxelles',
+            postedAt: day(70),
+            url: 'https://jobs.example.org/f3',
+          },
+          {
+            externalId: 'f4',
+            title: 'Acheteur',
+            company: 'Exemple',
+            location: 'Gent',
+            url: 'https://jobs.example.org/f4',
+          },
+          {
+            externalId: 'f5',
+            title: 'Développeur (Remote)',
+            company: 'Exemple',
+            location: 'Gent',
+            url: 'https://jobs.example.org/f5',
+          },
+          {
+            externalId: 'f6',
+            title: 'Assistant',
+            company: 'Exemple',
+            location: 'Bruxelles',
+            languages: ['Allemand'],
+            url: 'https://jobs.example.org/f6',
+          },
+          {
+            externalId: 'f7',
+            title: 'Magasinier',
+            company: 'Exemple',
+            location: 'Bruxelles',
+            contract: 'Intérimaire',
+            url: 'https://jobs.example.org/f7',
+          },
+          {
+            externalId: 'f8',
+            title: 'Gestionnaire',
+            company: 'Exemple',
+            location: 'Belgium',
+            url: 'https://jobs.example.org/f8',
+          },
+        ]);
+        return Promise.resolve();
+      },
+    });
+    await runPass(deps([alpha]), { userId, passId: await pass(userId, ['alpha']) });
+    const postings = await offersOf(userId);
+    const announcements = new Map(
+      (await announcementsOf(userId)).map((offer) => [offer.id, offer]),
+    );
+    const reason = (id: string) =>
+      announcements.get(postings.find((posting) => posting.externalId === id)!.offerId)!
+        .excludedReason;
+    expect(reason('f1')).toBeNull();
+    expect(reason('f2')).toBe('excluded_company');
+    expect(reason('f3')).toBe('too_old');
+    expect(reason('f4')).toBe('too_far');
+    expect(reason('f5')).toBeNull();
+    expect(reason('f6')).toBe('language');
+    expect(reason('f7')).toBe('contract');
+    expect(reason('f8')).toBeNull();
+    expect([...announcements.values()].every((offer) => offer.screenedAt !== null)).toBe(true);
+
+    // The criteria change (the API then asks the worker): every offer is read again.
+    await withUser(handle.db, userId, async (tx) => {
+      await tx
+        .update(schema.profiles)
+        .set({ radiusKm: 80, contractTypes: [] })
+        .where(eq(schema.profiles.userId, userId));
+      const result = await screenOffers(
+        tx,
+        userId,
+        null,
+        await screenProfileOf(tx, userId, settings, new Date()),
+        new Date(),
+      );
+      expect(result).toEqual({ screened: 8, excluded: 3 });
+    });
+    const after = new Map((await announcementsOf(userId)).map((offer) => [offer.id, offer]));
+    const now = (id: string) =>
+      after.get(postings.find((posting) => posting.externalId === id)!.offerId)!.excludedReason;
+    expect(now('f4')).toBeNull();
+    expect(now('f7')).toBeNull();
+    expect(now('f2')).toBe('excluded_company');
+  });
+
+  it('screens at start-up the announcements never screened', async () => {
+    const userId = await account();
+    await withUser(handle.db, userId, async (tx) => {
+      const [offer] = await tx.insert(schema.offers).values({ userId }).returning();
+      await tx.insert(schema.jobOffers).values({
+        userId,
+        offerId: offer!.id,
+        source: 'alpha',
+        externalId: 'old',
+        title: 'Comptable',
+        company: 'Exemple',
+        postedOn: '2020-01-01',
+        dedupVersion: 1,
+        contentKey: 'k',
+        bareTitle: 'comptable',
+        placeStatus: 'unknown',
+      });
+    });
+    await prepareStoredPostings({ db: handle.db, logger, gazetteer, settings }, ['alpha']);
+    const [offer] = await announcementsOf(userId);
+    expect(offer).toMatchObject({ excludedReason: 'too_old' });
+    expect(offer!.screenedAt).not.toBeNull();
   });
 });
 

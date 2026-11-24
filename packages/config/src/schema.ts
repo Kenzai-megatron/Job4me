@@ -254,6 +254,8 @@ export const settingsSchema = z
          * it, the same offer seen again is a new announcement.
          */
         historyDays: z.number().int().min(1).max(365),
+        /** The deterministic filter sets aside an ad older than this, when its date is known. */
+        maxAgeDays: z.number().int().min(1).max(365),
         listLimit: z.number().int().min(1).max(100),
       }),
       runs: z.object({
@@ -291,6 +293,18 @@ export const settingsSchema = z
         lon: z.number().min(2).max(7),
       }),
       sources: z.record(z.string().regex(/^[a-z][a-z0-9_]{1,31}$/), sourceSettingsSchema),
+    }),
+    /** Scoring (phase 3 plan, sections 7 to 9). */
+    scoring: z.object({
+      /** The weights of the detailed grid, 100 in all (SPEC, section 5); the profile may change them. */
+      defaultWeights: z.object({
+        skills: z.number().int().min(0).max(100),
+        experience: z.number().int().min(0).max(100),
+        languages: z.number().int().min(0).max(100),
+        practical: z.number().int().min(0).max(100),
+        sector: z.number().int().min(0).max(100),
+        motivations: z.number().int().min(0).max(100),
+      }),
     }),
     /** Geography (ADR 0017; docs/SOURCES.md, section 1.7). */
     geo: z.object({

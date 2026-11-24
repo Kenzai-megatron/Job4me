@@ -54,6 +54,8 @@ describe('StepStone', () => {
       description:
         'Notre client, une société fictive du centre de Bruxelles, recherche un comptable pour son équipe financière.',
       details: 'Télétravail possible',
+      contracts: [],
+      languages: [],
     });
     expect(second).toMatchObject({
       externalId: '1000002',

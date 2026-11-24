@@ -186,6 +186,43 @@ describe('profile document and identity', () => {
     });
   });
 
+  it('keeps the scoring instructions and grid weights, 100 in all', async () => {
+    const { browser } = await signedInBrowser(ctx, 'scoring');
+    const empty = (await browser.get('/api/profile')).json<Record<string, unknown>>();
+    expect(empty).toMatchObject({
+      scoringInstructions: null,
+      scoringWeights: null,
+      defaultScoringWeights: {
+        skills: 30,
+        experience: 20,
+        languages: 15,
+        practical: 15,
+        sector: 10,
+        motivations: 10,
+      },
+    });
+    const weights = {
+      skills: 40,
+      experience: 20,
+      languages: 10,
+      practical: 10,
+      sector: 10,
+      motivations: 10,
+    };
+    const saved = await browser.send('PATCH', '/api/profile', {
+      scoringInstructions: 'La comptabilité fiscale pure ne m’intéresse pas.',
+      scoringWeights: weights,
+    });
+    expect(saved.json()).toMatchObject({
+      scoringInstructions: 'La comptabilité fiscale pure ne m’intéresse pas.',
+      scoringWeights: weights,
+    });
+    const wrong = await browser.send('PATCH', '/api/profile', {
+      scoringWeights: { ...weights, skills: 50 },
+    });
+    expect(wrong.statusCode).toBe(400);
+  });
+
   it('keeps identity and contact details encrypted at rest', async () => {
     const { browser, userId } = await signedInBrowser(ctx, 'identity');
     const identity = {

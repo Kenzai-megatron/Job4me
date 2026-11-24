@@ -279,7 +279,8 @@
       "sectors": "Secteurs",
       "eliminations": "Critères éliminatoires",
       "titleFilters": "Pré-filtre de titre",
-      "excludedCompanies": "Entreprises exclues"
+      "excludedCompanies": "Entreprises exclues",
+      "scoring": "Consignes de notation"
     },
     "intros": {
       "identity": "Chiffrées et jamais envoyées à l'IA : ces informations n'entrent que dans l'en-tête de vos documents.",
@@ -296,7 +297,8 @@
       "sectors": "Préférés, acceptés ou exclus.",
       "eliminations": "Ce qui écarte une offre d'office : langue exigée, secteur, horaires, déplacements.",
       "titleFilters": "Expressions cherchées dans l'intitulé des offres, avant toute notation.",
-      "excludedCompanies": "Aucune offre proposée et aucun envoi, dont votre employeur actuel."
+      "excludedCompanies": "Aucune offre proposée et aucun envoi, dont votre employeur actuel.",
+      "scoring": "Ce que la notation lit en plus du profil : ce qui est hors sujet pour vous, vos cas limites, et le poids de chaque critère."
     },
     "fields": {
       "fullName": "Nom complet",
@@ -343,14 +345,17 @@
       "value": "Valeur",
       "list": "Liste",
       "expression": "Expression",
-      "reason": "Raison"
+      "reason": "Raison",
+      "scoringInstructions": "Consignes",
+      "scoringWeights": "Poids de la grille (100 au total)"
     },
     "hints": {
       "month": "Mois et année.",
       "drivingLicences": "Exemple : B, C1, séparés par des virgules.",
       "basePostalCode": "4 chiffres.",
       "radiusKm": "Sans valeur : {{km}} km.",
-      "tags": "Séparées par des virgules."
+      "tags": "Séparées par des virgules.",
+      "scoringInstructions": "Par exemple : « La comptabilité fiscale pure ne m'intéresse pas » ; « Néerlandais courant exigé : hors sujet ; néerlandais un atout : pertinent »."
     },
     "options": {
       "contractTypes": {
@@ -426,7 +431,8 @@
       "cancel": "Annuler",
       "delete": "Supprimer",
       "keep": "Garder",
-      "reject": "Écarter"
+      "reject": "Écarter",
+      "defaultWeights": "Poids par défaut"
     },
     "empty": "Rien pour l'instant.",
     "choose": "Choisir…",
@@ -460,7 +466,16 @@
       "attribution": "Localités belges :",
       "geonames": "GeoNames",
       "license": "(licence CC BY 4.0)"
-    }
+    },
+    "scoringCriteria": {
+      "skills": "Compétences techniques",
+      "experience": "Expérience et fonction",
+      "languages": "Langues",
+      "practical": "Critères pratiques",
+      "sector": "Secteur",
+      "motivations": "Motivations"
+    },
+    "weightsTotal": "Total : {{total}} sur 100."
   },
   "imports": {
     "title": "Importer un CV ou LinkedIn",
@@ -688,6 +703,7 @@
     "filter": "Source",
     "allSources": "Toutes les sources",
     "empty": "Aucune offre pour l'instant : les passages planifiés en apporteront, ou ajoutez-en une.",
+    "emptyExcluded": "Aucune offre écartée : le filtre n'a rien mis de côté.",
     "more": "Afficher plus",
     "open": "Voir l'annonce",
     "posted": "publiée le {{date}}",
@@ -716,6 +732,25 @@
       "added": "Offre ajoutée.",
       "merged": "Cette offre était déjà collectée : votre ajout rejoint son annonce.",
       "see": "Voir l'offre"
+    },
+    "excludedBecause": "Écartée : {{reason}}.",
+    "exclusions": {
+      "excluded_company": "employeur exclu dans votre profil",
+      "too_old": "annonce de plus de 60 jours",
+      "abroad": "lieu à l'étranger",
+      "too_far": "au-delà de votre rayon",
+      "language": "langue exigée exclue dans vos critères éliminatoires",
+      "contract": "contrat hors de ceux de votre profil"
+    },
+    "views": {
+      "label": "Offres gardées ou écartées",
+      "kept": "Gardées",
+      "excluded": "Écartées",
+      "keptCount_one": "Gardée ({{count}})",
+      "keptCount_other": "Gardées ({{count}})",
+      "excludedCount_one": "Écartée ({{count}})",
+      "excludedCount_other": "Écartées ({{count}})",
+      "hint": "Le filtre écarte sans IA ce qui est certain : employeur exclu, annonce trop ancienne, lieu au-delà du rayon (sauf télétravail accepté), langue ou contrat donnés par la source et exclus par votre profil. Un lieu inconnu reste gardé, une offre ajoutée à la main aussi."
     }
   },
   "offer": {

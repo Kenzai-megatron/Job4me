@@ -32,6 +32,30 @@ const idSchema = z.uuid();
 
 export const profileIdParamsSchema = z.object({ id: idSchema });
 
+/**
+ * The grid of the detailed analysis (SPEC, section 5), weights changed by the candidate:
+ * technical skills, experience and position, languages, practical criteria, sector, motivations.
+ */
+export const scoringCriteria = [
+  'skills',
+  'experience',
+  'languages',
+  'practical',
+  'sector',
+  'motivations',
+] as const;
+export type ScoringCriterion = (typeof scoringCriteria)[number];
+export const scoringWeightsSchema = z
+  .object(
+    Object.fromEntries(scoringCriteria.map((name) => [name, z.number().int().min(0).max(100)])) as {
+      [K in ScoringCriterion]: z.ZodNumber;
+    },
+  )
+  .refine((weights) => Object.values(weights).reduce((sum, value) => sum + value, 0) === 100, {
+    message: 'weights_total',
+  });
+export type ScoringWeights = z.infer<typeof scoringWeightsSchema>;
+
 /** Practical criteria and motivations: one document per account. */
 export const profileSchema = z.object({
   motivations: z.string().trim().max(4000).nullable(),
@@ -47,6 +71,10 @@ export const profileSchema = z.object({
   remotePreference: z.enum(remotePreferences).nullable(),
   salaryMinMonthly: z.number().int().min(0).max(100_000).nullable(),
   availableFrom: z.iso.date().nullable(),
+  /** What is off topic, the borderline cases: read by the scoring (phase 3 plan, section 3). */
+  scoringInstructions: z.string().trim().max(2000).nullable(),
+  /** The grid's weights, 100 in all; null: those of the configuration. */
+  scoringWeights: scoringWeightsSchema.nullable(),
 });
 export const profilePatchSchema = profileSchema.partial();
 export type ProfileDocument = z.infer<typeof profileSchema>;
@@ -66,6 +94,7 @@ export type BaseLocation = z.infer<typeof baseLocationSchema>;
 /** The profile document as the API returns it. */
 export const profileResponseSchema = profileSchema.extend({
   defaultRadiusKm: z.number().int(),
+  defaultScoringWeights: scoringWeightsSchema,
   baseLocation: baseLocationSchema,
 });
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;

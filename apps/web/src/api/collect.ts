@@ -1,4 +1,10 @@
-import type { CollectionPass, Offer, OffersResponse, SourcesResponse } from '@job4me/contracts';
+import type {
+  CollectionPass,
+  Offer,
+  OffersResponse,
+  OfferView,
+  SourcesResponse,
+} from '@job4me/contracts';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { api } from './client';
 
@@ -25,13 +31,17 @@ export function offerQuery(id: string) {
   });
 }
 
-/** Announcements, newest first, page by page; `source` keeps those carried by one source. */
-export function offersQuery(source: string) {
+/**
+ * Announcements, newest first, page by page: the ones the filter keeps, or the ones it sets
+ * aside; `source` keeps those carried by one source.
+ */
+export function offersQuery(source: string, view: OfferView = 'kept') {
   return infiniteQueryOptions({
-    queryKey: ['offers', source],
+    queryKey: ['offers', source, view],
     initialPageParam: null as string | null,
     queryFn: ({ pageParam }) => {
       const params = new URLSearchParams();
+      if (view !== 'kept') params.set('view', view);
       if (source) params.set('source', source);
       if (pageParam) params.set('before', pageParam);
       const query = params.toString();

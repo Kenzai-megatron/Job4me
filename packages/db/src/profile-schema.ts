@@ -6,6 +6,7 @@ import {
   customType,
   index,
   integer,
+  jsonb,
   numeric,
   pgPolicy,
   pgTable,
@@ -73,6 +74,10 @@ export const profiles = pgTable(
     remotePreference: text('remote_preference'),
     salaryMinMonthly: integer('salary_min_monthly'),
     availableFrom: text('available_from'),
+    /** What is off topic for the candidate, the borderline cases (phase 3 plan, section 3). */
+    scoringInstructions: text('scoring_instructions'),
+    /** The weights of the detailed grid; null: those of the configuration. */
+    scoringWeights: jsonb('scoring_weights').$type<Record<string, number>>(),
   },
   (t) => [uniqueIndex('profile_user_id_idx').on(t.userId), ownerPolicy('profile')],
 );

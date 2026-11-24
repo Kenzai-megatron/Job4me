@@ -28,6 +28,17 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
     'https://www.geonames.org',
   );
 
+  // What the scoring reads besides the profile: instructions and the grid's weights.
+  const scoring = page.locator('#profile-scoring');
+  await scoring.getByLabel('Consignes').fill('La comptabilité fiscale pure ne m’intéresse pas.');
+  await expect(scoring).toContainText('Total : 100 sur 100.');
+  await scoring.getByLabel('Compétences techniques').fill('40');
+  await expect(scoring).toContainText('Total : 110 sur 100.');
+  await scoring.getByRole('button', { name: 'Poids par défaut' }).click();
+  await scoring.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(scoring.getByText('Enregistré.')).toBeVisible();
+  await expectAccessible(page);
+
   await page.getByRole('link', { name: 'Offres' }).first().click();
   await expect(page.getByRole('heading', { name: 'Offres', level: 1 })).toBeVisible();
   await expect(page.getByText("Aucune offre pour l'instant")).toBeVisible();
@@ -54,6 +65,17 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await expect(offer.getByRole('heading', { name: title })).toBeVisible();
   // Malines is Mechelen, 27 km by road from Brussels.
   await expect(offer).toContainText('Exemple SA · Mechelen, 27 km · Ajout manuel');
+  // The deterministic filter: kept offers by default, the ones set aside on demand.
+  await expect(page.getByRole('button', { name: 'Gardée (1)' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.getByRole('button', { name: 'Écartée (0)' }).click();
+  await expect(
+    page.getByText("Aucune offre écartée : le filtre n'a rien mis de côté."),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Gardée (1)' }).click();
+  await expect(offer).toBeVisible();
   const link = offer.getByRole('link', { name: "Voir l'annonce" });
   await expect(link).toHaveAttribute('href', 'https://example.org/offres/42');
   await expect(link).toHaveAttribute('rel', 'noopener noreferrer');

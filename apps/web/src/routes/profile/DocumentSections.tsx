@@ -1,4 +1,4 @@
-import type { Identity } from '@job4me/contracts';
+import { type Identity, scoringCriteria, type ScoringWeights } from '@job4me/contracts';
 import { Alert, Button, CheckboxGroup, SelectField, TextAreaField, TextField } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, type ReactNode, useState } from 'react';
@@ -356,6 +356,110 @@ export function MotivationsSection() {
       <Loading>
         {profile.data && profile.isFetchedAfterMount ? (
           <MotivationsForm initial={profile.data} />
+        ) : null}
+      </Loading>
+    </ProfileSection>
+  );
+}
+
+/**
+ * What the scoring reads besides the profile (phase 3 plan, section 3): what is off topic, the
+ * borderline cases, and the weights of the detailed grid, 100 in all.
+ */
+function ScoringForm({ initial }: { initial: ProfileResponse }) {
+  const { t } = useTranslation();
+  const { busy, error, saved, save } = useSave();
+  const defaults = initial.defaultScoringWeights;
+  const [instructions, setInstructions] = useState(initial.scoringInstructions ?? '');
+  const [weights, setWeights] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      scoringCriteria.map((name) => [name, String((initial.scoringWeights ?? defaults)[name])]),
+    ),
+  );
+  const values = scoringCriteria.map((name) => Number(weights[name] || 0));
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const wrong = total !== 100 || values.some((value) => !Number.isInteger(value) || value < 0);
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (wrong) return;
+    const chosen = Object.fromEntries(
+      scoringCriteria.map((name, index) => [name, values[index]]),
+    ) as ScoringWeights;
+    const same = scoringCriteria.every((name) => chosen[name] === defaults[name]);
+    void save(() =>
+      api.patch('/api/profile', {
+        scoringInstructions: orNull(instructions),
+        // The configuration's weights stay followed while they are the ones chosen.
+        scoringWeights: same ? null : chosen,
+      }),
+    );
+  };
+
+  return (
+    <form className="flex flex-col gap-4" onSubmit={submit}>
+      <TextAreaField
+        label={t('profile.fields.scoringInstructions')}
+        hint={t('profile.hints.scoringInstructions')}
+        value={instructions}
+        onChange={(event) => setInstructions(event.target.value)}
+        maxLength={2000}
+        rows={5}
+      />
+      <fieldset className="flex flex-col gap-3">
+        <legend className="mb-1 text-sm font-semibold">{t('profile.fields.scoringWeights')}</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {scoringCriteria.map((name) => (
+            <TextField
+              key={name}
+              label={t(`profile.scoringCriteria.${name}`)}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={100}
+              value={weights[name] ?? ''}
+              onChange={(event) =>
+                setWeights((current) => ({ ...current, [name]: event.target.value }))
+              }
+            />
+          ))}
+        </div>
+        <p
+          className={wrong ? 'text-sm font-medium text-danger' : 'text-sm text-muted'}
+          role="status"
+        >
+          {t('profile.weightsTotal', { total })}
+        </p>
+        <div>
+          <Button
+            variant="ghost"
+            onClick={() =>
+              setWeights(
+                Object.fromEntries(scoringCriteria.map((name) => [name, String(defaults[name])])),
+              )
+            }
+          >
+            {t('profile.actions.defaultWeights')}
+          </Button>
+        </div>
+      </fieldset>
+      <SaveRow busy={busy} error={error} saved={saved} />
+    </form>
+  );
+}
+
+export function ScoringSection() {
+  const { t } = useTranslation();
+  const profile = useQuery(profileQuery);
+  return (
+    <ProfileSection
+      id="profile-scoring"
+      title={t('profile.rubrics.scoring')}
+      intro={t('profile.intros.scoring')}
+    >
+      <Loading>
+        {profile.data && profile.isFetchedAfterMount ? (
+          <ScoringForm initial={profile.data} />
         ) : null}
       </Loading>
     </ProfileSection>

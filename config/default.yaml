@@ -178,6 +178,9 @@ collect:
     # ADR 0016 (docs/SOURCES.md, section 1.6): a new posting joins an announcement seen within
     # the last three weeks; past them, the same offer seen again is a new announcement.
     historyDays: 21
+    # The deterministic filter (phase 3 plan, section 6): an ad older than 60 days is set aside
+    # when its date is known.
+    maxAgeDays: 60
     listLimit: 50
   runs:
     retentionDays: 365
@@ -310,6 +313,16 @@ collect:
       enabledByDefault: true
 
 # Encrypted backups (plan, section 9; ADR 0012): pnpm stack:backup, pnpm stack:restore-test.
+# Scoring (phase 3 plan, sections 7 to 9).
+scoring:
+  # The grid of the detailed analysis (SPEC, section 5), 100 in all; the profile may change it.
+  defaultWeights:
+    skills: 30
+    experience: 20
+    languages: 15
+    practical: 15
+    sector: 10
+    motivations: 10
 # Geography (phase 3 plan, section 5; ADR 0017; docs/SOURCES.md, section 1.7).
 geo:
   # Road distance = straight line × 1.25 (the Belgian average); radius: profile.defaultRadiusKm.

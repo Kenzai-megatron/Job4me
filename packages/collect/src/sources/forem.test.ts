@@ -61,7 +61,10 @@ describe('Forem', () => {
       postedAt: '2026-11-22',
       url: 'https://www.leforem.be/recherche-offres/offre-detail/9100001',
       details: 'Intérimaire avec option sur durée indéterminée · Temps plein',
+      // The fields of their own, for the deterministic filter (phase 3 plan, section 6).
+      languages: ['nl'],
     });
+    expect(first!.contracts.sort()).toEqual(['interim', 'permanent']);
     expect(first!.description).toContain('Langues : Néerlandais.');
     expect(first!.description).toContain(
       'Source : Le Forem (ODWB, CC BY-SA 4.0), via Exemple Interim.',
@@ -74,6 +77,8 @@ describe('Forem', () => {
       location: 'Wavre (1300)',
       url: 'https://www.leforem.be/recherche-offres/offre-detail/9100003',
       details: 'Durée indéterminée',
+      contracts: ['permanent'],
+      languages: ['fr', 'nl'],
     });
     expect(third!.description).toContain('Langues : Français, Néerlandais.');
   });

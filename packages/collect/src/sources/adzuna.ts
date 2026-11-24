@@ -65,6 +65,7 @@ export function adzunaOffer(item: AdzunaResult, context: ConnectorContext): RawO
     details: [TERMS[item.contract_type ?? ''], TERMS[item.contract_time ?? ''], 'Jobs by Adzuna']
       .filter(Boolean)
       .join(' · '),
+    contract: item.contract_type,
   };
 }
 

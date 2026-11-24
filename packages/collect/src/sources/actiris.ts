@@ -63,6 +63,7 @@ export function actirisOffer(item: ActirisOffer, context: ConnectorContext): Raw
       ]
         .filter((part) => part && part.trim() !== '')
         .join(' · ') || null,
+    contract: item.typeContratLibelle,
   };
 }
 

@@ -3,6 +3,7 @@ import type {
   ManualOfferResponse,
   Offer,
   OfferPosting,
+  OfferView,
   RemoteMode,
 } from '@job4me/contracts';
 import { formatDate, formatNumber } from '@job4me/i18n';
@@ -203,6 +204,11 @@ function OfferItem({ offer }: { offer: Offer }) {
             : t('offers.seen', { date: formatDate(offer.firstSeenAt) }),
         ].join(' · ')}
       </p>
+      {offer.excluded ? (
+        <p className="text-sm font-medium">
+          {t('offers.excludedBecause', { reason: t(`offers.exclusions.${offer.excluded}`) })}
+        </p>
+      ) : null}
       {offer.postings.length > 1 ? (
         <p className="text-sm">{t('offers.postingCount', { count: offer.postings.length })}</p>
       ) : null}
@@ -232,9 +238,11 @@ export function OffersPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [source, setSource] = useState('');
+  const [view, setView] = useState<OfferView>('kept');
   const sources = useQuery(sourcesQuery);
-  const offers = useInfiniteQuery(offersQuery(source));
+  const offers = useInfiniteQuery(offersQuery(source, view));
   const items = offers.data?.pages.flatMap((page) => page.offers) ?? [];
+  const counts = offers.data?.pages[0]?.counts;
   const names = [...(sources.data?.sources.map((item) => item.name) ?? []), 'manual'];
 
   return (
@@ -266,9 +274,28 @@ export function OffersPage() {
         className="max-w-sm"
       />
 
+      {/* The deterministic filter (phase 3 plan, section 6): what it keeps, what it sets aside. */}
+      <div role="group" aria-label={t('offers.views.label')} className="flex flex-wrap gap-2">
+        {(['kept', 'excluded'] as const).map((name) => (
+          <Button
+            key={name}
+            variant={view === name ? 'primary' : 'secondary'}
+            aria-pressed={view === name}
+            onClick={() => setView(name)}
+          >
+            {counts
+              ? t(`offers.views.${name}Count`, { count: counts[name] })
+              : t(`offers.views.${name}`)}
+          </Button>
+        ))}
+      </div>
+      {view === 'excluded' ? <p className="text-sm text-muted">{t('offers.views.hint')}</p> : null}
+
       {offers.isError ? <Alert tone="error">{errorMessage(t, offers.error)}</Alert> : null}
       {offers.isSuccess && items.length === 0 ? (
-        <p className="text-muted">{t('offers.empty')}</p>
+        <p className="text-muted">
+          {view === 'excluded' ? t('offers.emptyExcluded') : t('offers.empty')}
+        </p>
       ) : null}
       {items.length > 0 ? (
         <Card aria-labelledby="offers-list-title">
