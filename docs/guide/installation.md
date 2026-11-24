@@ -164,6 +164,7 @@ Pour te connecter aussi depuis ton PC : sur la page de connexion, choisis la pas
 | Lancer un passage de collecte sans attendre 7 h 10 | `pnpm stack:cli sources:run` |
 | Sonder LinkedIn avant son connecteur (une fois, phase 2) | `pnpm probe:linkedin`, puis envoyer à Claude le bloc affiché ; après un refus (429), plus rien vers LinkedIn pendant 24 heures |
 | Journal de la collecte (offres lues, retenues, annonces inédites et parutions fusionnées par source) | écran **Sources**, ou `pnpm stack:logs worker` (lignes `source run`) |
+| Vérifier la ville de base (point de départ des distances) | **Profil > Critères pratiques** : « Ville de base trouvée : Bruxelles (1000) », sinon ajoute le code postal |
 
 Les conteneurs redémarrent seuls avec la machine (Docker démarré au boot). Tailscale garde sa configuration `serve`.
 

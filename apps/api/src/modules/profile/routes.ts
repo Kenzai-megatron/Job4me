@@ -7,17 +7,29 @@ import {
   okResponseSchema,
   profileIdParamsSchema,
   profilePatchSchema,
+  profileResponseSchema,
   profileSchema,
   type ProfileDocument,
   rubricPatchSchema,
 } from '@job4me/contracts';
-import { and, asc, count, eq, recordAudit, schema, type Transaction, withUser } from '@job4me/db';
+import {
+  and,
+  asc,
+  count,
+  eq,
+  recordAudit,
+  schema,
+  type Transaction,
+  updateDistances,
+  withUser,
+} from '@job4me/db';
 import { aadFor, decrypt, encrypt } from '@job4me/security';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
+import { baseLocation, baseOf, gazetteerOf, offerGeo } from '../collect/geo';
 import { type RubricDefinition, rubricDefinitions } from './rubrics';
 
 // Profile API (phase 1 plan, section 8): every handler runs inside withUser, so row-level
@@ -265,19 +277,23 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
   }
 
   return async (app) => {
-    const profileResponseSchema = profileSchema.extend({
-      defaultRadiusKm: z.number().int(),
-    });
-
     app.get(
       '/api/profile',
       { schema: { response: { 200: profileResponseSchema } } },
       async (request) => {
         const { userId } = requireSession(request);
-        const [row] = await withUser(deps.db, userId, (tx) =>
-          tx.select().from(schema.profiles).where(eq(schema.profiles.userId, userId)),
-        );
-        return { ...profileFromRow(row), defaultRadiusKm: settings.profile.defaultRadiusKm };
+        const gazetteer = await gazetteerOf(deps.db, settings);
+        return withUser(deps.db, userId, async (tx) => {
+          const [row] = await tx
+            .select()
+            .from(schema.profiles)
+            .where(eq(schema.profiles.userId, userId));
+          return {
+            ...profileFromRow(row),
+            defaultRadiusKm: settings.profile.defaultRadiusKm,
+            baseLocation: baseLocation(await baseOf(tx, userId, gazetteer)),
+          };
+        });
       },
     );
 
@@ -286,19 +302,29 @@ export function profileRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       { schema: { body: profilePatchSchema, response: { 200: profileResponseSchema } } },
       async (request) => {
         const { userId } = requireSession(request);
-        const row = await withUser(deps.db, userId, async (tx) => {
+        const gazetteer = await gazetteerOf(deps.db, settings);
+        return withUser(deps.db, userId, async (tx) => {
+          const at = now();
           const [saved] = await tx
             .insert(schema.profiles)
             .values({ ...request.body, userId })
             .onConflictDoUpdate({
               target: schema.profiles.userId,
-              set: { ...request.body, updatedAt: now() },
+              set: { ...request.body, updatedAt: at },
             })
             .returning();
           await audit(tx, userId, request.id, { rubric: 'profile', op: 'updated' });
-          return saved;
+          const base = await baseOf(tx, userId, gazetteer);
+          // A new base city: every distance is measured again from it (ADR 0017).
+          if ('baseCity' in request.body || 'basePostalCode' in request.body) {
+            await updateDistances(tx, userId, offerGeo(base.place, settings), at);
+          }
+          return {
+            ...profileFromRow(saved),
+            defaultRadiusKm: settings.profile.defaultRadiusKm,
+            baseLocation: baseLocation(base),
+          };
         });
-        return { ...profileFromRow(row), defaultRadiusKm: settings.profile.defaultRadiusKm };
       },
     );
 

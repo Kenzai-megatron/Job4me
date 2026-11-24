@@ -3,11 +3,14 @@ import {
   type CollectedOffer,
   DEDUP_VERSION,
   employerWords,
+  type Gazetteer,
   identify,
   type IncomingPosting,
+  type Place,
   type Placement,
   placePostings,
   type PostingIdentity,
+  remoteOf,
   type StoredPosting,
 } from '@job4me/collect';
 import type { PassTrigger } from '@job4me/contracts';
@@ -19,7 +22,10 @@ import {
   eq,
   findHistoryPostings,
   inArray,
+  isNull,
   lt,
+  type OfferGeo,
+  or,
   refreshOffers,
   schema,
   sql,
@@ -31,7 +37,9 @@ import type { Logger } from '@job4me/logger';
 // Postings and their announcements (ADR 0016). Each posting of a run is placed by the merge
 // rules of packages/collect: its own announcement when it was stored before, one it joins, or a
 // new one. A test pass places them without writing anything, so its log still says how many
-// announcements were new and how many postings were merged.
+// announcements were new and how many postings were merged. Each posting is also located in the
+// Belgian localities, with the remote work it announces (ADR 0017); the announcement takes the
+// most precise place of its postings and its distance from the profile's base city.
 
 const DAY_MS = 86_400_000;
 const CHUNK = 500;
@@ -44,6 +52,39 @@ export interface StoreContext {
   settings: Settings;
   /** Source names in calling order: the first one called wins a tie for the retained posting. */
   sourceOrder: readonly string[];
+  gazetteer: Gazetteer;
+  /** Distances are measured from the profile's base city. */
+  geo: OfferGeo;
+}
+
+/** Where distances are measured from: the base city, when the localities know it. */
+export function offerGeo(base: Place, settings: Settings): OfferGeo {
+  return {
+    base: base.status === 'found' ? { latitude: base.latitude, longitude: base.longitude } : null,
+    roadFactor: settings.geo.roadFactor,
+  };
+}
+
+/** The base city of an account's profile, read in the localities. */
+export async function baseOf(tx: Transaction, userId: string, gazetteer: Gazetteer) {
+  const [profile] = await tx
+    .select({ city: schema.profiles.baseCity, code: schema.profiles.basePostalCode })
+    .from(schema.profiles)
+    .where(eq(schema.profiles.userId, userId));
+  return gazetteer.locateBase(profile?.city ?? null, profile?.code ?? null);
+}
+
+/** The columns of a posting's place (ADR 0017). */
+function placeColumns(place: Place, remote: ReturnType<typeof remoteOf>) {
+  const found = place.status === 'found' ? place : null;
+  return {
+    placeStatus: place.status,
+    placeName: found?.name ?? null,
+    postalCode: found?.postalCode ?? null,
+    latitude: found?.latitude ?? null,
+    longitude: found?.longitude ?? null,
+    remote,
+  };
 }
 
 export interface StoreResult {
@@ -169,6 +210,7 @@ export async function storePostings(
             titleRefs: identity.refs,
             dedupVersion: DEDUP_VERSION,
             mergeReason: reasonOf(placements[position]!),
+            ...placeColumns(context.gazetteer.locate(offer.location), remoteOf(offer)),
           };
         }),
       )
@@ -189,104 +231,195 @@ export async function storePostings(
           bareTitle: sql`excluded.bare_title`,
           titleRefs: sql`excluded.title_refs`,
           dedupVersion: sql`excluded.dedup_version`,
+          placeStatus: sql`excluded.place_status`,
+          placeName: sql`excluded.place_name`,
+          postalCode: sql`excluded.postal_code`,
+          latitude: sql`excluded.latitude`,
+          longitude: sql`excluded.longitude`,
+          remote: sql`excluded.remote`,
           lastSeenAt: at,
           updatedAt: at,
         },
       });
   }
-  await refreshOffers(tx, userId, targets, context.sourceOrder, at);
+  await refreshOffers(tx, userId, targets, context.sourceOrder, at, context.geo);
   return result;
+}
+
+export interface StartupDeps {
+  db: Database;
+  logger: Logger;
+  gazetteer: Gazetteer;
+  settings: Settings;
+}
+
+export interface StartupCounts {
+  identified: number;
+  regrouped: number;
+  located: number;
 }
 
 /**
  * Postings stored before their identity existed (phase 2) or under an older normalization: the
  * identity is computed again. Those never identified were alone in their announcement
  * (migration 0009): the ones that are the same announcement are regrouped once, by the history
- * rules, in the order they were first seen. Runs at the worker's start-up, account by account.
+ * rules, in the order they were first seen. Returns the announcements to refresh.
  */
-export async function identifyStoredPostings(
-  deps: { db: Database; logger: Logger },
-  sourceOrder: readonly string[],
-  now: Date = new Date(),
+async function identifyStored(
+  tx: Transaction,
+  userId: string,
+  now: Date,
+  touched: Set<string>,
 ): Promise<{ identified: number; regrouped: number }> {
   const postings = schema.jobOffers;
+  const rows = await tx
+    .select({
+      id: postings.id,
+      offerId: postings.offerId,
+      source: postings.source,
+      url: postings.url,
+      title: postings.title,
+      company: postings.company,
+      version: postings.dedupVersion,
+    })
+    .from(postings)
+    .where(and(eq(postings.userId, userId), lt(postings.dedupVersion, DEDUP_VERSION)))
+    .orderBy(asc(postings.firstSeenAt), asc(postings.id));
+  if (rows.length === 0) return { identified: 0, regrouped: 0 };
+  const identities = rows.map((row) => identify(row.title, row.company));
+  for (let index = 0; index < rows.length; index += CHUNK) {
+    const values = rows.slice(index, index + CHUNK).map((row, offset) => {
+      const identity = identities[index + offset]!;
+      const refs = sql`array[${sql.join(
+        identity.refs.map((ref) => sql`${ref}`),
+        sql`, `,
+      )}]::text[]`;
+      return sql`(${row.id}::uuid, ${identity.key}, ${identity.bare}, ${refs})`;
+    });
+    await tx.execute(sql`
+      update ${postings}
+      set content_key = identified.key, bare_title = identified.bare,
+        title_refs = identified.refs, dedup_version = ${DEDUP_VERSION}, updated_at = ${now}
+      from (values ${sql.join(values, sql`, `)}) as identified (id, key, bare, refs)
+      where ${postings.id} = identified.id and ${postings.userId} = ${userId}
+    `);
+  }
+
+  // Regrouped once: the postings never identified, each alone in its announcement. An offer
+  // added by hand stays where it is (collected postings may join it): two of them are never
+  // merged together, each was meant.
+  const fresh = rows.flatMap((row, index) => (row.version === 0 ? [index] : []));
+  const placements = placePostings(
+    fresh.map((index) => {
+      const row = rows[index]!;
+      return {
+        source: row.source,
+        url: row.url,
+        identity: identities[index]!,
+        known: row.source === 'manual' ? { postingId: row.id, offerId: row.offerId } : null,
+      };
+    }),
+    [],
+    'history',
+  );
+  let moved = 0;
+  for (const [position, placement] of placements.entries()) {
+    if (placement.kind !== 'grouped' && placement.kind !== 'joined') continue;
+    const row = rows[fresh[position]!]!;
+    // Joined: an offer added by hand; grouped: the first posting of the announcement.
+    const target =
+      placement.kind === 'joined' ? placement.offerId : rows[fresh[placement.leader]!]!.offerId;
+    await tx
+      .update(postings)
+      .set({ offerId: target, mergeReason: placement.reason, updatedAt: now })
+      .where(and(eq(postings.id, row.id), eq(postings.userId, userId)));
+    touched.add(target).add(row.offerId);
+    moved += 1;
+  }
+  return { identified: rows.length, regrouped: moved };
+}
+
+/** Postings stored before the geography (ADR 0017): located once, with their remote work. */
+async function locateStored(
+  tx: Transaction,
+  userId: string,
+  gazetteer: Gazetteer,
+  now: Date,
+  touched: Set<string>,
+): Promise<number> {
+  const postings = schema.jobOffers;
+  const rows = await tx
+    .select({
+      id: postings.id,
+      offerId: postings.offerId,
+      location: postings.location,
+      title: postings.title,
+      description: postings.description,
+    })
+    .from(postings)
+    .where(and(eq(postings.userId, userId), isNull(postings.placeStatus)));
+  for (let index = 0; index < rows.length; index += CHUNK) {
+    const values = rows.slice(index, index + CHUNK).map((row) => {
+      const place = placeColumns(gazetteer.locate(row.location), remoteOf(row));
+      touched.add(row.offerId);
+      return sql`(${row.id}::uuid, ${place.placeStatus}::text, ${place.placeName}::text,
+        ${place.postalCode}::text, ${place.latitude}::double precision,
+        ${place.longitude}::double precision, ${place.remote}::text)`;
+    });
+    await tx.execute(sql`
+      update ${postings}
+      set place_status = located.status, place_name = located.name,
+        postal_code = located.code, latitude = located.latitude, longitude = located.longitude,
+        remote = located.remote, updated_at = ${now}
+      from (values ${sql.join(values, sql`, `)})
+        as located (id, status, name, code, latitude, longitude, remote)
+      where ${postings.id} = located.id and ${postings.userId} = ${userId}
+    `);
+  }
+  return rows.length;
+}
+
+/**
+ * At the worker's start-up, account by account: postings without their identity (ADR 0016) or
+ * their place (ADR 0017) get them, and their announcements are refreshed, distances included.
+ */
+export async function prepareStoredPostings(
+  deps: StartupDeps,
+  sourceOrder: readonly string[],
+  now: Date = new Date(),
+): Promise<StartupCounts> {
   const accounts = await deps.db.select({ id: schema.users.id }).from(schema.users);
-  let identified = 0;
-  let regrouped = 0;
+  const total: StartupCounts = { identified: 0, regrouped: 0, located: 0 };
   for (const account of accounts) {
     const userId = account.id;
     const counts = await withUser(deps.db, userId, async (tx) => {
-      const rows = await tx
-        .select({
-          id: postings.id,
-          offerId: postings.offerId,
-          source: postings.source,
-          url: postings.url,
-          title: postings.title,
-          company: postings.company,
-          version: postings.dedupVersion,
-        })
-        .from(postings)
-        .where(and(eq(postings.userId, userId), lt(postings.dedupVersion, DEDUP_VERSION)))
-        .orderBy(asc(postings.firstSeenAt), asc(postings.id));
-      if (rows.length === 0) return { identified: 0, regrouped: 0 };
-      const identities = rows.map((row) => identify(row.title, row.company));
-      for (let index = 0; index < rows.length; index += CHUNK) {
-        const values = rows.slice(index, index + CHUNK).map((row, offset) => {
-          const identity = identities[index + offset]!;
-          const refs = sql`array[${sql.join(
-            identity.refs.map((ref) => sql`${ref}`),
-            sql`, `,
-          )}]::text[]`;
-          return sql`(${row.id}::uuid, ${identity.key}, ${identity.bare}, ${refs})`;
-        });
-        await tx.execute(sql`
-          update ${postings}
-          set content_key = identified.key, bare_title = identified.bare,
-            title_refs = identified.refs, dedup_version = ${DEDUP_VERSION}, updated_at = ${now}
-          from (values ${sql.join(values, sql`, `)}) as identified (id, key, bare, refs)
-          where ${postings.id} = identified.id and ${postings.userId} = ${userId}
-        `);
-      }
-
-      // Regrouped once: the postings never identified, each alone in its announcement. An
-      // offer added by hand stays where it is (collected postings may join it): two of them
-      // are never merged together, each was meant.
-      const fresh = rows.flatMap((row, index) => (row.version === 0 ? [index] : []));
-      const placements = placePostings(
-        fresh.map((index) => {
-          const row = rows[index]!;
-          return {
-            source: row.source,
-            url: row.url,
-            identity: identities[index]!,
-            known: row.source === 'manual' ? { postingId: row.id, offerId: row.offerId } : null,
-          };
-        }),
-        [],
-        'history',
-      );
+      const pending = await tx
+        .select({ id: schema.jobOffers.id })
+        .from(schema.jobOffers)
+        .where(
+          and(
+            eq(schema.jobOffers.userId, userId),
+            or(
+              lt(schema.jobOffers.dedupVersion, DEDUP_VERSION),
+              isNull(schema.jobOffers.placeStatus),
+            ),
+          ),
+        )
+        .limit(1);
+      if (pending.length === 0) return { identified: 0, regrouped: 0, located: 0 };
       const touched = new Set<string>();
-      let moved = 0;
-      for (const [position, placement] of placements.entries()) {
-        if (placement.kind !== 'grouped' && placement.kind !== 'joined') continue;
-        const row = rows[fresh[position]!]!;
-        // Joined: an offer added by hand; grouped: the first posting of the announcement.
-        const target =
-          placement.kind === 'joined' ? placement.offerId : rows[fresh[placement.leader]!]!.offerId;
-        await tx
-          .update(postings)
-          .set({ offerId: target, mergeReason: placement.reason, updatedAt: now })
-          .where(and(eq(postings.id, row.id), eq(postings.userId, userId)));
-        touched.add(target).add(row.offerId);
-        moved += 1;
-      }
-      await refreshOffers(tx, userId, [...touched], sourceOrder, now);
-      return { identified: rows.length, regrouped: moved };
+      const identity = await identifyStored(tx, userId, now, touched);
+      const located = await locateStored(tx, userId, deps.gazetteer, now, touched);
+      const geo = offerGeo(await baseOf(tx, userId, deps.gazetteer), deps.settings);
+      await refreshOffers(tx, userId, [...touched], sourceOrder, now, geo);
+      return { ...identity, located };
     });
-    identified += counts.identified;
-    regrouped += counts.regrouped;
+    total.identified += counts.identified;
+    total.regrouped += counts.regrouped;
+    total.located += counts.located;
   }
-  if (identified > 0) deps.logger.info({ identified, regrouped }, 'stored postings identified');
-  return { identified, regrouped };
+  if (total.identified + total.located > 0) {
+    deps.logger.info(total, 'stored postings prepared');
+  }
+  return total;
 }

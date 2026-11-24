@@ -1,20 +1,27 @@
 import { randomBytes } from 'node:crypto';
 import { Writable } from 'node:stream';
-import { availableConnectors, type Connector, eachKeyword, SourceSkipped } from '@job4me/collect';
+import {
+  availableConnectors,
+  type Connector,
+  eachKeyword,
+  Gazetteer,
+  SourceSkipped,
+} from '@job4me/collect';
 import { loadConfig, type Settings } from '@job4me/config';
-import { connect, type DatabaseHandle, eq, schema, withUser } from '@job4me/db';
+import { connect, type DatabaseHandle, eq, readLocalities, schema, withUser } from '@job4me/db';
 import { createTestDatabase, type TestDatabase } from '@job4me/db/testing';
 import { createLogger } from '@job4me/logger';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { judgeRun } from './collect/alerts';
 import { closeStalePasses, type CollectDeps, keywordsFor, runPass } from './collect/pass';
-import { identifyStoredPostings } from './collect/postings';
+import { prepareStoredPostings } from './collect/postings';
 import { dueSources, isoWeekday, purgeCollection, schedulePasses } from './collect/schedule';
 
 let database: TestDatabase;
 let handle: DatabaseHandle;
 let settings: Settings;
+let gazetteer: Gazetteer;
 
 const lines: string[] = [];
 const logger = createLogger({
@@ -54,6 +61,7 @@ beforeAll(async () => {
     off: { ...source, enabledByDefault: false },
   };
   settings = loaded;
+  gazetteer = new Gazetteer(await readLocalities(handle.db), settings.geo);
 });
 
 afterAll(async () => {
@@ -172,6 +180,7 @@ function deps(connectors: Connector[], extra: Partial<CollectDeps> = {}): Collec
     db: handle.db,
     settings,
     logger,
+    gazetteer,
     connectors,
     secrets: {},
     sleep: () => Promise.resolve(),
@@ -572,7 +581,13 @@ describe('a collection pass', () => {
 /** A connector handing over the given offers, as written by its site. */
 const giving = (
   name: string,
-  offers: Array<{ id: string; title: string; company?: string; description?: string }>,
+  offers: Array<{
+    id: string;
+    title: string;
+    company?: string;
+    description?: string;
+    location?: string;
+  }>,
 ) =>
   connector({
     name,
@@ -583,6 +598,7 @@ const giving = (
           title: offer.title,
           company: offer.company ?? null,
           description: offer.description ?? null,
+          location: offer.location ?? null,
           url: `https://jobs.example.org/${name}/${offer.id}`,
         })),
       );
@@ -712,8 +728,11 @@ describe('announcements (ADR 0016)', () => {
           .where(eq(schema.offers.id, offer!.id));
       }
     });
-    const result = await identifyStoredPostings({ db: handle.db, logger }, ['alpha', 'beta']);
+    const prepare = () =>
+      prepareStoredPostings({ db: handle.db, logger, gazetteer, settings }, ['alpha', 'beta']);
+    const result = await prepare();
     expect(result.identified).toBeGreaterThanOrEqual(3);
+    expect(result.located).toBeGreaterThanOrEqual(6);
     const postings = await offersOf(userId);
     expect(postings.every((posting) => posting.contentKey !== null)).toBe(true);
     expect(postings.every((posting) => posting.dedupVersion === 1)).toBe(true);
@@ -727,8 +746,76 @@ describe('announcements (ADR 0016)', () => {
     expect(comptable.lastSeenAt.getTime()).toBe(byId.get('l2')!.lastSeenAt.getTime());
 
     // Once only: the next start-up finds nothing to do.
-    const next = await identifyStoredPostings({ db: handle.db, logger }, ['alpha', 'beta']);
-    expect(next).toEqual({ identified: 0, regrouped: 0 });
+    expect(await prepare()).toEqual({ identified: 0, regrouped: 0, located: 0 });
+  });
+});
+
+describe('geography (ADR 0017)', () => {
+  const based = async (city: string | null, postalCode: string | null = null) => {
+    const userId = await account();
+    await withUser(handle.db, userId, (tx) =>
+      tx.insert(schema.profiles).values({ userId, baseCity: city, basePostalCode: postalCode }),
+    );
+    return userId;
+  };
+
+  it('locates each posting and measures its announcement from the base city', async () => {
+    const userId = await based('Bruxelles', '1000');
+    const alpha = giving('alpha', [
+      { id: 'g1', title: 'Comptable', company: 'Exemple', location: 'Mechelen' },
+      { id: 'g2', title: 'Juriste', company: 'Exemple', location: 'Gent, Flemish Region, Belgium' },
+      { id: 'g3', title: 'Analyste', company: 'Exemple', location: 'Belgium' },
+      { id: 'g4', title: 'Acheteur', company: 'Exemple', location: 'Montrouge, France' },
+      {
+        id: 'g5',
+        title: 'Développeur (Remote)',
+        company: 'Exemple',
+        location: 'Bruxelles (hybride)',
+      },
+    ]);
+    await runPass(deps([alpha]), { userId, passId: await pass(userId, ['alpha']) });
+    const postings = await offersOf(userId);
+    const byId = new Map(postings.map((posting) => [posting.externalId, posting]));
+    expect(byId.get('g1')).toMatchObject({
+      placeStatus: 'found',
+      placeName: 'Mechelen',
+      postalCode: '2800',
+    });
+    const announcements = new Map(
+      (await announcementsOf(userId)).map((offer) => [offer.id, offer]),
+    );
+    const of = (id: string) => announcements.get(byId.get(id)!.offerId)!;
+    expect(of('g1')).toMatchObject({ placeStatus: 'found', placeName: 'Mechelen', distanceKm: 27 });
+    expect(of('g2')).toMatchObject({ placeStatus: 'found', placeName: 'Gent' });
+    expect(of('g2').distanceKm).toBeGreaterThan(60);
+    expect(of('g3')).toMatchObject({ placeStatus: 'unknown', distanceKm: null });
+    expect(of('g4')).toMatchObject({ placeStatus: 'abroad', distanceKm: null });
+    expect(of('g5')).toMatchObject({ placeName: 'Bruxelles', distanceKm: 0, remote: 'full' });
+  });
+
+  it('measures nothing without a base city found in the localities', async () => {
+    const userId = await based('Nulle part');
+    const alpha = giving('alpha', [{ id: 'n1', title: 'Comptable', location: 'Mechelen' }]);
+    await runPass(deps([alpha]), { userId, passId: await pass(userId, ['alpha']) });
+    const [offer] = await announcementsOf(userId);
+    expect(offer).toMatchObject({ placeStatus: 'found', placeName: 'Mechelen', distanceKm: null });
+  });
+
+  it('centres the searches around a point on the base city, else on the configured area', async () => {
+    const centres: Array<{ name: string; lat: number; lon: number }> = [];
+    const spy = connector({
+      name: 'alpha',
+      run(context) {
+        centres.push(context.center);
+        return Promise.resolve();
+      },
+    });
+    const malines = await based(null, '2800');
+    await runPass(deps([spy]), { userId: malines, passId: await pass(malines, ['alpha']) });
+    const nowhere = await based('Nulle part');
+    await runPass(deps([spy]), { userId: nowhere, passId: await pass(nowhere, ['alpha']) });
+    expect(centres[0]).toMatchObject({ name: 'Mechelen', lat: 51.0257 });
+    expect(centres[1]).toEqual(settings.collect.area);
   });
 });
 

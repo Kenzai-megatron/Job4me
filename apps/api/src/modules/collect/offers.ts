@@ -5,6 +5,7 @@ import {
   employerWords,
   identify,
   placePostings,
+  remoteOf,
 } from '@job4me/collect';
 import {
   manualOfferInputSchema,
@@ -43,6 +44,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
+import { baseOf, gazetteerOf, offerGeo } from './geo';
 
 // Offers (phase 3 plan, sections 4 and 10; ADR 0016): announcements, each with every posting
 // that carries it. Every query filters on the signed-in account and runs under row-level
@@ -61,6 +63,8 @@ function toPosting(row: JobOfferRow): OfferPosting {
     postedOn: row.postedOn,
     url: row.url,
     mergeReason: row.mergeReason,
+    place: { status: row.placeStatus, name: row.placeName, postalCode: row.postalCode },
+    remote: row.remote,
     firstSeenAt: row.firstSeenAt.toISOString(),
     lastSeenAt: row.lastSeenAt.toISOString(),
   });
@@ -107,6 +111,13 @@ export async function loadOffers(
         description: retained.description,
         firstSeenAt: offer.firstSeenAt.toISOString(),
         lastSeenAt: offer.lastSeenAt.toISOString(),
+        place: {
+          status: offer.placeStatus,
+          name: offer.placeName,
+          postalCode: offer.postalCode,
+          distanceKm: offer.distanceKm,
+        },
+        remote: offer.remote,
         postings: [retained, ...list.filter((posting) => posting !== retained)].map(toPosting),
       }),
     ];
@@ -233,7 +244,9 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
             .update(postings)
             .set({ offerId: detachedId!, mergeReason: null, updatedAt: at })
             .where(and(eq(postings.id, postingId), eq(postings.userId, userId)));
-          await refreshOffers(tx, userId, [id, detachedId!], sourceOrder(), at);
+          const gazetteer = await gazetteerOf(deps.db, settings);
+          const geo = offerGeo((await baseOf(tx, userId, gazetteer)).place, settings);
+          await refreshOffers(tx, userId, [id, detachedId!], sourceOrder(), at, geo);
           await recordAudit(tx, {
             actorType: 'user',
             actorUserId: userId,
@@ -269,6 +282,9 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
         const company = input.company ?? '?';
         const identity = identify(input.title, company);
         const since = new Date(at.getTime() - settings.collect.offers.historyDays * DAY_MS);
+        const gazetteer = await gazetteerOf(deps.db, settings);
+        const place = gazetteer.locate(input.location);
+        const found = place.status === 'found' ? place : null;
         return withUser(deps.db, userId, async (tx) => {
           const stored = await findHistoryPostings(
             tx,
@@ -316,11 +332,22 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
               titleRefs: identity.refs,
               dedupVersion: DEDUP_VERSION,
               mergeReason: joined?.reason ?? null,
+              placeStatus: place.status,
+              placeName: found?.name ?? null,
+              postalCode: found?.postalCode ?? null,
+              latitude: found?.latitude ?? null,
+              longitude: found?.longitude ?? null,
+              remote: remoteOf({
+                location: input.location,
+                title: input.title,
+                description: input.text,
+              }),
             })
             .onConflictDoNothing()
             .returning();
           if (!row) throw new HttpError(409, 'duplicate');
-          await refreshOffers(tx, userId, [offerId], sourceOrder(), at);
+          const geo = offerGeo((await baseOf(tx, userId, gazetteer)).place, settings);
+          await refreshOffers(tx, userId, [offerId], sourceOrder(), at, geo);
           await recordAudit(tx, {
             actorType: 'user',
             actorUserId: userId,

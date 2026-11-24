@@ -178,6 +178,22 @@ export type OfferOrigin = (typeof offerOrigins)[number];
 export const mergeReasons = ['key', 'reference', 'url', 'employer', 'no_employer'] as const;
 export type MergeReason = (typeof mergeReasons)[number];
 
+/**
+ * Where an offer is (ADR 0017): found in the Belgian localities, unknown (kept, without a
+ * distance) or abroad; null until the worker has read it.
+ */
+export const placeStatuses = ['found', 'unknown', 'abroad'] as const;
+export type PlaceStatus = (typeof placeStatuses)[number];
+/** Remote work announced by an offer: fully, or partly. */
+export const remoteModes = ['full', 'hybrid'] as const;
+export type RemoteMode = (typeof remoteModes)[number];
+
+export const postingPlaceSchema = z.object({
+  status: z.enum(placeStatuses).nullable(),
+  name: z.string().nullable(),
+  postalCode: z.string().nullable(),
+});
+
 /** A posting: the offer as one site carries it (docs/SOURCES.md, section 1.1); "?" is unknown. */
 export const offerPostingSchema = z.object({
   id: z.uuid(),
@@ -190,6 +206,8 @@ export const offerPostingSchema = z.object({
   url: z.string().nullable(),
   /** How it joined the announcement; null for the posting that started it. */
   mergeReason: z.enum(mergeReasons).nullable(),
+  place: postingPlaceSchema,
+  remote: z.enum(remoteModes).nullable(),
   firstSeenAt: z.string(),
   lastSeenAt: z.string(),
 });
@@ -212,6 +230,9 @@ export const offerSchema = z.object({
   description: z.string(),
   firstSeenAt: z.string(),
   lastSeenAt: z.string(),
+  /** The most precise place of its postings, and the road distance from the base city. */
+  place: postingPlaceSchema.extend({ distanceKm: z.number().int().min(0).nullable() }),
+  remote: z.enum(remoteModes).nullable(),
   postings: z.array(offerPostingSchema).min(1),
 });
 export type Offer = z.infer<typeof offerSchema>;

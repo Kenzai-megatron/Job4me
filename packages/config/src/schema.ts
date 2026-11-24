@@ -291,6 +291,16 @@ export const settingsSchema = z
       }),
       sources: z.record(z.string().regex(/^[a-z][a-z0-9_]{1,31}$/), sourceSettingsSchema),
     }),
+    /** Geography (ADR 0017; docs/SOURCES.md, section 1.7). */
+    geo: z.object({
+      /** Road distance from the straight line: 1.25 on average in Belgium. */
+      roadFactor: z.number().min(1).max(3),
+      /** A place name carried by two places further apart than this is not guessed. */
+      ambiguityKm: z.number().min(1).max(100),
+      /** Four figures in this range are years, not postal codes. */
+      yearsFrom: z.number().int().min(1000).max(9999),
+      yearsTo: z.number().int().min(1000).max(9999),
+    }),
     backups: z.object({
       /** The most recent backups kept, then one a week for this many weeks (ADR 0012). */
       keepDaily: z.number().int().min(1).max(365),

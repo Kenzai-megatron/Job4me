@@ -71,6 +71,13 @@
       "when": 1795459004510,
       "tag": "0009_announcements",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795504010100,
+      "tag": "0010_geography",
+      "breakpoints": true
     }
   ]
 }

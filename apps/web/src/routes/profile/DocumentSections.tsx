@@ -131,8 +131,41 @@ function IdentityForm({ initial }: { initial: Identity }) {
   );
 }
 
+/**
+ * The base city as the localities read it (ADR 0017): « Bruxelles, 1000 : trouvée », or why
+ * distances cannot be measured. Read again after each save.
+ */
+function BaseCityCheck() {
+  const { t } = useTranslation();
+  const profile = useQuery(profileQuery);
+  const base = profile.data?.baseLocation;
+  if (!base || base.status === 'missing') return null;
+  return (
+    <div className="flex flex-col gap-1 text-sm" role="status">
+      {base.status === 'found' ? (
+        <p>{t('profile.base.found', { name: base.name, postalCode: base.postalCode })}</p>
+      ) : (
+        <p className="text-danger">{t(`profile.base.${base.status}`)}</p>
+      )}
+      <p className="text-muted">
+        {t('profile.base.attribution')}{' '}
+        <a
+          href="https://www.geonames.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent underline underline-offset-4"
+        >
+          {t('profile.base.geonames')}
+        </a>{' '}
+        {t('profile.base.license')}
+      </p>
+    </div>
+  );
+}
+
 function PracticalForm({ initial }: { initial: ProfileResponse }) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { busy, error, saved, save } = useSave();
   const [baseCity, setBaseCity] = useState(initial.baseCity ?? '');
   const [postalCode, setPostalCode] = useState(initial.basePostalCode ?? '');
@@ -147,8 +180,8 @@ function PracticalForm({ initial }: { initial: ProfileResponse }) {
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    void save(() =>
-      api.patch('/api/profile', {
+    void save(async () => {
+      await api.patch('/api/profile', {
         baseCity: orNull(baseCity),
         basePostalCode: orNull(postalCode),
         radiusKm: radius.trim() === '' ? null : Number(radius),
@@ -157,8 +190,11 @@ function PracticalForm({ initial }: { initial: ProfileResponse }) {
         remotePreference: orNull(remote),
         salaryMinMonthly: salary.trim() === '' ? null : Number(salary),
         availableFrom: orNull(available),
-      }),
-    );
+      });
+      // Distances are measured from the base city: the offers show them again.
+      await queryClient.invalidateQueries({ queryKey: ['offers'] });
+      await queryClient.invalidateQueries({ queryKey: ['offer'] });
+    });
   };
 
   return (
@@ -176,6 +212,7 @@ function PracticalForm({ initial }: { initial: ProfileResponse }) {
         value={postalCode}
         onChange={(event) => setPostalCode(event.target.value)}
       />
+      <BaseCityCheck />
       <TextField
         label={t('profile.fields.radiusKm')}
         hint={t('profile.hints.radiusKm', { km: initial.defaultRadiusKm })}

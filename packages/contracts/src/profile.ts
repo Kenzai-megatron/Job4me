@@ -51,6 +51,25 @@ export const profileSchema = z.object({
 export const profilePatchSchema = profileSchema.partial();
 export type ProfileDocument = z.infer<typeof profileSchema>;
 
+/**
+ * The base city read in the Belgian localities (ADR 0017): found (« Bruxelles, 1000 »), unknown,
+ * abroad, or missing from the profile. Distances are measured from it.
+ */
+export const baseLocationStatuses = ['found', 'unknown', 'abroad', 'missing'] as const;
+export const baseLocationSchema = z.object({
+  status: z.enum(baseLocationStatuses),
+  name: z.string().nullable(),
+  postalCode: z.string().nullable(),
+});
+export type BaseLocation = z.infer<typeof baseLocationSchema>;
+
+/** The profile document as the API returns it. */
+export const profileResponseSchema = profileSchema.extend({
+  defaultRadiusKm: z.number().int(),
+  baseLocation: baseLocationSchema,
+});
+export type ProfileResponse = z.infer<typeof profileResponseSchema>;
+
 /** Identity and contact details: encrypted at rest, never sent to the AI. */
 export const identitySchema = z.object({
   fullName: z.string().trim().max(120).nullable(),

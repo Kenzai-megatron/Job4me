@@ -101,11 +101,11 @@ export function foremOffer(item: ForemRecord, context: ConnectorContext): RawOff
   };
 }
 
-/** The ODSQL filter: the keyword, the distance around the centre, the age of the ad. */
+/** The ODSQL filter: the keyword, the distance around the base city, the age of the ad. */
 export function foremWhere(keyword: string, context: ConnectorContext): string {
   // Quotes and backslashes would end the ODSQL string: they go.
   const term = keyword.replace(/["\\]/g, ' ').replace(/\s+/g, ' ').trim();
-  const { lat, lon } = context.area;
+  const { lat, lon } = context.center;
   const parts = [
     `search("${term}")`,
     `within_distance(lieuxtravailgeo, geom'POINT(${lon} ${lat})', ${context.radiusKm}km)`,

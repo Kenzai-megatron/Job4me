@@ -1,5 +1,11 @@
-import type { ManualOfferInput, ManualOfferResponse, Offer } from '@job4me/contracts';
-import { formatDate } from '@job4me/i18n';
+import type {
+  ManualOfferInput,
+  ManualOfferResponse,
+  Offer,
+  OfferPosting,
+  RemoteMode,
+} from '@job4me/contracts';
+import { formatDate, formatNumber } from '@job4me/i18n';
 import { Alert, Button, Card, SelectField, TextAreaField, TextField } from '@job4me/ui';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -136,6 +142,31 @@ function AddOffer({ onAdded }: { onAdded: () => void }) {
   );
 }
 
+/**
+ * Where an offer is (ADR 0017): the locality and its road distance from the base city, the place
+ * as written when it is abroad or unknown, and the remote work it announces.
+ */
+export function usePlaceLabel() {
+  const { t } = useTranslation();
+  return (
+    place: OfferPosting['place'] & { distanceKm?: number | null },
+    location: string,
+    remote: RemoteMode | null,
+  ) => {
+    const where =
+      place.status === 'found' && place.name
+        ? typeof place.distanceKm === 'number'
+          ? t('offers.place.distance', { name: place.name, km: formatNumber(place.distanceKm) })
+          : place.name
+        : place.status === 'abroad'
+          ? t('offers.place.abroad', { location })
+          : location === '?'
+            ? t('offers.place.unknown')
+            : location;
+    return remote ? `${where} · ${t(`offers.remote.${remote}`)}` : where;
+  };
+}
+
 /** The sites that carry an announcement, each named once, the retained one first. */
 export function useSourceNames() {
   const { t } = useTranslation();
@@ -149,6 +180,7 @@ export function useSourceNames() {
 function OfferItem({ offer }: { offer: Offer }) {
   const { t } = useTranslation();
   const sourceNames = useSourceNames();
+  const placeLabel = usePlaceLabel();
   const link = safeLink(offer.url);
   return (
     <li className="flex flex-col gap-1 py-4">
@@ -164,7 +196,7 @@ function OfferItem({ offer }: { offer: Offer }) {
       <p className="text-sm text-muted">
         {[
           offer.company,
-          offer.location,
+          placeLabel(offer.place, offer.location, offer.remote),
           sourceNames(offer),
           offer.postedOn
             ? t('offers.posted', { date: formatDate(offer.postedOn) })

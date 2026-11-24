@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { LOCALITIES_SHA256, loadLocalities } from './localities';
 import { runMigrations } from './migrate';
 import { createTestDatabase, type TestDatabase } from './testing';
 
@@ -37,6 +38,7 @@ describe('migrations', () => {
       'auth_throttle',
       'certification',
       'collection_pass',
+      'dataset',
       'education',
       'elimination_rule',
       'excluded_company',
@@ -47,6 +49,7 @@ describe('migrations', () => {
       'job_offer',
       'keyword_proposal_run',
       'language_level',
+      'locality',
       'offer',
       'one_time_token',
       'passkey',
@@ -256,6 +259,49 @@ describe('migration 0009 (ADR 0016)', () => {
       await client.end();
       await old.drop();
       await rm(before, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('localities (ADR 0017)', () => {
+  it('are loaded once from the versioned GeoNames file, read only for the application', async () => {
+    const { rows } = await owner.query<{ count: number; sha256: string; rows: number }>(
+      `select (select count(*)::int from locality) as count, d.sha256, d.rows
+       from dataset d where d.name = 'localities'`,
+    );
+    expect(rows[0]!.sha256).toBe(LOCALITIES_SHA256);
+    expect(rows[0]!.count).toBe(rows[0]!.rows);
+    expect(rows[0]!.count).toBeGreaterThan(2500);
+    const { rows: mechelen } = await app.query<{ names: string[]; postal_codes: string[] }>(
+      "select names, postal_codes from locality where name = 'Mechelen'",
+    );
+    expect(mechelen[0]!.names).toContain('Malines');
+    expect(mechelen[0]!.postal_codes).toContain('2800');
+    await expect(app.query("delete from locality where name = 'Mechelen'")).rejects.toThrow(
+      /permission denied/,
+    );
+    await expect(
+      app.query("update dataset set sha256 = 'x' where name = 'localities'"),
+    ).rejects.toThrow(/permission denied/);
+    // Same file: nothing to load again.
+    const folder = join(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
+    expect(await loadLocalities(owner, folder)).toEqual({ loaded: false, rows: 0 });
+  });
+
+  it('refuse a file that does not match its fingerprint (threat 8)', async () => {
+    const folder = join(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
+    const altered = await mkdtemp(join(tmpdir(), 'job4me-localities-'));
+    try {
+      await mkdir(join(altered, 'data'));
+      const text = await readFile(join(folder, 'data', 'localities.tsv'), 'utf8');
+      // Brussels moved 40 km away.
+      await writeFile(
+        join(altered, 'data', 'localities.tsv'),
+        text.replace('\t50.85040\t4.34880\t', '\t50.50000\t4.34880\t'),
+      );
+      await expect(loadLocalities(owner, altered)).rejects.toThrow(/fingerprint/);
+    } finally {
+      await rm(altered, { recursive: true, force: true });
     }
   });
 });

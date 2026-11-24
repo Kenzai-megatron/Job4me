@@ -8,7 +8,9 @@ import {
   type Connector,
   type ConnectorContext,
   type FetchLike,
+  type Gazetteer,
   lockedByUsageMode,
+  type Place,
   PoliteClient,
   type RawOffer,
   type Sleep,
@@ -20,7 +22,7 @@ import { and, asc, type Database, desc, eq, inArray, lt, schema, sql, withUser }
 import type { Logger } from '@job4me/logger';
 import type { PushMessage } from '../notify';
 import { checkSilentSources } from './alerts';
-import { storePostings } from './postings';
+import { offerGeo, storePostings } from './postings';
 
 // The orchestrator (ADR 0013): one pass, one source at a time in calling order, each in its own
 // try/catch and time budget within the pass budget. A source that fails never stops the others;
@@ -36,6 +38,8 @@ export interface CollectDeps {
   connectors: readonly Connector[];
   /** Keys of the sources that need one (Adzuna, SerpApi): absent, the source is skipped. */
   secrets: Readonly<Record<string, string | undefined>>;
+  /** The Belgian localities (ADR 0017), loaded once at start-up. */
+  gazetteer: Gazetteer;
   /** Tests replace the network and the waits. */
   fetch?: FetchLike;
   sleep?: Sleep;
@@ -59,6 +63,8 @@ interface Profile {
   keywords: Array<{ keyword: string; priority: boolean }>;
   baseCity: string | null;
   basePostalCode: string | null;
+  /** The base city read in the localities: the centre of distances and of the Forem's search. */
+  base: Place;
   radiusKm: number;
   passes: (title: string) => boolean;
   settings: Map<string, typeof schema.sourceSettings.$inferSelect>;
@@ -125,6 +131,7 @@ async function loadProfile(deps: CollectDeps, userId: string): Promise<Profile> 
       keywords,
       baseCity: profile?.baseCity ?? null,
       basePostalCode: profile?.basePostalCode ?? null,
+      base: deps.gazetteer.locateBase(profile?.baseCity ?? null, profile?.basePostalCode ?? null),
       radiusKm: profile?.radiusKm ?? deps.settings.profile.defaultRadiusKm,
       passes: compileTitleFilter(
         rules.filter((rule): rule is { list: 'keep' | 'reject' | 'always'; expression: string } =>
@@ -259,6 +266,10 @@ async function runSource(
     http,
     secrets: Object.fromEntries(connector.secrets.map((name) => [name, deps.secrets[name]!])),
     area: deps.settings.collect.area,
+    center:
+      profile.base.status === 'found'
+        ? { name: profile.base.name, lat: profile.base.latitude, lon: profile.base.longitude }
+        : deps.settings.collect.area,
     maxAgeDays: config.maxAgeDays ?? null,
     params: config.params ?? {},
     now,
@@ -347,6 +358,8 @@ async function runSource(
         at: finishedAt,
         settings: deps.settings,
         sourceOrder: deps.connectors.map((item) => item.name),
+        gazetteer: deps.gazetteer,
+        geo: offerGeo(profile.base, deps.settings),
       },
       kept,
     ),

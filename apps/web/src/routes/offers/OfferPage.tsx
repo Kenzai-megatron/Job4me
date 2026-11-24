@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { api } from '../../api/client';
 import { offerQuery, safeLink } from '../../api/collect';
 import { errorMessage } from '../../components/errors';
-import { useSourceNames } from './OffersPage';
+import { usePlaceLabel, useSourceNames } from './OffersPage';
 
 /** When a posting was seen: one day, or from its first to its latest sighting. */
 function seen(posting: OfferPosting, t: ReturnType<typeof useTranslation>['t']) {
@@ -29,6 +29,7 @@ function PostingItem({
   onUnmerge: () => void;
 }) {
   const { t } = useTranslation();
+  const placeLabel = usePlaceLabel();
   const source = t(`sources.names.${posting.source}`, { defaultValue: posting.source });
   const link = safeLink(posting.url);
   return (
@@ -41,7 +42,7 @@ function PostingItem({
       <p className="text-sm text-muted">
         {[
           posting.company,
-          posting.location,
+          placeLabel(posting.place, posting.location, posting.remote),
           posting.postedOn ? t('offers.posted', { date: formatDate(posting.postedOn) }) : null,
           seen(posting, t),
         ]
@@ -77,6 +78,7 @@ export function OfferPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const sourceNames = useSourceNames();
+  const placeLabel = usePlaceLabel();
   const { offerId } = useParams({ strict: false });
   const id = offerId ?? '';
   const offer = useQuery({ ...offerQuery(id), enabled: id !== '' });
@@ -122,7 +124,7 @@ export function OfferPage() {
             <p className="text-muted">
               {[
                 data.company,
-                data.location,
+                placeLabel(data.place, data.location, data.remote),
                 sourceNames(data),
                 data.postedOn
                   ? t('offers.posted', { date: formatDate(data.postedOn) })
