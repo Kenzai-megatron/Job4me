@@ -3,7 +3,12 @@ import { Card } from '@job4me/ui';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { completenessQuery } from '../../api/profile';
-import { IdentitySection, MotivationsSection, PracticalSection } from './DocumentSections';
+import {
+  IdentitySection,
+  MotivationsSection,
+  PracticalSection,
+  ScoringSection,
+} from './DocumentSections';
 import { ImportsSection } from './ImportsSection';
 import { KeywordProposer } from './KeywordProposer';
 import { rubricSections } from './fields';
@@ -91,6 +96,7 @@ export function ProfilePage() {
       <IdentitySection />
       <PracticalSection />
       <MotivationsSection />
+      <ScoringSection />
       {rubricSections.map((section) => (
         <ListSection
           key={section.slug}

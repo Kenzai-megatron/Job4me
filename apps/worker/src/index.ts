@@ -3,16 +3,18 @@ import { loadConfig, loadSecrets } from '@job4me/config';
 import {
   type CollectPassJob,
   type KeywordsProposeJob,
+  type OffersScreenJob,
   type PushTestJob,
   QUEUES,
 } from '@job4me/contracts';
-import { connect, queueOptions, readLocalities } from '@job4me/db';
+import { connect, queueOptions, readLocalities, withUser } from '@job4me/db';
 import { createLogger } from '@job4me/logger';
 import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
 import { runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
+import { screenOffers, screenProfileOf } from './collect/screen';
 import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
@@ -102,6 +104,24 @@ async function main(): Promise<void> {
   // One pass at a time (localConcurrency 1): never two calls to the same site at once.
   await boss.work<CollectPassJob>(QUEUES.collectPass, async (jobs) => {
     for (const job of jobs) await runPass(collectDeps, job.data);
+  });
+  // The deterministic filter again on every offer of an account whose criteria changed.
+  await ensureQueue(boss, QUEUES.offersScreen);
+  await boss.work<OffersScreenJob>(QUEUES.offersScreen, async (jobs) => {
+    for (const job of jobs) {
+      const { userId } = job.data;
+      const now = new Date();
+      const result = await withUser(database.db, userId, async (tx) =>
+        screenOffers(
+          tx,
+          userId,
+          null,
+          await screenProfileOf(tx, userId, config.settings, now),
+          now,
+        ),
+      );
+      logger.info(result, 'offers screened');
+    }
   });
   logger.info({ sources: connectors.map((connector) => connector.name) }, 'collection ready');
 

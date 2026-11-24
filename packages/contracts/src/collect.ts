@@ -194,6 +194,22 @@ export const postingPlaceSchema = z.object({
   postalCode: z.string().nullable(),
 });
 
+/**
+ * Why the deterministic filter sets an offer aside (phase 3 plan, section 6), first applicable:
+ * an employer excluded in the profile, an ad older than the limit, a place abroad or beyond the
+ * radius (unless remote work is announced and accepted), a language or a contract that the
+ * source gives as a field and the profile rules out. Never applied to an offer added by hand.
+ */
+export const exclusionReasons = [
+  'excluded_company',
+  'too_old',
+  'abroad',
+  'too_far',
+  'language',
+  'contract',
+] as const;
+export type ExclusionReason = (typeof exclusionReasons)[number];
+
 /** A posting: the offer as one site carries it (docs/SOURCES.md, section 1.1); "?" is unknown. */
 export const offerPostingSchema = z.object({
   id: z.uuid(),
@@ -233,11 +249,18 @@ export const offerSchema = z.object({
   /** The most precise place of its postings, and the road distance from the base city. */
   place: postingPlaceSchema.extend({ distanceKm: z.number().int().min(0).nullable() }),
   remote: z.enum(remoteModes).nullable(),
+  /** Why the deterministic filter sets it aside; null: kept. */
+  excluded: z.enum(exclusionReasons).nullable(),
   postings: z.array(offerPostingSchema).min(1),
 });
 export type Offer = z.infer<typeof offerSchema>;
 
+/** The offers kept by the deterministic filter, or the ones it sets aside (« why not shown »). */
+export const offerViews = ['kept', 'excluded'] as const;
+export type OfferView = (typeof offerViews)[number];
+
 export const offersQuerySchema = z.object({
+  view: z.enum(offerViews).default('kept'),
   /** Announcements carried by this source among others. */
   source: sourceNameSchema.optional(),
   /** Cursor: the id of the last offer of the previous page. */
@@ -253,6 +276,8 @@ export type OfferUnmergeResponse = z.infer<typeof offerUnmergeResponseSchema>;
 export const offersResponseSchema = z.object({
   offers: z.array(offerSchema),
   nextCursor: z.uuid().nullable(),
+  /** How many offers each view holds, the source filter applied. */
+  counts: z.object({ kept: z.number().int().min(0), excluded: z.number().int().min(0) }),
 });
 export type OffersResponse = z.infer<typeof offersResponseSchema>;
 

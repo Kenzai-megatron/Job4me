@@ -52,6 +52,7 @@ describe('Adzuna', () => {
       postedAt: '2026-11-20',
       url: 'https://www.adzuna.be/land/ad/4100000001?se=example&utm_medium=api&v=0',
       details: 'CDI · temps plein · Jobs by Adzuna',
+      contracts: ['permanent'],
       description: 'Pour notre client, nous recherchons un comptable junior & motivé…',
     });
     expect(first!.salary).toBe("35 000 – 42 000 € (estimation d'Adzuna)");
@@ -60,6 +61,7 @@ describe('Adzuna', () => {
       location: 'Mechelen',
       salary: null,
       details: 'Jobs by Adzuna',
+      contracts: [],
     });
   });
 

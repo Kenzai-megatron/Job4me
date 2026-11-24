@@ -7,6 +7,8 @@ export const QUEUES = {
   collectSchedule: 'collect_schedule',
   /** One collection pass (scheduled, manual or test), one source at a time. */
   collectPass: 'collect_pass',
+  /** The deterministic filter again on every offer of an account, its criteria changed. */
+  offersScreen: 'offers_screen',
 } as const;
 
 /** Ask Claude Sonnet for search keywords (one run of keyword_proposal_run). */
@@ -24,4 +26,9 @@ export interface PushTestJob {
 export interface CollectPassJob {
   userId: string;
   passId: string;
+}
+
+/** Run the deterministic filter again on every offer of an account (phase 3 plan, section 6). */
+export interface OffersScreenJob {
+  userId: string;
 }

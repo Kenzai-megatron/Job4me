@@ -182,10 +182,20 @@ export const offers = pgTable(
     ...place(),
     /** Kilometres by road from the base city; null when either place is unknown. */
     distanceKm: integer('distance_km'),
+    /**
+     * Why the deterministic filter sets it aside (phase 3 plan, section 6); null: kept. Read
+     * again after each pass that touches it and after each change of the profile's criteria.
+     */
+    excludedReason: text('excluded_reason'),
+    screenedAt: at('screened_at'),
   },
   (t) => [
     index('offer_user_first_seen_idx').on(t.userId, t.firstSeenAt),
     index('offer_user_last_seen_idx').on(t.userId, t.lastSeenAt),
+    check(
+      'offer_excluded_reason_check',
+      sql`${t.excludedReason} is null or ${t.excludedReason} in ('excluded_company', 'too_old', 'abroad', 'too_far', 'language', 'contract')`,
+    ),
     ...placeChecks('offer', t),
     check('offer_distance_check', sql`${t.distanceKm} is null or ${t.distanceKm} >= 0`),
     ownerPolicy('offer'),
@@ -229,6 +239,15 @@ export const jobOffers = pgTable(
     /** How it joined its announcement; null for the posting that started it. */
     mergeReason: text('merge_reason'),
     ...place(),
+    /** Contracts and required languages given by the source in fields of their own. */
+    contracts: text('contracts')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    languages: text('languages')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
   },
   (t) => [
     uniqueIndex('job_offer_user_source_external_idx').on(t.userId, t.source, t.externalId),

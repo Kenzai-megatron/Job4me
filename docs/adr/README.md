@@ -22,3 +22,4 @@ Chaque décision structurante de Job4me tient dans une fiche courte : contexte, 
 | [0016](0016-annonce-unique-et-dedoublonnage.md) | Annonce unique et dédoublonnage | Acceptée le 23/11/2026 |
 | [0017](0017-geographie-geonames.md) | Géographie : localités GeoNames et distances | Acceptée le 23/11/2026 |
 | [0018](0018-notation-des-offres.md) | Notation des offres : sans IA par défaut, Claude en option | Acceptée le 23/11/2026 |
+| [0019](0019-filtre-deterministe.md) | Filtre déterministe | Acceptée le 24/11/2026 |

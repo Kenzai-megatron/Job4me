@@ -21,7 +21,23 @@ describe('cleanOffer', () => {
       salary: null,
       description: '',
       details: null,
+      contracts: [],
+      languages: [],
     });
+  });
+
+  it('reads the contract and the languages a source gives in fields of their own', () => {
+    const cleaned = cleanOffer(
+      {
+        ...raw,
+        contract: 'Intérimaire avec option sur durée indéterminée',
+        languages: ['Néerlandais', 'Anglais'],
+      },
+      'forem',
+      1200,
+    );
+    expect(cleaned?.contracts.sort()).toEqual(['interim', 'permanent']);
+    expect(cleaned?.languages).toEqual(['nl', 'en']);
   });
 
   it('takes a job site written where the employer should be for an unknown employer', () => {

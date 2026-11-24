@@ -98,6 +98,8 @@ export function foremOffer(item: ForemRecord, context: ConnectorContext): RawOff
     details:
       [item.typecontrat, item.regimetravail].filter((part) => part && part.trim()).join(' · ') ||
       null,
+    contract: item.typecontrat,
+    languages: item.langues,
   };
 }
 

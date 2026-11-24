@@ -11,6 +11,7 @@ import {
   placePostings,
   type PostingIdentity,
   remoteOf,
+  type ScreenProfile,
   type StoredPosting,
 } from '@job4me/collect';
 import type { PassTrigger } from '@job4me/contracts';
@@ -33,6 +34,7 @@ import {
   withUser,
 } from '@job4me/db';
 import type { Logger } from '@job4me/logger';
+import { screenOffers, screenProfileOf } from './screen';
 
 // Postings and their announcements (ADR 0016). Each posting of a run is placed by the merge
 // rules of packages/collect: its own announcement when it was stored before, one it joins, or a
@@ -55,6 +57,8 @@ export interface StoreContext {
   gazetteer: Gazetteer;
   /** Distances are measured from the profile's base city. */
   geo: OfferGeo;
+  /** The criteria of the deterministic filter (phase 3 plan, section 6). */
+  screen: ScreenProfile;
 }
 
 /** Where distances are measured from: the base city, when the localities know it. */
@@ -211,6 +215,8 @@ export async function storePostings(
             dedupVersion: DEDUP_VERSION,
             mergeReason: reasonOf(placements[position]!),
             ...placeColumns(context.gazetteer.locate(offer.location), remoteOf(offer)),
+            contracts: offer.contracts,
+            languages: offer.languages,
           };
         }),
       )
@@ -237,12 +243,15 @@ export async function storePostings(
           latitude: sql`excluded.latitude`,
           longitude: sql`excluded.longitude`,
           remote: sql`excluded.remote`,
+          contracts: sql`excluded.contracts`,
+          languages: sql`excluded.languages`,
           lastSeenAt: at,
           updatedAt: at,
         },
       });
   }
   await refreshOffers(tx, userId, targets, context.sourceOrder, at, context.geo);
+  await screenOffers(tx, userId, targets, context.screen, at);
   return result;
 }
 
@@ -257,6 +266,8 @@ export interface StartupCounts {
   identified: number;
   regrouped: number;
   located: number;
+  /** Announcements read by the deterministic filter for the first time. */
+  screened: number;
 }
 
 /**
@@ -389,7 +400,7 @@ export async function prepareStoredPostings(
   now: Date = new Date(),
 ): Promise<StartupCounts> {
   const accounts = await deps.db.select({ id: schema.users.id }).from(schema.users);
-  const total: StartupCounts = { identified: 0, regrouped: 0, located: 0 };
+  const total: StartupCounts = { identified: 0, regrouped: 0, located: 0, screened: 0 };
   for (const account of accounts) {
     const userId = account.id;
     const counts = await withUser(deps.db, userId, async (tx) => {
@@ -406,19 +417,31 @@ export async function prepareStoredPostings(
           ),
         )
         .limit(1);
-      if (pending.length === 0) return { identified: 0, regrouped: 0, located: 0 };
+      const unscreened = await tx
+        .select({ id: schema.offers.id })
+        .from(schema.offers)
+        .where(and(eq(schema.offers.userId, userId), isNull(schema.offers.screenedAt)))
+        .limit(1);
+      if (pending.length === 0 && unscreened.length === 0) {
+        return { identified: 0, regrouped: 0, located: 0, screened: 0 };
+      }
       const touched = new Set<string>();
       const identity = await identifyStored(tx, userId, now, touched);
       const located = await locateStored(tx, userId, deps.gazetteer, now, touched);
       const geo = offerGeo(await baseOf(tx, userId, deps.gazetteer), deps.settings);
       await refreshOffers(tx, userId, [...touched], sourceOrder, now, geo);
-      return { ...identity, located };
+      // The deterministic filter (phase 3 plan, section 6) on what changed and was never read.
+      const criteria = await screenProfileOf(tx, userId, deps.settings, now);
+      await screenOffers(tx, userId, [...touched], criteria, now);
+      const { screened } = await screenOffers(tx, userId, 'unscreened', criteria, now);
+      return { ...identity, located, screened };
     });
     total.identified += counts.identified;
     total.regrouped += counts.regrouped;
     total.located += counts.located;
+    total.screened += counts.screened;
   }
-  if (total.identified + total.located > 0) {
+  if (total.identified + total.located + total.screened > 0) {
     deps.logger.info(total, 'stored postings prepared');
   }
   return total;

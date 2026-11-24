@@ -597,6 +597,53 @@ describe('offers', () => {
       (await browser.get(`/api/offers/${offer.id}`)).json<Offer>().place.distanceKm,
     ).toBeNull();
   });
+
+  it('list the offers the filter keeps or sets aside, with their counts', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'filter-views');
+    const kept = await withUser(ctx.deps.db, userId, (tx) =>
+      collected(tx, userId, { source: 'alpha', externalId: 'k1', title: 'Comptable' }),
+    );
+    const aside = await withUser(ctx.deps.db, userId, async (tx) => {
+      const made = await collected(tx, userId, {
+        source: 'alpha',
+        externalId: 'x1',
+        title: 'Juriste',
+        company: 'Deloitte',
+      });
+      await tx
+        .update(schema.offers)
+        .set({ excludedReason: 'excluded_company' })
+        .where(eq(schema.offers.id, made.offerId));
+      return made;
+    });
+    const list = (await browser.get('/api/offers')).json<OffersResponse>();
+    expect(list.offers.map((offer) => offer.id)).toEqual([kept.offerId]);
+    expect(list.counts).toEqual({ kept: 1, excluded: 1 });
+    const excluded = (await browser.get('/api/offers?view=excluded')).json<OffersResponse>();
+    expect(excluded.offers).toEqual([
+      expect.objectContaining({ id: aside.offerId, excluded: 'excluded_company' }),
+    ]);
+    expect((await browser.get('/api/offers?view=other')).statusCode).toBe(400);
+  });
+
+  it('ask the worker to screen again when a criterion of the filter changes', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'filter-criteria');
+    const screens = () =>
+      queued.filter((job) => job.name === 'offers_screen' && job.data.userId === userId).length;
+    await browser.send('PATCH', '/api/profile', { motivations: 'Aider les PME.' });
+    expect(screens()).toBe(0);
+    await browser.send('PATCH', '/api/profile', { radiusKm: 25 });
+    expect(screens()).toBe(1);
+    await browser.post('/api/profile/excluded-companies', { name: 'Deloitte' });
+    expect(screens()).toBe(2);
+    await browser.post('/api/profile/eliminations', { kind: 'language', value: 'Allemand' });
+    expect(screens()).toBe(3);
+    // An offer added by hand is kept, whatever the criteria.
+    const added = (
+      await browser.post('/api/offers', { title: 'Juriste', company: 'Deloitte' })
+    ).json<ManualOfferResponse>();
+    expect(added.offer.excluded).toBeNull();
+  });
 });
 
 describe('command line', () => {

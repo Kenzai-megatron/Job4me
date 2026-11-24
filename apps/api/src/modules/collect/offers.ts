@@ -29,6 +29,8 @@ import {
   eq,
   findHistoryPostings,
   inArray,
+  isNotNull,
+  isNull,
   type JobOfferRow,
   lt,
   ne,
@@ -45,6 +47,7 @@ import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
 import { baseOf, gazetteerOf, offerGeo } from './geo';
+import { requestScreening } from './screening';
 
 // Offers (phase 3 plan, sections 4 and 10; ADR 0016): announcements, each with every posting
 // that carries it. Every query filters on the signed-in account and runs under row-level
@@ -118,6 +121,7 @@ export async function loadOffers(
           distanceKm: offer.distanceKm,
         },
         remote: offer.remote,
+        excluded: offer.excludedReason,
         postings: [retained, ...list.filter((posting) => posting !== retained)].map(toPosting),
       }),
     ];
@@ -143,17 +147,28 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       { schema: { querystring: offersQuerySchema, response: { 200: offersResponseSchema } } },
       async (request) => {
         const { userId } = requireSession(request);
-        const { source, before } = request.query;
+        const { source, before, view } = request.query;
         const limit = request.query.limit ?? settings.collect.offers.listLimit;
         const offers = schema.offers;
         const postings = schema.jobOffers;
         return withUser(deps.db, userId, async (tx) => {
-          const conditions = [eq(offers.userId, userId)];
+          const scope = [eq(offers.userId, userId)];
           if (source) {
-            conditions.push(
+            scope.push(
               sql`exists (select 1 from ${postings} where ${postings.offerId} = ${offers.id} and ${postings.source} = ${source})`,
             );
           }
+          const [counts] = await tx
+            .select({
+              kept: sql<number>`count(*) filter (where ${offers.excludedReason} is null)::int`,
+              excluded: sql<number>`count(*) filter (where ${offers.excludedReason} is not null)::int`,
+            })
+            .from(offers)
+            .where(and(...scope));
+          const conditions = [
+            ...scope,
+            view === 'excluded' ? isNotNull(offers.excludedReason) : isNull(offers.excludedReason),
+          ];
           if (before) {
             const [cursor] = await tx
               .select({ firstSeenAt: offers.firstSeenAt, id: offers.id })
@@ -181,6 +196,7 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
               page.map((row) => row.id),
             ),
             nextCursor: rows.length > limit ? page.at(-1)!.id : null,
+            counts: counts ?? { kept: 0, excluded: 0 },
           };
         });
       },
@@ -259,6 +275,10 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           });
           const [offer, detached] = await loadOffers(tx, userId, [id, detachedId!]);
           return { offer: offer!, detached: detached! };
+        }).then(async (result) => {
+          // Their employers, contracts and languages changed: the filter reads them again.
+          await requestScreening(deps, userId);
+          return result;
         });
       },
     );
@@ -348,6 +368,11 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           if (!row) throw new HttpError(409, 'duplicate');
           const geo = offerGeo((await baseOf(tx, userId, gazetteer)).place, settings);
           await refreshOffers(tx, userId, [offerId], sourceOrder(), at, geo);
+          // An offer added by hand is never set aside by the filter (phase 3 plan, section 6).
+          await tx
+            .update(schema.offers)
+            .set({ excludedReason: null, screenedAt: at })
+            .where(and(eq(schema.offers.id, offerId), eq(schema.offers.userId, userId)));
           await recordAudit(tx, {
             actorType: 'user',
             actorUserId: userId,

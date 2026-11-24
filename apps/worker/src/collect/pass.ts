@@ -11,6 +11,7 @@ import {
   type Gazetteer,
   lockedByUsageMode,
   type Place,
+  type ScreenProfile,
   PoliteClient,
   type RawOffer,
   type Sleep,
@@ -23,6 +24,7 @@ import type { Logger } from '@job4me/logger';
 import type { PushMessage } from '../notify';
 import { checkSilentSources } from './alerts';
 import { offerGeo, storePostings } from './postings';
+import { screenProfileOf } from './screen';
 
 // The orchestrator (ADR 0013): one pass, one source at a time in calling order, each in its own
 // try/catch and time budget within the pass budget. A source that fails never stops the others;
@@ -67,6 +69,8 @@ interface Profile {
   base: Place;
   radiusKm: number;
   passes: (title: string) => boolean;
+  /** The criteria of the deterministic filter (phase 3 plan, section 6). */
+  screen: ScreenProfile;
   settings: Map<string, typeof schema.sourceSettings.$inferSelect>;
 }
 
@@ -139,6 +143,7 @@ async function loadProfile(deps: CollectDeps, userId: string): Promise<Profile> 
         ),
       ),
       settings: new Map(settings.map((row) => [row.source, row])),
+      screen: await screenProfileOf(tx, userId, deps.settings, deps.now?.() ?? new Date()),
     };
   });
 }
@@ -360,6 +365,7 @@ async function runSource(
         sourceOrder: deps.connectors.map((item) => item.name),
         gazetteer: deps.gazetteer,
         geo: offerGeo(profile.base, deps.settings),
+        screen: profile.screen,
       },
       kept,
     ),

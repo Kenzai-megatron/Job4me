@@ -1,7 +1,9 @@
 import {
   collectErrorCodes,
   errorCodes,
+  exclusionReasons,
   mergeReasons,
+  scoringCriteria,
   sourceAlertKinds,
   passTriggers,
   runStatuses,
@@ -36,6 +38,8 @@ describe('translation files', () => {
       ...[1, 2, 3, 4, 5, 6, 7].map((day) => `sources.weekdays.${day}`),
       ...sourceAlertKinds.map((kind) => `sources.alerts.${kind}`),
       ...mergeReasons.map((reason) => `offer.reasons.${reason}`),
+      ...exclusionReasons.map((reason) => `offers.exclusions.${reason}`),
+      ...scoringCriteria.map((name) => `profile.scoringCriteria.${name}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

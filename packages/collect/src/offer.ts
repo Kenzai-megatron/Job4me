@@ -1,6 +1,7 @@
 import { offerUrlSchema, sourceNameSchema } from '@job4me/contracts';
 import { z } from 'zod';
 import { isJobSite } from './dedup';
+import { contractsOf, languagesIn } from './screen';
 import { cleanLine, truncate } from './text';
 
 // The common format of every collected offer (docs/SOURCES.md, section 1.1; ADR 0013).
@@ -20,6 +21,10 @@ export interface RawOffer {
   description?: string | null;
   /** Facts given by the source, shown as they are: "CDI · temps partiel". */
   details?: string | null;
+  /** The contract as the source labels it in a field of its own (« Durée indéterminée »). */
+  contract?: string | null;
+  /** Languages the source requires in a field of its own (the Forem's « langues »). */
+  languages?: readonly string[] | null;
 }
 
 export const collectedOfferSchema = z.object({
@@ -36,6 +41,12 @@ export const collectedOfferSchema = z.object({
   salary: z.string().min(1).max(200).nullable(),
   description: z.string().max(10_000),
   details: z.string().min(1).max(300).nullable(),
+  /** Contracts read from the source's field (ADR: phase 3 plan, section 6); empty: unknown. */
+  contracts: z.array(
+    z.enum(['permanent', 'fixed_term', 'interim', 'freelance', 'internship', 'student_job']),
+  ),
+  /** Language codes required by the source's field; empty: unknown. */
+  languages: z.array(z.string().regex(/^[a-z]{2}$/)).max(10),
 });
 export type CollectedOffer = z.infer<typeof collectedOfferSchema>;
 
@@ -67,6 +78,8 @@ export function cleanOffer(
     salary: optional(raw.salary, 200),
     description: truncate(cleanLine(raw.description ?? ''), maxDescriptionChars),
     details: optional(raw.details, 300),
+    contracts: contractsOf(raw.contract),
+    languages: languagesIn((raw.languages ?? []).join(' ')).slice(0, 10),
   });
   return parsed.success ? parsed.data : null;
 }

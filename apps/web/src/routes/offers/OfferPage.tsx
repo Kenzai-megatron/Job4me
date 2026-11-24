@@ -134,6 +134,13 @@ export function OfferPage() {
             {data.details || data.salary ? (
               <p className="text-sm">{[data.details, data.salary].filter(Boolean).join(' · ')}</p>
             ) : null}
+            {data.excluded ? (
+              <Alert tone="info">
+                {t('offers.excludedBecause', {
+                  reason: t(`offers.exclusions.${data.excluded}`),
+                })}
+              </Alert>
+            ) : null}
           </div>
 
           <Card aria-labelledby="offer-description-title">
