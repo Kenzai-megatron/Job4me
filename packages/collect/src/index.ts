@@ -40,7 +40,17 @@ export {
   roadKm,
   straightKm,
 } from './places';
-export { compileTitleFilter, type TitleFilterRule } from './prefilter';
+export { compileTitleFilter, startsAWord, type TitleFilterRule } from './prefilter';
+export {
+  type RulePenalties,
+  RULES_VERSION,
+  type RuleScore,
+  type RuleWeights,
+  type ScoreFactor,
+  type ScoreOffer as RulesOffer,
+  scoreOffer,
+  type ScoreProfile,
+} from './score';
 export {
   type ContractKind,
   contractsOf,

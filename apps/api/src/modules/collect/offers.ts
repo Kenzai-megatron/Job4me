@@ -28,13 +28,13 @@ import {
   desc,
   eq,
   findHistoryPostings,
+  gte,
   inArray,
   isNotNull,
   isNull,
   type JobOfferRow,
   lt,
   ne,
-  or,
   recordAudit,
   refreshOffers,
   schema,
@@ -84,6 +84,13 @@ export async function loadOffers(
     .select()
     .from(schema.offers)
     .where(and(eq(schema.offers.userId, userId), inArray(schema.offers.id, [...ids])));
+  const scored = await tx
+    .select()
+    .from(schema.offerScores)
+    .where(
+      and(eq(schema.offerScores.userId, userId), inArray(schema.offerScores.offerId, [...ids])),
+    );
+  const scores = new Map(scored.map((row) => [row.offerId, row]));
   const postings = await tx
     .select()
     .from(schema.jobOffers)
@@ -122,6 +129,19 @@ export async function loadOffers(
         },
         remote: offer.remote,
         excluded: offer.excludedReason,
+        score: (() => {
+          const row = scores.get(offer.id);
+          return row
+            ? {
+                value: row.score,
+                method: row.method,
+                confidence: row.confidence,
+                factors: row.factors ?? [],
+                reason: row.reason,
+                scoredAt: row.scoredAt.toISOString(),
+              }
+            : null;
+        })(),
         postings: [retained, ...list.filter((posting) => posting !== retained)].map(toPosting),
       }),
     ];
@@ -147,16 +167,22 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       { schema: { querystring: offersQuerySchema, response: { 200: offersResponseSchema } } },
       async (request) => {
         const { userId } = requireSession(request);
-        const { source, before, view } = request.query;
+        const { source, before, view, band, fresh } = request.query;
         const limit = request.query.limit ?? settings.collect.offers.listLimit;
         const offers = schema.offers;
         const postings = schema.jobOffers;
+        const scores = schema.offerScores;
+        /** The order of the list: by score (unscored last), then the freshest, then the id. */
+        const rank = sql`(coalesce(${scores.score}, -1), ${offers.firstSeenAt}, ${offers.id})`;
         return withUser(deps.db, userId, async (tx) => {
           const scope = [eq(offers.userId, userId)];
           if (source) {
             scope.push(
               sql`exists (select 1 from ${postings} where ${postings.offerId} = ${offers.id} and ${postings.source} = ${source})`,
             );
+          }
+          if (fresh) {
+            scope.push(gte(offers.firstSeenAt, new Date(now().getTime() - 7 * DAY_MS)));
           }
           const [counts] = await tx
             .select({
@@ -169,24 +195,32 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
             ...scope,
             view === 'excluded' ? isNotNull(offers.excludedReason) : isNull(offers.excludedReason),
           ];
+          if (band) {
+            const low = Number(band);
+            const high = low === 80 ? 101 : low === 0 ? 40 : low + 20;
+            conditions.push(gte(scores.score, low), lt(scores.score, high));
+          }
           if (before) {
             const [cursor] = await tx
-              .select({ firstSeenAt: offers.firstSeenAt, id: offers.id })
+              .select({ score: scores.score, firstSeenAt: offers.firstSeenAt, id: offers.id })
               .from(offers)
+              .leftJoin(scores, eq(scores.offerId, offers.id))
               .where(and(eq(offers.id, before), eq(offers.userId, userId)));
             if (!cursor) throw new HttpError(400, 'validation_error');
             conditions.push(
-              or(
-                lt(offers.firstSeenAt, cursor.firstSeenAt),
-                and(eq(offers.firstSeenAt, cursor.firstSeenAt), lt(offers.id, cursor.id)),
-              )!,
+              sql`${rank} < (${cursor.score ?? -1}::integer, ${cursor.firstSeenAt}::timestamptz, ${cursor.id}::uuid)`,
             );
           }
           const rows = await tx
             .select({ id: offers.id })
             .from(offers)
+            .leftJoin(scores, eq(scores.offerId, offers.id))
             .where(and(...conditions))
-            .orderBy(desc(offers.firstSeenAt), desc(offers.id))
+            .orderBy(
+              desc(sql`coalesce(${scores.score}, -1)`),
+              desc(offers.firstSeenAt),
+              desc(offers.id),
+            )
             .limit(limit + 1);
           const page = rows.slice(0, limit);
           return {
@@ -385,6 +419,10 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
           });
           const [offer] = await loadOffers(tx, userId, [offerId]);
           return { offer: offer!, merged: joined !== null };
+        }).then(async (result) => {
+          // The worker scores it (phase 3 plan, section 7), as every kept offer.
+          await requestScreening(deps, userId);
+          return result;
         });
       },
     );

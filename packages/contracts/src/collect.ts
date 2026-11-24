@@ -131,6 +131,11 @@ export const sourceSummarySchema = z.object({
   /** Searches left on a rationed source (SerpApi), as its account said at the last pass. */
   quota: z.object({ remaining: z.number().int(), checkedAt: z.string() }).nullable(),
   window: sourceWindowSchema,
+  /**
+   * Relevance over the window (SPEC, section 9): of the kept announcements this source carries,
+   * how many are scored, and how many 80 or more.
+   */
+  relevance: z.object({ scored: z.number().int().min(0), top: z.number().int().min(0) }),
   /** The latest runs, newest first (tests included). */
   runs: z.array(sourceRunSchema),
 });
@@ -210,6 +215,65 @@ export const exclusionReasons = [
 ] as const;
 export type ExclusionReason = (typeof exclusionReasons)[number];
 
+/** How a score was made: without AI (the default), or by Claude once switched on (ADR 0018). */
+export const scoreMethods = ['rules', 'claude_quick', 'claude_detailed'] as const;
+export type ScoreMethod = (typeof scoreMethods)[number];
+/** The bands of the specification: 80 apply today, 60 relevant, 40 for want of better, 0 off. */
+export const scoreBands = ['80', '60', '40', '0'] as const;
+export type ScoreBandName = (typeof scoreBands)[number];
+
+const contractKinds = [
+  'permanent',
+  'fixed_term',
+  'interim',
+  'freelance',
+  'internship',
+  'student_job',
+] as const;
+
+/** What made a score without AI, as data the interface words (packages/collect, score). */
+export const scoreFactorSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('title'),
+    strength: z.enum(['target', 'priority', 'keyword', 'partial', 'none']),
+    match: z.string().nullable(),
+  }),
+  z.object({ kind: z.literal('skills'), matched: z.array(z.string()) }),
+  z.object({ kind: z.literal('language'), code: z.string(), level: z.string().nullable() }),
+  z.object({
+    kind: z.literal('distance'),
+    status: z.enum(placeStatuses).nullable(),
+    km: z.number().int().nullable(),
+    remote: z.enum(remoteModes).nullable(),
+  }),
+  z.object({
+    kind: z.literal('contract'),
+    contracts: z.array(z.enum(contractKinds)),
+    wanted: z.boolean().nullable(),
+  }),
+  z.object({
+    kind: z.literal('regime'),
+    regime: z.enum(['full_time', 'part_time']),
+    wanted: z.boolean(),
+  }),
+  z.object({ kind: z.literal('freshness'), days: z.number().int().min(0) }),
+  z.object({ kind: z.literal('sector'), sector: z.string() }),
+  z.object({ kind: z.literal('rejected'), expression: z.string() }),
+]);
+export type ScoreFactor = z.infer<typeof scoreFactorSchema>;
+
+/** The current score of an announcement: always explained, at low confidence without AI. */
+export const offerScoreSchema = z.object({
+  value: z.number().int().min(0).max(100),
+  method: z.enum(scoreMethods),
+  confidence: z.enum(['low', 'normal']),
+  factors: z.array(scoreFactorSchema),
+  /** Claude's short reason (lot 5). */
+  reason: z.string().nullable(),
+  scoredAt: z.string(),
+});
+export type OfferScore = z.infer<typeof offerScoreSchema>;
+
 /** A posting: the offer as one site carries it (docs/SOURCES.md, section 1.1); "?" is unknown. */
 export const offerPostingSchema = z.object({
   id: z.uuid(),
@@ -251,6 +315,8 @@ export const offerSchema = z.object({
   remote: z.enum(remoteModes).nullable(),
   /** Why the deterministic filter sets it aside; null: kept. */
   excluded: z.enum(exclusionReasons).nullable(),
+  /** Its score, once computed (only the kept offers are scored). */
+  score: offerScoreSchema.nullable(),
   postings: z.array(offerPostingSchema).min(1),
 });
 export type Offer = z.infer<typeof offerSchema>;
@@ -263,6 +329,10 @@ export const offersQuerySchema = z.object({
   view: z.enum(offerViews).default('kept'),
   /** Announcements carried by this source among others. */
   source: sourceNameSchema.optional(),
+  /** Announcements of one band of scores. */
+  band: z.enum(scoreBands).optional(),
+  /** Announcements first seen within the last seven days. */
+  fresh: z.stringbool().optional(),
   /** Cursor: the id of the last offer of the previous page. */
   before: z.uuid().optional(),
   limit: z.coerce.number().int().min(1).max(100).optional(),

@@ -35,6 +35,7 @@ import {
 } from '@job4me/db';
 import type { Logger } from '@job4me/logger';
 import { screenOffers, screenProfileOf } from './screen';
+import { type ScoringContext, scoreOffers, scoringContextOf } from './scoring';
 
 // Postings and their announcements (ADR 0016). Each posting of a run is placed by the merge
 // rules of packages/collect: its own announcement when it was stored before, one it joins, or a
@@ -59,6 +60,8 @@ export interface StoreContext {
   geo: OfferGeo;
   /** The criteria of the deterministic filter (phase 3 plan, section 6). */
   screen: ScreenProfile;
+  /** What the scoring without AI reads (phase 3 plan, section 7). */
+  scoring: ScoringContext;
 }
 
 /** Where distances are measured from: the base city, when the localities know it. */
@@ -252,6 +255,7 @@ export async function storePostings(
   }
   await refreshOffers(tx, userId, targets, context.sourceOrder, at, context.geo);
   await screenOffers(tx, userId, targets, context.screen, at);
+  await scoreOffers(tx, userId, targets, context.scoring, at);
   return result;
 }
 
@@ -268,6 +272,8 @@ export interface StartupCounts {
   located: number;
   /** Announcements read by the deterministic filter for the first time. */
   screened: number;
+  /** Scores written (announcements never scored, or whose profile or offer changed). */
+  scored: number;
 }
 
 /**
@@ -400,7 +406,13 @@ export async function prepareStoredPostings(
   now: Date = new Date(),
 ): Promise<StartupCounts> {
   const accounts = await deps.db.select({ id: schema.users.id }).from(schema.users);
-  const total: StartupCounts = { identified: 0, regrouped: 0, located: 0, screened: 0 };
+  const total: StartupCounts = {
+    identified: 0,
+    regrouped: 0,
+    located: 0,
+    screened: 0,
+    scored: 0,
+  };
   for (const account of accounts) {
     const userId = account.id;
     const counts = await withUser(deps.db, userId, async (tx) => {
@@ -422,8 +434,20 @@ export async function prepareStoredPostings(
         .from(schema.offers)
         .where(and(eq(schema.offers.userId, userId), isNull(schema.offers.screenedAt)))
         .limit(1);
-      if (pending.length === 0 && unscreened.length === 0) {
-        return { identified: 0, regrouped: 0, located: 0, screened: 0 };
+      const unscored = await tx
+        .select({ id: schema.offers.id })
+        .from(schema.offers)
+        .leftJoin(schema.offerScores, eq(schema.offerScores.offerId, schema.offers.id))
+        .where(
+          and(
+            eq(schema.offers.userId, userId),
+            isNull(schema.offers.excludedReason),
+            isNull(schema.offerScores.id),
+          ),
+        )
+        .limit(1);
+      if (pending.length === 0 && unscreened.length === 0 && unscored.length === 0) {
+        return { identified: 0, regrouped: 0, located: 0, screened: 0, scored: 0 };
       }
       const touched = new Set<string>();
       const identity = await identifyStored(tx, userId, now, touched);
@@ -434,14 +458,19 @@ export async function prepareStoredPostings(
       const criteria = await screenProfileOf(tx, userId, deps.settings, now);
       await screenOffers(tx, userId, [...touched], criteria, now);
       const { screened } = await screenOffers(tx, userId, 'unscreened', criteria, now);
-      return { ...identity, located, screened };
+      // The scoring without AI (phase 3 plan, section 7) on what changed and was never scored.
+      const scoring = await scoringContextOf(tx, userId, deps.settings, now);
+      const changed = await scoreOffers(tx, userId, [...touched], scoring, now);
+      const fresh = await scoreOffers(tx, userId, 'unscored', scoring, now);
+      return { ...identity, located, screened, scored: changed.scored + fresh.scored };
     });
     total.identified += counts.identified;
     total.regrouped += counts.regrouped;
     total.located += counts.located;
     total.screened += counts.screened;
+    total.scored += counts.scored;
   }
-  if (total.identified + total.located + total.screened > 0) {
+  if (total.identified + total.located + total.screened + total.scored > 0) {
     deps.logger.info(total, 'stored postings prepared');
   }
   return total;

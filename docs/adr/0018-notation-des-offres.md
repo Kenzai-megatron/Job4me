@@ -19,3 +19,19 @@ La spécification (section 5) note chaque offre sur 100 avec Claude Haiku 5.5, p
 
 - Tant que l'IA reste coupée, la phase ne coûte rien ; le jeu de référence dira si la notation sans IA suffit.
 - Activer Claude est un réglage et un plafond, sans changement de code.
+
+## Mise en œuvre (lot 4, 24/11/2026) : la notation sans IA
+
+- **Règles** (`packages/collect/src/score.ts`, version `rules-1`), poids dans la configuration (`scoring.rules`, 100 au total) :
+  - intitulé, 35 : métier cible 100 %, mot-clé prioritaire 90 %, autre mot-clé 75 %, intitulé en partie proche 60 % × la part des mots trouvés ;
+  - compétences du profil citées, 20 : trois suffisent ; une offre sans description reste neutre ;
+  - langues demandées (champ de la source ou texte) par rapport aux niveaux du profil, 10 : la plus faible compte ;
+  - distance, 15 : tout jusqu'au quart du rayon, puis de moins en moins jusqu'à la moitié au rayon ; lieu inconnu 60 % ; télétravail complet accepté, tout ;
+  - contrat et régime donnés par la source, 10 ;
+  - fraîcheur, 10 ;
+  - pénalités : secteur exclu cité −20, mot rejeté du pré-filtre dans l'intitulé −15.
+- **Les critères pratiques ne comptent qu'à proportion de la pertinence** (intitulé ou compétences) : une offre proche, récente et en CDI dont l'intitulé et les compétences ne correspondent à rien reste hors sujet. Étalement sur des cas types : 91 (métier cible, compétences citées), 81 (métier cible sans description), 62 (mot-clé), 48 (autre intitulé, trois compétences), 27 (intitulé en partie proche), 9 (hors sujet).
+- **Toujours expliqué** : les facteurs sont gardés comme données (`offer_score.factors`) et l'interface les formule (« intitulé de votre métier « Comptable » · 3 compétences citées · 12 km · CDI »). **Confiance basse** : un score sans IA ne déclenchera jamais d'envoi automatique (phase 5).
+- **Recalculé seulement si quelque chose change** : la version du profil (règles, poids, données lues) ou celle de l'offre. Seules les offres gardées par le filtre (ADR 0019) sont notées : après chaque passage, au démarrage, et après chaque changement du profil (file `offers_screen`).
+- **Écrans** : offres classées par score puis par fraîcheur, avec pastille de tranche et explication ; filtres par tranche et « nouvelles » ; fiche avec tous les facteurs ; pertinence par source sur quatre semaines (part des offres notées 80 ou plus).
+- L'écart avec les notes de Mehdi se mesurera au lot 6 (jeu de référence) : il dira si la notation sans IA suffit.

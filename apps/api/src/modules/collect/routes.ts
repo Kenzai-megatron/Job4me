@@ -16,6 +16,7 @@ import {
   desc,
   eq,
   gte,
+  isNull,
   ne,
   recordAudit,
   schema,
@@ -72,6 +73,29 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
       )
       .groupBy(runs.source);
     const windows = new Map(figures.map(({ source, ...counts }) => [source, counts]));
+    // Relevance (SPEC, section 9): the kept announcements a source carried over the window, how
+    // many are scored, and how many 80 or more.
+    const postings = schema.jobOffers;
+    const offers = schema.offers;
+    const scores = schema.offerScores;
+    const relevance = await tx
+      .select({
+        source: postings.source,
+        scored: sql<number>`count(distinct ${offers.id}) filter (where ${scores.score} is not null)::int`,
+        top: sql<number>`count(distinct ${offers.id}) filter (where ${scores.score} >= 80)::int`,
+      })
+      .from(postings)
+      .innerJoin(offers, eq(offers.id, postings.offerId))
+      .leftJoin(scores, eq(scores.offerId, offers.id))
+      .where(
+        and(
+          eq(postings.userId, userId),
+          isNull(offers.excludedReason),
+          gte(postings.firstSeenAt, new Date(now().getTime() - days * 86_400_000)),
+        ),
+      )
+      .groupBy(postings.source);
+    const relevant = new Map(relevance.map(({ source, ...counts }) => [source, counts]));
     const result: SourceSummary[] = [];
     for (const connector of connectors()) {
       if (only && connector.name !== only) continue;
@@ -122,6 +146,7 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
               merged: 0,
             }),
           },
+          relevance: relevant.get(connector.name) ?? { scored: 0, top: 0 },
           runs: latest.map(toSourceRun),
         }),
       );

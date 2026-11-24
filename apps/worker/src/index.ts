@@ -15,6 +15,7 @@ import { createAiService } from './ai/service';
 import { runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
 import { screenOffers, screenProfileOf } from './collect/screen';
+import { scoreOffers, scoringContextOf } from './collect/scoring';
 import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
@@ -105,22 +106,20 @@ async function main(): Promise<void> {
   await boss.work<CollectPassJob>(QUEUES.collectPass, async (jobs) => {
     for (const job of jobs) await runPass(collectDeps, job.data);
   });
-  // The deterministic filter again on every offer of an account whose criteria changed.
+  // The deterministic filter, then the scoring, again on every offer of an account whose
+  // profile changed (phase 3 plan, sections 6 and 7).
   await ensureQueue(boss, QUEUES.offersScreen);
   await boss.work<OffersScreenJob>(QUEUES.offersScreen, async (jobs) => {
     for (const job of jobs) {
       const { userId } = job.data;
       const now = new Date();
-      const result = await withUser(database.db, userId, async (tx) =>
-        screenOffers(
-          tx,
-          userId,
-          null,
-          await screenProfileOf(tx, userId, config.settings, now),
-          now,
-        ),
-      );
-      logger.info(result, 'offers screened');
+      const result = await withUser(database.db, userId, async (tx) => {
+        const criteria = await screenProfileOf(tx, userId, config.settings, now);
+        const screened = await screenOffers(tx, userId, null, criteria, now);
+        const scoring = await scoringContextOf(tx, userId, config.settings, now);
+        return { ...screened, ...(await scoreOffers(tx, userId, null, scoring, now)) };
+      });
+      logger.info(result, 'offers screened and scored');
     }
   });
   logger.info({ sources: connectors.map((connector) => connector.name) }, 'collection ready');

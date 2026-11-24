@@ -17,6 +17,7 @@ import { judgeRun } from './collect/alerts';
 import { closeStalePasses, type CollectDeps, keywordsFor, runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
 import { screenOffers, screenProfileOf } from './collect/screen';
+import { scoreOffers, scoringContextOf } from './collect/scoring';
 import { dueSources, isoWeekday, purgeCollection, schedulePasses } from './collect/schedule';
 
 let database: TestDatabase;
@@ -747,7 +748,13 @@ describe('announcements (ADR 0016)', () => {
     expect(comptable.lastSeenAt.getTime()).toBe(byId.get('l2')!.lastSeenAt.getTime());
 
     // Once only: the next start-up finds nothing to do.
-    expect(await prepare()).toEqual({ identified: 0, regrouped: 0, located: 0, screened: 0 });
+    expect(await prepare()).toEqual({
+      identified: 0,
+      regrouped: 0,
+      located: 0,
+      screened: 0,
+      scored: 0,
+    });
   });
 });
 
@@ -967,6 +974,70 @@ describe('deterministic filter (phase 3 plan, section 6)', () => {
     const [offer] = await announcementsOf(userId);
     expect(offer).toMatchObject({ excludedReason: 'too_old' });
     expect(offer!.screenedAt).not.toBeNull();
+  });
+});
+
+describe('scoring without AI (phase 3 plan, section 7)', () => {
+  it('scores the kept offers of a pass, explained, and only again when something changed', async () => {
+    const userId = await account([['comptable', true]]);
+    await withUser(handle.db, userId, async (tx) => {
+      await tx.insert(schema.profiles).values({ userId, baseCity: 'Bruxelles' });
+      await tx.insert(schema.targetJobs).values({ userId, title: 'Comptable', position: 0 });
+      await tx.insert(schema.skills).values([
+        { userId, name: 'Excel' },
+        { userId, name: 'TVA' },
+      ]);
+    });
+    const alpha = giving('alpha', [
+      {
+        id: 's1',
+        title: 'Comptable',
+        company: 'Exemple',
+        location: 'Bruxelles',
+        description: 'Excel, TVA, clôtures.',
+      },
+      { id: 's2', title: 'Chauffeur', company: 'Exemple', location: 'Bruxelles' },
+      { id: 's3', title: 'Analyste', company: 'Autre', location: 'Montrouge, France' },
+    ]);
+    await runPass(deps([alpha]), { userId, passId: await pass(userId, ['alpha']) });
+    const read = () =>
+      withUser(handle.db, userId, (tx) =>
+        tx
+          .select({
+            externalId: schema.jobOffers.externalId,
+            score: schema.offerScores.score,
+            method: schema.offerScores.method,
+            confidence: schema.offerScores.confidence,
+            factors: schema.offerScores.factors,
+            scoredAt: schema.offerScores.scoredAt,
+          })
+          .from(schema.jobOffers)
+          .leftJoin(schema.offerScores, eq(schema.offerScores.offerId, schema.jobOffers.offerId))
+          .where(eq(schema.jobOffers.userId, userId)),
+      );
+    const first = new Map((await read()).map((row) => [row.externalId, row]));
+    expect(first.get('s1')).toMatchObject({ method: 'rules', confidence: 'low' });
+    expect(first.get('s1')!.score).toBeGreaterThanOrEqual(80);
+    expect(first.get('s1')!.factors).toContainEqual({
+      kind: 'title',
+      strength: 'target',
+      match: 'Comptable',
+    });
+    expect(first.get('s2')!.score).toBeLessThan(40);
+    // Set aside by the filter (abroad): never scored.
+    expect(first.get('s3')!.score).toBeNull();
+
+    // Nothing changed: nothing scored again.
+    const scoreAgain = (date: Date) =>
+      withUser(handle.db, userId, async (tx) =>
+        scoreOffers(tx, userId, null, await scoringContextOf(tx, userId, settings, date), date),
+      );
+    expect(await scoreAgain(new Date())).toEqual({ scored: 0 });
+    // A new skill: every kept offer is scored again.
+    await withUser(handle.db, userId, (tx) =>
+      tx.insert(schema.skills).values({ userId, name: 'Clôtures' }),
+    );
+    expect(await scoreAgain(new Date())).toEqual({ scored: 2 });
   });
 });
 

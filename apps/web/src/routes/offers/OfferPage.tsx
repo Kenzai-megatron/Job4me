@@ -9,6 +9,7 @@ import { api } from '../../api/client';
 import { offerQuery, safeLink } from '../../api/collect';
 import { errorMessage } from '../../components/errors';
 import { usePlaceLabel, useSourceNames } from './OffersPage';
+import { OfferScoreBadge, useFactorLabels } from './score';
 
 /** When a posting was seen: one day, or from its first to its latest sighting. */
 function seen(posting: OfferPosting, t: ReturnType<typeof useTranslation>['t']) {
@@ -70,9 +71,30 @@ function PostingItem({
   );
 }
 
+/** The score with every factor that made it, and how far it can be trusted. */
+function ScoreDetail({ score }: { score: NonNullable<OfferUnmergeResponse['offer']['score']> }) {
+  const { t } = useTranslation();
+  const label = useFactorLabels();
+  const factors = score.factors.map(label).filter((text): text is string => Boolean(text));
+  return (
+    <div className="flex flex-col gap-2">
+      <OfferScoreBadge score={score} />
+      {score.reason ? <p className="text-sm">{score.reason}</p> : null}
+      {factors.length > 0 ? (
+        <ul className="list-disc ps-5 text-sm">
+          {factors.map((text) => (
+            <li key={text}>{text}</li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="text-sm text-muted">{t(`offers.methods.${score.method}`)}</p>
+    </div>
+  );
+}
+
 /**
- * One announcement (ADR 0016): its retained posting, then every site that carries it, with
- * "not the same offer" to undo a wrong merge. Scores and analysis come with lot 4.
+ * One announcement (ADR 0016): its score and what made it, its retained posting, then every site
+ * that carries it, with "not the same offer" to undo a wrong merge.
  */
 export function OfferPage() {
   const { t } = useTranslation();
@@ -134,6 +156,7 @@ export function OfferPage() {
             {data.details || data.salary ? (
               <p className="text-sm">{[data.details, data.salary].filter(Boolean).join(' · ')}</p>
             ) : null}
+            {data.score ? <ScoreDetail score={data.score} /> : null}
             {data.excluded ? (
               <Alert tone="info">
                 {t('offers.excludedBecause', {

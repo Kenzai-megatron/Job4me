@@ -128,7 +128,18 @@ function SourceCard({ source }: { source: SourceSummary }) {
             })}
           </p>
         ) : null}
-        <p className="text-sm text-muted">{t('sources.relevance')}</p>
+        <p className="text-sm text-muted">
+          {source.relevance.scored === 0
+            ? t('sources.relevanceNone', { days: source.window.days })
+            : t('sources.relevance', {
+                percent: formatNumber(
+                  Math.round((100 * source.relevance.top) / source.relevance.scored),
+                ),
+                top: formatNumber(source.relevance.top),
+                scored: formatNumber(source.relevance.scored),
+                days: source.window.days,
+              })}
+        </p>
         {source.runs.length > 1 ? (
           <details className="text-sm">
             <summary className="cursor-pointer font-semibold text-accent">

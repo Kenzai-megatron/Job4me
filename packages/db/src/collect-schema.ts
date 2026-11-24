@@ -7,6 +7,7 @@ import {
   doublePrecision,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   uniqueIndex,
@@ -273,8 +274,47 @@ export const jobOffers = pgTable(
   ],
 );
 
+/**
+ * The current score of an announcement (phase 3 plan, section 3; ADR 0018): without AI by default
+ * (`rules`, its factors), or by Claude once switched on (lot 5). Computed again only when the
+ * profile or the offer changes (their versions), or when the rules change.
+ */
+export const offerScores = pgTable(
+  'offer_score',
+  {
+    ...common(),
+    offerId: uuid('offer_id')
+      .notNull()
+      .references(() => offers.id, { onDelete: 'cascade' }),
+    method: text('method').notNull(),
+    score: integer('score').notNull(),
+    confidence: text('confidence').notNull(),
+    /** What made a score without AI, as data the interface words. */
+    factors: jsonb('factors').$type<unknown[]>(),
+    /** Claude's short reason (lot 5). */
+    reason: text('reason'),
+    model: text('model'),
+    promptVersion: text('prompt_version'),
+    profileVersion: text('profile_version').notNull(),
+    offerVersion: text('offer_version').notNull(),
+    scoredAt: at('scored_at').notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('offer_score_offer_idx').on(t.offerId),
+    index('offer_score_user_idx').on(t.userId, t.score),
+    check(
+      'offer_score_method_check',
+      sql`${t.method} in ('rules', 'claude_quick', 'claude_detailed')`,
+    ),
+    check('offer_score_confidence_check', sql`${t.confidence} in ('low', 'normal')`),
+    check('offer_score_score_check', sql`${t.score} between 0 and 100`),
+    ownerPolicy('offer_score'),
+  ],
+);
+
 export type SourceSettingRow = typeof sourceSettings.$inferSelect;
 export type CollectionPassRow = typeof collectionPasses.$inferSelect;
 export type SourceRunRow = typeof sourceRuns.$inferSelect;
 export type JobOfferRow = typeof jobOffers.$inferSelect;
 export type OfferRow = typeof offers.$inferSelect;
+export type OfferScoreRow = typeof offerScores.$inferSelect;
