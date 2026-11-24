@@ -113,8 +113,7 @@ Détail et raisons dans la [revue de sécurité de la phase 3](review-phase-3.md
 
 - **Une annonce piégée peut gonfler sa propre note** : le lot suspect ne détecte qu'une manipulation de tout un lot. Aucun envoi en phase 3 ; la phase 5 ne devra jamais envoyer sur la seule foi d'un score de Claude.
 - **Plafonds de l'IA non atomiques** (risque de la phase 1, étendu) : la notation, les mots-clés et la structuration d'un CV peuvent passer le contrôle en même temps ; l'écart reste borné au pire cas de quelques appels.
-- **Notes de Mehdi dans l'étalon** : quand Claude note, jusqu'à cinq offres notées partent avec leur note et son mot d'explication.
-- **Offres notées jamais purgées** : quelques annonces de tiers restent au-delà de 90 jours, tant qu'elles portent une note.
+- **Notes de Mehdi dans l'étalon** (accepté par Mehdi le 24/11/2026) : quand Claude note, jusqu'à cinq offres notées partent avec leur note et son mot d'explication.
 
 ## Phase 2 (collecte), en cours
 

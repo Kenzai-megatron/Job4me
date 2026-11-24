@@ -186,3 +186,12 @@ Lots 1 à 7 livrés, chacun par sa pull request, CI verte ; [revue de sécurité
 | 5 | CI verte, plan de sécurité appliqué et testé, revue faite | fait |
 
 La démonstration suit le [guide de la phase 3](../guide/demonstration-phase-3.md).
+
+### Décisions du 24/11/2026, à la clôture
+
+| # | Décision |
+| --- | --- |
+| D9 | Un élément bloquant plafonne le score de l'analyse détaillée à 59 (configuration) |
+| D10 | Une offre notée est purgée comme les autres, 90 jours après sa dernière vue, sa note avec elle |
+| D11 | Quand Claude note : intitulés des diplômes et des certifications, et jusqu'à 5 offres notées comme étalon de sévérité |
+| D12 | Le plan de la phase 4 se prépare pendant la démonstration de la phase 3 |
