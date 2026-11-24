@@ -300,6 +300,19 @@ export const offerScoreSchema = z.object({
 });
 export type OfferScore = z.infer<typeof offerScoreSchema>;
 
+/** Mehdi's own rating of an offer (phase 3 plan, section 9): the reference set. */
+export const offerRatingSchema = z.object({
+  value: z.number().int().min(0).max(100),
+  note: z.string().nullable(),
+  ratedAt: z.string(),
+});
+export type OfferRating = z.infer<typeof offerRatingSchema>;
+export const offerRatingInputSchema = z.object({
+  value: z.number().int().min(0).max(100),
+  note: z.string().trim().max(200).nullable().default(null),
+});
+export type OfferRatingInput = z.input<typeof offerRatingInputSchema>;
+
 /** A posting: the offer as one site carries it (docs/SOURCES.md, section 1.1); "?" is unknown. */
 export const offerPostingSchema = z.object({
   id: z.uuid(),
@@ -343,6 +356,8 @@ export const offerSchema = z.object({
   excluded: z.enum(exclusionReasons).nullable(),
   /** Its score, once computed (only the kept offers are scored). */
   score: offerScoreSchema.nullable(),
+  /** Mehdi's own rating, when he gave one. */
+  rating: offerRatingSchema.nullable(),
   postings: z.array(offerPostingSchema).min(1),
 });
 export type Offer = z.infer<typeof offerSchema>;
@@ -409,3 +424,68 @@ export type ManualOfferInput = z.input<typeof manualOfferInputSchema>;
 /** The announcement the offer added by hand belongs to: `merged` when it was already there. */
 export const manualOfferResponseSchema = z.object({ offer: offerSchema, merged: z.boolean() });
 export type ManualOfferResponse = z.infer<typeof manualOfferResponseSchema>;
+
+/** Why a measure of the reference set gave nothing; the interface translates them. */
+export const benchmarkErrorCodes = [
+  'ai_disabled',
+  'ai_cap_reached',
+  'ai_refused',
+  'ai_invalid_output',
+  'ai_failed',
+  'no_rating',
+] as const;
+export type BenchmarkErrorCode = (typeof benchmarkErrorCodes)[number];
+export const benchmarkStatuses = ['queued', 'running', 'done', 'failed'] as const;
+
+/** One of the widest gaps between a rating and a score. */
+export const benchmarkGapSchema = z.object({
+  offerId: z.uuid(),
+  title: z.string(),
+  rating: z.number().int().min(0).max(100),
+  score: z.number().int().min(0).max(100),
+});
+export type BenchmarkGap = z.infer<typeof benchmarkGapSchema>;
+
+/** One measure of the reference set (phase 3 plan, section 9). */
+export const benchmarkSchema = z.object({
+  id: z.uuid(),
+  status: z.enum(benchmarkStatuses),
+  errorCode: z.enum(benchmarkErrorCodes).nullable(),
+  withClaude: z.boolean(),
+  rated: z.number().int().min(0),
+  rules: z
+    .object({ version: z.string(), meanGap: z.number().min(0), worst: z.array(benchmarkGapSchema) })
+    .nullable(),
+  claude: z
+    .object({
+      rated: z.number().int().min(0),
+      meanGap: z.number().min(0),
+      worst: z.array(benchmarkGapSchema),
+      quickModel: z.string(),
+      detailedModel: z.string(),
+      promptVersion: z.string(),
+      costUsd: z.number().min(0),
+      /** Per offer measured. */
+      costPerOfferUsd: z.number().min(0),
+    })
+    .nullable(),
+  /** Offers rated 60 or more that the title filter would have set aside. */
+  titleFilter: z
+    .object({ rated: z.number().int().min(0), rejected: z.number().int().min(0) })
+    .nullable(),
+  createdAt: z.string(),
+  finishedAt: z.string().nullable(),
+});
+export type Benchmark = z.infer<typeof benchmarkSchema>;
+
+export const benchmarksResponseSchema = z.object({
+  /** Offers Mehdi rated, and how many the reference set calls for. */
+  rated: z.number().int().min(0),
+  goal: z.number().int().min(1),
+  /** The gap the specification accepts (Hypothèse: 10 points). */
+  maxMeanGap: z.number().min(0),
+  /** The title filter is measured on the offers rated this much or more (SPEC: 60). */
+  filterRating: z.number().int().min(0).max(100),
+  benchmarks: z.array(benchmarkSchema),
+});
+export type BenchmarksResponse = z.infer<typeof benchmarksResponseSchema>;

@@ -1,4 +1,4 @@
-import type { AiUsageResponse, KeywordRun } from '@job4me/contracts';
+import type { AiUsageResponse, BenchmarksResponse, KeywordRun } from '@job4me/contracts';
 import { queryOptions } from '@tanstack/react-query';
 import { api } from './client';
 
@@ -15,4 +15,10 @@ export const keywordRunQuery = queryOptions({
     const status = query.state.data?.run?.status;
     return status === 'queued' || status === 'running' ? 2000 : false;
   },
+});
+
+/** The reference set (phase 3 plan, section 9): ratings given and measures made. */
+export const benchmarksQuery = queryOptions({
+  queryKey: ['scoring', 'benchmarks'],
+  queryFn: () => api.get<BenchmarksResponse>('/api/scoring/benchmarks'),
 });

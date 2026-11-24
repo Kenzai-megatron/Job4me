@@ -1,6 +1,7 @@
 import {
   aiCallStatuses,
   aiUsages,
+  benchmarkErrorCodes,
   collectErrorCodes,
   errorCodes,
   exclusionReasons,
@@ -49,6 +50,7 @@ describe('translation files', () => {
       ...scoreMethods.map((method) => `offers.methods.${method}`),
       ...aiUsages.map((usage) => `ai.usages.${usage}`),
       ...aiCallStatuses.map((status) => `ai.statuses.${status}`),
+      ...benchmarkErrorCodes.map((code) => `ai.reference.errors.${code}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

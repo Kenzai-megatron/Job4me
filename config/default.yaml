@@ -157,6 +157,9 @@ ai:
       reasonChars: 200
       # Offers scored per pass, taken in turn from each source; the rest waits for the next pass.
       perPass: 200
+      # Offers Mehdi rated, shown as the calibration of severity (SPEC, section 5): one per band
+      # first, the oldest ratings first, so that a new rating changes nothing once they are there.
+      examples: 5
     detailed:
       model: claude-sonnet-5-5
       maxTokens: 8000
@@ -368,6 +371,21 @@ scoring:
     penalties:
       excludedSector: 20
       rejectedTitle: 15
+  # The reference set (phase 3 plan, section 9; decision D1): Mehdi rates 30 real offers in
+  # Job4me, `pnpm stack:cli scoring:benchmark` measures the scorings against his ratings.
+  reference:
+    goal: 30
+    # Hypothèse (SPEC, section 5): a mean gap under 10 points.
+    maxMeanGap: 10
+    # Hypothèse: the title filter sets aside at most 5 % of the offers rated 60 or more.
+    filterRating: 60
+    maxFilterRejected: 0.05
+    timeoutMs: 900000
+  # Decision D7: after a pass, one notification of the new offers of 80 or more (first seen within
+  # the week), each offer named once.
+  alert:
+    threshold: 80
+    freshDays: 7
   # The grid of the detailed analysis (SPEC, section 5), 100 in all; the profile may change it.
   defaultWeights:
     skills: 30

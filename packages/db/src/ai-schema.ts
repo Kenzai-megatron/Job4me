@@ -39,7 +39,7 @@ export const aiCalls = pgTable(
     index('ai_call_user_id_idx').on(t.userId, t.createdAt),
     check(
       'ai_call_usage_check',
-      sql`${t.usage} in ('cv_structuring', 'keywords', 'scoring_quick', 'scoring_detailed')`,
+      sql`${t.usage} in ('cv_structuring', 'keywords', 'scoring_quick', 'scoring_detailed', 'scoring_benchmark')`,
     ),
     check(
       'ai_call_status_check',

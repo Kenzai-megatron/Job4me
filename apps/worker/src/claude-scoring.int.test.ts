@@ -15,9 +15,12 @@ import { createLogger } from '@job4me/logger';
 import { aadFor, deriveKey, encrypt } from '@job4me/security';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createAiService } from './ai/service';
+import { runBenchmark } from './collect/benchmark';
 import { scoreWithClaude } from './collect/claude';
 import { type CollectDeps, runPass } from './collect/pass';
+import { purgeCollection } from './collect/schedule';
 import { scoreOffers, scoringContextOf } from './collect/scoring';
+import { alertTopOffers } from './collect/top-offers';
 
 // The scoring by Claude (phase 3 plan, sections 7 bis, 8 and 11) behind a simulated transport:
 // no key, no real call, fictitious offers and a fictitious profile (CLAUDE.md, decision D1).
@@ -720,5 +723,230 @@ describe('threats of the plan (section 11)', () => {
     await run(owner, enabled(), fakeClaude(fair));
     expect([...(await scoresOf(other)).values()].every((row) => row.method === 'rules')).toBe(true);
     expect(await callsOf(other)).toHaveLength(0);
+  });
+});
+
+/** Mehdi's ratings of the offers of these titles. */
+async function rate(userId: string, ratings: Record<string, number>) {
+  await withUser(handle.db, userId, async (tx) => {
+    for (const [title, rating] of Object.entries(ratings)) {
+      const [posting] = await tx
+        .select({ offerId: schema.jobOffers.offerId })
+        .from(schema.jobOffers)
+        .where(eq(schema.jobOffers.title, title));
+      await tx.insert(schema.offerRatings).values({ userId, offerId: posting!.offerId, rating });
+    }
+  });
+}
+
+async function measure(
+  userId: string,
+  settings: Settings,
+  transport: ReturnType<typeof fakeClaude> | null,
+  withClaude: boolean,
+) {
+  const [row] = await withUser(handle.db, userId, (tx) =>
+    tx
+      .insert(schema.scoringBenchmarks)
+      .values({ userId, withClaude })
+      .returning({ id: schema.scoringBenchmarks.id }),
+  );
+  await runBenchmark(
+    { db: handle.db, ai: service(transport, settings), settings, logger },
+    { userId, benchmarkId: row!.id },
+  );
+  const [result] = await withUser(handle.db, userId, (tx) =>
+    tx.select().from(schema.scoringBenchmarks).where(eq(schema.scoringBenchmarks.id, row!.id)),
+  );
+  return result!;
+}
+
+describe('the reference set (phase 3 plan, section 9)', () => {
+  it('measures the scoring without AI against the ratings, and the title filter', async () => {
+    const userId = await account();
+    await withUser(handle.db, userId, (tx) =>
+      tx
+        .insert(schema.titleFilterRules)
+        .values({ userId, list: 'reject', expression: 'chauffeur' }),
+    );
+    await collect(userId, [
+      giving('alpha', [
+        ...many('a', 2, (index) => `Comptable ${index}`),
+        ...many('c', 1, () => 'Chauffeur comptable'),
+      ]),
+    ]);
+    await rate(userId, { 'Comptable 0': 90, 'Comptable 1': 40, 'Chauffeur comptable': 70 });
+    const claude = fakeClaude(fair);
+    const result = await measure(userId, base, claude, false);
+    expect(claude.sent).toHaveLength(0);
+    expect(result).toMatchObject({
+      status: 'done',
+      rated: 3,
+      rulesVersion: 'rules-1',
+      filterRated: 2,
+      filterRejected: 1,
+      claudeMeanGap: null,
+      costUsd: 0,
+    });
+    expect(result.rulesMeanGap).toBeGreaterThan(0);
+    // The widest gap first: the offer rated 40 that the rules score high.
+    expect(result.rulesWorst?.[0]).toMatchObject({ title: 'Comptable 1', rating: 40 });
+  });
+
+  it('measures Claude through the steps of a pass, its calibration aside, with its cost', async () => {
+    const userId = await account();
+    await collect(userId, [
+      giving('alpha', [
+        ...many('a', 3, (index) => `Comptable ${index}`),
+        ...many('c', 3, (index) => `Chauffeur ${index}`),
+      ]),
+    ]);
+    await rate(userId, {
+      'Comptable 0': 85,
+      'Comptable 1': 80,
+      'Comptable 2': 90,
+      'Chauffeur 0': 10,
+      'Chauffeur 1': 20,
+      'Chauffeur 2': 15,
+    });
+    const settings = enabled((scoring) => {
+      scoring.quick.examples = 2;
+    });
+    const claude = fakeClaude(fair);
+    const result = await measure(userId, settings, claude, true);
+    // The calibration: one offer per band, the oldest ratings first (80 band, then 0 band).
+    const system = quickRequests(claude.sent)[0]!.system;
+    expect(system).toContain('Comptable 0 | Employeur a0 | Bruxelles : 85/100');
+    expect(system).toContain('Chauffeur 0 | Employeur c0 | Bruxelles : 10/100');
+    const sentTitles = quickRequests(claude.sent).flatMap((request) =>
+      offersIn(request.user).map((offer) => offer.title),
+    );
+    expect(sentTitles.sort()).toEqual(['Chauffeur 1', 'Chauffeur 2', 'Comptable 1', 'Comptable 2']);
+    expect(result).toMatchObject({
+      status: 'done',
+      rated: 6,
+      claudeRated: 4,
+      quickModel: settings.ai.scoring.quick.model,
+      detailedModel: settings.ai.scoring.detailed.model,
+      promptVersion: 'quick-1+detailed-1',
+    });
+    // Comptable 1 and 2: analysed (81); Chauffeur 1 and 2: 15. Gaps 1, 9, 5, 0.
+    expect(result.claudeMeanGap).toBe(3.8);
+    expect(result.costUsd).toBeGreaterThan(0);
+    const usages = (await callsOf(userId)).map((call) => call.usage);
+    expect(new Set(usages)).toEqual(new Set(['scoring_benchmark']));
+    // A measure never touches the scores of the offers.
+    expect([...(await scoresOf(userId)).values()].every((row) => row.method === 'rules')).toBe(
+      true,
+    );
+  });
+
+  it('measures the scoring without AI even when Claude cannot be asked', async () => {
+    const userId = await account();
+    await collect(userId, [
+      giving(
+        'alpha',
+        many('a', 1, () => 'Comptable'),
+      ),
+    ]);
+    await rate(userId, { Comptable: 80 });
+    const result = await measure(userId, base, null, true);
+    expect(result).toMatchObject({ status: 'failed', errorCode: 'ai_disabled', rated: 1 });
+    expect(result.rulesMeanGap).not.toBeNull();
+  });
+
+  it('says so when nothing is rated', async () => {
+    const userId = await account();
+    const result = await measure(userId, base, null, false);
+    expect(result).toMatchObject({ status: 'failed', errorCode: 'no_rating' });
+  });
+
+  it('never purges a rated offer, even long after its last sighting', async () => {
+    const userId = await account();
+    await collect(userId, [
+      giving(
+        'alpha',
+        many('a', 2, (index) => `Comptable ${index}`),
+      ),
+    ]);
+    await rate(userId, { 'Comptable 0': 80 });
+    const later = new Date(Date.now() + (base.collect.offers.retentionDays + 5) * 86_400_000);
+    await purgeCollection(handle.db, base, later);
+    expect([...(await scoresOf(userId)).keys()]).toEqual(['Comptable 0']);
+  });
+});
+
+describe('new offers of 80 or more (decision D7)', () => {
+  it('tells the phone once of the fresh offers of 80 or more, never an offer added by hand', async () => {
+    const userId = await account();
+    await collect(userId, [
+      giving('alpha', [
+        ...many('a', 2, (index) => `Comptable ${index}`),
+        ...many('c', 1, () => 'Chauffeur'),
+      ]),
+    ]);
+    await withUser(handle.db, userId, async (tx) => {
+      // One added by hand, one first seen long ago: neither is told.
+      const [old] = await tx
+        .select({ offerId: schema.jobOffers.offerId })
+        .from(schema.jobOffers)
+        .where(eq(schema.jobOffers.title, 'Comptable 1'));
+      await tx
+        .update(schema.offers)
+        .set({ firstSeenAt: new Date(Date.now() - 30 * 86_400_000) })
+        .where(eq(schema.offers.id, old!.offerId));
+      await tx
+        .update(schema.jobOffers)
+        .set({ origin: 'manual' })
+        .where(eq(schema.jobOffers.title, 'Chauffeur'));
+      await tx
+        .update(schema.offerScores)
+        .set({ score: 95 })
+        .where(eq(schema.offerScores.userId, userId));
+    });
+    const told: Array<{ title: string; body: string; url: string }> = [];
+    const deps = {
+      db: handle.db,
+      settings: base,
+      logger,
+      notify: (_user: string, message: { title: string; body: string; url: string }) => {
+        told.push(message);
+        return Promise.resolve();
+      },
+    };
+    expect(await alertTopOffers(deps, userId)).toBe(1);
+    expect(told).toEqual([
+      {
+        title: 'Nouvelles offres à 80 ou plus',
+        body: '1 nouvelle offre notée 80 ou plus : ouvrez Job4me pour la voir.',
+        url: '/',
+      },
+    ]);
+    // Told once.
+    expect(await alertTopOffers(deps, userId)).toBe(0);
+    expect(told).toHaveLength(1);
+  });
+
+  it('is told after a pass when the scoring by Claude is off', async () => {
+    const userId = await account();
+    const told: string[] = [];
+    const notify = (id: string) => {
+      told.push(id);
+      return Promise.resolve();
+    };
+    await collect(
+      userId,
+      [
+        giving(
+          'alpha',
+          many('a', 1, () => 'Comptable'),
+        ),
+      ],
+      {
+        afterPass: (id) => alertTopOffers({ db: handle.db, settings: base, logger, notify }, id),
+      },
+    );
+    // The fair rules score of a target job with its skills cited reaches 80.
+    expect(told).toEqual([userId]);
   });
 });
