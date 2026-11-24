@@ -94,6 +94,16 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   );
   await expect(page.getByRole('button', { name: "Ce n'est pas la même offre" })).toHaveCount(0);
   await expect(page.locator('img[src="x"]')).toHaveCount(0);
+  // « Ma note » (phase 3 plan, section 9): the reference set, rated from the offer's page.
+  const rating = page.getByRole('region', { name: 'Ma note' });
+  await rating.getByRole('button', { name: 'Noter cette offre' }).click();
+  await rating.getByLabel('Note sur 100').fill('75');
+  await rating.getByLabel('Un mot d’explication (facultatif)').fill('Bonne piste.');
+  await expectAccessible(page);
+  await rating.getByRole('button', { name: 'Enregistrer ma note' }).click();
+  await expect(rating.getByRole('status')).toHaveText('Note enregistrée.');
+  await expect(rating).toContainText('Ma note : 75');
+  await expect(rating).toContainText('Bonne piste.');
   await expectAccessible(page);
   await page.getByRole('link', { name: 'Toutes les offres' }).click();
   await expect(page.getByRole('heading', { name: 'Offres', level: 1 })).toBeVisible();

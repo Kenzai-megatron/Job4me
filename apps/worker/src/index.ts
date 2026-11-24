@@ -7,18 +7,21 @@ import {
   type OffersScreenJob,
   type PushTestJob,
   QUEUES,
+  type ScoringBenchmarkJob,
 } from '@job4me/contracts';
 import { connect, queueOptions, readLocalities, withUser } from '@job4me/db';
 import { createLogger } from '@job4me/logger';
 import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
+import { runBenchmark } from './collect/benchmark';
 import { scoreWithClaude } from './collect/claude';
 import { runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
 import { screenOffers, screenProfileOf } from './collect/screen';
 import { scoreOffers, scoringContextOf } from './collect/scoring';
 import { purgeCollection, schedulePasses } from './collect/schedule';
+import { alertTopOffers } from './collect/top-offers';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
 import { sendTestNotification } from './jobs/push-test';
@@ -91,8 +94,17 @@ async function main(): Promise<void> {
     { db: database.db, logger, gazetteer, settings: config.settings },
     connectors.map((connector) => connector.name),
   );
+  // Push to the phone (decision D4: silent sources; D7: new offers of 80 or more).
+  const notify = vapid
+    ? (userId: string, message: PushMessage) =>
+        pushToUser({ db: database.db, logger, vapid }, userId, message)
+    : undefined;
+  const scoringDeps = { db: database.db, ai, settings: config.settings, logger };
+  const topOffers = (userId: string) =>
+    alertTopOffers({ ...scoringDeps, ...(notify ? { notify } : {}) }, userId);
   // The scoring by Claude after each pass (phase 3 plan, sections 7 bis and 8), when the setting
-  // switches it on (decision D5: off); one run per account at a time.
+  // switches it on (decision D5: off); one run per account at a time, never run twice. The new
+  // offers of 80 or more are told once it is done (decision D7).
   const claudeScoring = config.settings.ai.scoring.enabled;
   await ensureQueue(boss, QUEUES.offersAiScore, {
     expireInSeconds: Math.ceil(config.settings.ai.scoring.staleAfterMs / 1000),
@@ -100,11 +112,17 @@ async function main(): Promise<void> {
   });
   await boss.work<OffersAiScoreJob>(QUEUES.offersAiScore, async (jobs) => {
     for (const job of jobs) {
-      await scoreWithClaude(
-        { db: database.db, ai, settings: config.settings, logger },
-        job.data.userId,
-      );
+      await scoreWithClaude(scoringDeps, job.data.userId);
+      await topOffers(job.data.userId);
     }
+  });
+  // The measure of the reference set (phase 3 plan, section 9), asked for from the home machine.
+  await ensureQueue(boss, QUEUES.scoringBenchmark, {
+    expireInSeconds: Math.ceil(config.settings.scoring.reference.timeoutMs / 1000),
+    retryLimit: 0,
+  });
+  await boss.work<ScoringBenchmarkJob>(QUEUES.scoringBenchmark, async (jobs) => {
+    for (const job of jobs) await runBenchmark(scoringDeps, job.data);
   });
   const collectDeps = {
     db: database.db,
@@ -115,18 +133,12 @@ async function main(): Promise<void> {
     // Adzuna and SerpApi (decision D2): empty until Mehdi writes them on the home machine.
     secrets: secrets.sourceKeys,
     // Silent sources reach the phone (decision D4) when the push keys exist.
-    ...(vapid
-      ? {
-          notify: (userId: string, message: PushMessage) =>
-            pushToUser({ db: database.db, logger, vapid }, userId, message),
-        }
-      : {}),
-    ...(claudeScoring
-      ? {
-          afterPass: (userId: string) =>
-            boss.send(QUEUES.offersAiScore, { userId }, { singletonKey: userId }),
-        }
-      : {}),
+    ...(notify ? { notify } : {}),
+    // After a pass: the scoring by Claude when it is on, else at once the new offers of 80.
+    afterPass: (userId: string) =>
+      claudeScoring
+        ? boss.send(QUEUES.offersAiScore, { userId }, { singletonKey: userId })
+        : topOffers(userId),
   };
   await boss.work(QUEUES.collectSchedule, async () => {
     await schedulePasses({

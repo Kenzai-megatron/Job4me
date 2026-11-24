@@ -72,7 +72,7 @@
   },
   "placeholder": {
     "comingInPhase": "Arrive en phase {{phase}}",
-    "home": "Le résumé de la semaine : nouvelles offres à 80 ou plus, actions à faire, envois programmés et quotas.",
+    "home": "Le reste du résumé de la semaine : actions à faire, envois programmés et quotas.",
     "applications": "Le suivi de chaque candidature, des relances aux entretiens.",
     "documents": "Vos CV maîtres et les dossiers adaptés à chaque offre, en PDF et en DOCX.",
     "profile": "Votre profil, vos mots-clés et l'import de votre CV et de votre archive LinkedIn."
@@ -85,7 +85,11 @@
     "setupLink": "Ouvrir les paramètres de sécurité",
     "silentTitle": "Des sources sont muettes",
     "silentBody": "{{sources}} : rien rapporté au dernier passage, ou bien moins que d'habitude.",
-    "silentLink": "Ouvrir l'écran Sources"
+    "silentLink": "Ouvrir l'écran Sources",
+    "topTitle": "Nouvelles offres à 80 ou plus",
+    "topIntro": "Vues ces sept derniers jours, les meilleures d’abord.",
+    "topEmpty": "Aucune nouvelle offre à 80 ou plus cette semaine.",
+    "topAll": "Voir toutes les offres"
   },
   "security": {
     "title": "Sécurité",
@@ -203,7 +207,10 @@
     "testTitle": "Job4me",
     "testBody": "Les notifications fonctionnent sur cet appareil.",
     "silentTitle": "Source muette",
-    "silentBody": "{{sources}} : rien lu au dernier passage, ou bien moins que d'habitude. Ouvrez l'écran Sources."
+    "silentBody": "{{sources}} : rien lu au dernier passage, ou bien moins que d'habitude. Ouvrez l'écran Sources.",
+    "topTitle": "Nouvelles offres à 80 ou plus",
+    "topBody_one": "{{count}} nouvelle offre notée {{threshold}} ou plus : ouvrez Job4me pour la voir.",
+    "topBody_other": "{{count}} nouvelles offres notées {{threshold}} ou plus : ouvrez Job4me pour les voir."
   },
   "scores": {
     "band80": "postuler aujourd'hui",
@@ -559,7 +566,8 @@
       "cv_structuring": "Structuration du CV",
       "keywords": "Proposition de mots-clés",
       "scoring_quick": "Notation rapide des offres",
-      "scoring_detailed": "Analyse détaillée des offres"
+      "scoring_detailed": "Analyse détaillée des offres",
+      "scoring_benchmark": "Mesure du jeu de référence"
     },
     "statuses": {
       "succeeded": "réussi",
@@ -568,6 +576,29 @@
       "failed": "échec de l'appel",
       "blocked": "bloqué par un plafond",
       "disabled": "IA non configurée"
+    },
+    "reference": {
+      "title": "Jeu de référence",
+      "progress_one": "{{count}} offre notée sur {{goal}}",
+      "progress_other": "{{count}} offres notées sur {{goal}}",
+      "howTo": "Notez des offres depuis leur fiche (« Ma note »), puis mesurez depuis la machine de la maison :",
+      "withClaude": "Ajoutez --claude pour mesurer aussi Claude (quelques centimes, dans les plafonds).",
+      "threshold": "Seuil : un écart moyen de {{max}} points au plus.",
+      "empty": "Aucune mesure pour l’instant.",
+      "running": "{{date}} : mesure en cours…",
+      "rules": "{{date}} : notation sans IA, écart moyen de {{gap}} points",
+      "claude": "Claude : écart moyen de {{gap}} points sur {{rated}} offres, {{cost}} par offre",
+      "filter_one": "Pré-filtre de titre : {{rejected}} sur {{count}} offre notée {{rating}} ou plus écartée",
+      "filter_other": "Pré-filtre de titre : {{rejected}} sur {{count}} offres notées {{rating}} ou plus écartées",
+      "failed": "Mesure en échec : {{reason}}",
+      "errors": {
+        "ai_disabled": "IA non configurée sur cette machine",
+        "ai_cap_reached": "plafond de dépense atteint",
+        "ai_refused": "refusée par le modèle",
+        "ai_invalid_output": "réponse inexploitable",
+        "ai_failed": "API Claude injoignable",
+        "no_rating": "aucune offre notée"
+      }
     }
   },
   "review": {
@@ -845,6 +876,21 @@
       "strengths": "Points forts",
       "gaps": "Écarts",
       "keywords": "Mots-clés à reprendre"
+    },
+    "rating": {
+      "title": "Ma note",
+      "intro": "Vos notes forment le jeu de référence : il en faut {{goal}}, variées (bonnes, moyennes, hors sujet), pour mesurer la notation.",
+      "rate": "Noter cette offre",
+      "value": "Note sur 100",
+      "note": "Un mot d’explication (facultatif)",
+      "save": "Enregistrer ma note",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "remove": "Retirer ma note",
+      "yours": "Ma note : {{value}}",
+      "gap": "Écart avec le score : {{gap}} points",
+      "saved": "Note enregistrée.",
+      "removed": "Note retirée."
     }
   }
 }

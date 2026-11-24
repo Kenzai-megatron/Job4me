@@ -88,6 +88,22 @@ pnpm stack:up
 
 La notation part après chaque passage planifié ou manuel, jamais après un passage de test : au plus 200 offres par passage en notation rapide et 10 analyses détaillées, à tour de rôle entre les sources ; le reste attend le passage suivant. Ce qui part chez Anthropic : ton profil sans identité ni coordonnées ni ville de base, et pour chaque offre son intitulé, son employeur, son lieu, sa distance et le début de son texte, sans adresse e-mail ni numéro de téléphone. Pour la couper, remets `false` dans `.env` et redémarre : les scores déjà donnés restent tant que ni ton profil ni l'offre ne changent.
 
+### Mesurer la notation sur tes propres notes (jeu de référence)
+
+Note une trentaine d'offres variées depuis leur fiche (« Ma note » : bonnes, moyennes, hors sujet). Puis, sur la machine de la maison :
+
+```bash
+pnpm stack:cli scoring:benchmark
+```
+
+La commande affiche l'écart moyen entre la notation sans IA et tes notes (le but : moins de 10 points), les cinq plus grands écarts et la part des offres notées 60 ou plus que le pré-filtre de titre aurait écartées. Pour mesurer aussi Claude (quelques centimes, dans les plafonds, la clé de l'IA étant installée) :
+
+```bash
+pnpm stack:cli scoring:benchmark --claude
+```
+
+Les mesures restent visibles dans Paramètres > IA. Tes notes ne quittent jamais ta machine, sauf quand Claude note (notation activée, ou `--claude`) : jusqu'à cinq offres notées partent alors avec leur note et ton mot d'explication, comme étalon de sévérité, en plus de ce que décrit la section précédente.
+
 ### Activer Adzuna et Google Jobs (facultatif)
 
 Sans clé, ces deux sources sont « sautées, clé absente » ; les autres collectent normalement. Les deux clés sont gratuites, à ton nom (décision D2 : quand tu veux).

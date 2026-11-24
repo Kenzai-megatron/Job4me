@@ -237,6 +237,8 @@ export const settingsSchema = z
           reasonChars: z.number().int().min(40).max(500),
           /** Offers scored per pass, in turn from each source; the rest waits. */
           perPass: z.number().int().min(0).max(5000),
+          /** Offers Mehdi rated shown to Claude as the calibration of severity. */
+          examples: z.number().int().min(0).max(20),
         }),
         detailed: aiTaskSchema.extend({
           fallbacks: z.boolean(),
@@ -349,6 +351,24 @@ export const settingsSchema = z
           excludedSector: z.number().int().min(0).max(100),
           rejectedTitle: z.number().int().min(0).max(100),
         }),
+      }),
+      /** The reference set (plan, section 9; decision D1): Mehdi's ratings measure the scorings. */
+      reference: z.object({
+        goal: z.number().int().min(1).max(500),
+        /** A scoring is good under this mean gap (SPEC: 10 points, Hypothèse). */
+        maxMeanGap: z.number().min(0).max(100),
+        /** The title filter is measured on the offers rated this much or more (SPEC: 60). */
+        filterRating: z.number().int().min(0).max(100),
+        /** It may set aside at most this share of them (SPEC: 5 %, Hypothèse). */
+        maxFilterRejected: z.number().min(0).max(1),
+        /** A measure still running after this long is failed; the command stops waiting. */
+        timeoutMs: z.number().int().min(10_000),
+      }),
+      /** Decision D7: one notification after a pass when new offers reach the threshold. */
+      alert: z.object({
+        threshold: z.number().int().min(0).max(100),
+        /** « New »: first seen within these days. */
+        freshDays: z.number().int().min(1).max(60),
       }),
       /** The weights of the detailed grid, 100 in all (SPEC, section 5); the profile may change them. */
       defaultWeights: z.object({

@@ -11,6 +11,8 @@ export const QUEUES = {
   offersScreen: 'offers_screen',
   /** The scoring by Claude after a pass, when switched on (phase 3 plan, sections 7 bis and 8). */
   offersAiScore: 'offers_ai_score',
+  /** The measure of the reference set (phase 3 plan, section 9). */
+  scoringBenchmark: 'scoring_benchmark',
 } as const;
 
 /** Ask Claude Sonnet for search keywords (one run of keyword_proposal_run). */
@@ -38,4 +40,10 @@ export interface OffersScreenJob {
 /** Score with Claude the kept offers of an account still without a current Claude score. */
 export interface OffersAiScoreJob {
   userId: string;
+}
+
+/** Measure the scorings against the ratings (one row of scoring_benchmark). */
+export interface ScoringBenchmarkJob {
+  userId: string;
+  benchmarkId: string;
 }

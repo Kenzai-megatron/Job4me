@@ -3,6 +3,7 @@ import {
   type AiUsage,
   aiUsageResponseSchema,
   aiUsages,
+  benchmarksResponseSchema,
   type KeywordRun,
   keywordRunSchema,
   latestKeywordRunSchema,
@@ -13,6 +14,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import type { AppDeps } from '../../context';
 import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
+import { toBenchmark } from './benchmarks';
 
 // AI from the API side (plan, section 8): the API never calls Claude. It queues the keyword
 // proposal for the worker, and shows what the calls cost, never what they said.
@@ -159,6 +161,36 @@ export function aiRoutes(deps: AppDeps): FastifyPluginAsyncZod {
               costUsd: call.costUsd,
               createdAt: call.createdAt.toISOString(),
             })),
+          };
+        });
+      },
+    );
+
+    // The reference set (phase 3 plan, section 9): how many offers Mehdi rated, and the last
+    // measures of the scorings against his ratings (asked for from the home machine).
+    app.get(
+      '/api/scoring/benchmarks',
+      { schema: { response: { 200: benchmarksResponseSchema } } },
+      async (request) => {
+        const { userId } = requireSession(request);
+        const { reference } = settings.scoring;
+        return withUser(deps.db, userId, async (tx) => {
+          const [rated] = await tx
+            .select({ n: count() })
+            .from(schema.offerRatings)
+            .where(eq(schema.offerRatings.userId, userId));
+          const rows = await tx
+            .select()
+            .from(schema.scoringBenchmarks)
+            .where(eq(schema.scoringBenchmarks.userId, userId))
+            .orderBy(desc(schema.scoringBenchmarks.createdAt))
+            .limit(10);
+          return {
+            rated: rated?.n ?? 0,
+            goal: reference.goal,
+            maxMeanGap: reference.maxMeanGap,
+            filterRating: reference.filterRating,
+            benchmarks: rows.map(toBenchmark),
           };
         });
       },

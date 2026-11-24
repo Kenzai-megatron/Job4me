@@ -130,12 +130,14 @@ export interface OfferFacts {
 
 /**
  * The kept announcements of an account and their facts: the ones given, every one (`null`), or
- * the ones without a score (`'unscored'`).
+ * the ones without a score (`'unscored'`). The measure of the reference set reads the offers set
+ * aside too (`kept: false`).
  */
 export async function offerFactsOf(
   tx: Transaction,
   userId: string,
   which: readonly string[] | null | 'unscored',
+  { kept = true }: { kept?: boolean } = {},
 ): Promise<OfferFacts[]> {
   if (Array.isArray(which) && which.length === 0) return [];
   const offers = schema.offers;
@@ -160,7 +162,7 @@ export async function offerFactsOf(
     .where(
       and(
         eq(offers.userId, userId),
-        isNull(offers.excludedReason),
+        kept ? isNull(offers.excludedReason) : undefined,
         which === 'unscored'
           ? isNull(scores.id)
           : which === null

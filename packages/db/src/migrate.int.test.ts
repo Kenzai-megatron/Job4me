@@ -51,6 +51,7 @@ describe('migrations', () => {
       'language_level',
       'locality',
       'offer',
+      'offer_rating',
       'offer_score',
       'one_time_token',
       'passkey',
@@ -60,6 +61,7 @@ describe('migrations', () => {
       'push_subscription',
       'recovery_code',
       'saved_offer',
+      'scoring_benchmark',
       'search_keyword',
       'sector_preference',
       'session',
@@ -99,6 +101,8 @@ describe('migrations', () => {
       'job_offer',
       'offer',
       'offer_score',
+      'offer_rating',
+      'scoring_benchmark',
     ]) {
       expect(guarded).toContain(table);
     }

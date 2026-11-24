@@ -11,6 +11,8 @@ export const aiUsages = [
   // Phase 3 (plan, sections 7 bis and 8): off until the setting switches them on (decision D5).
   'scoring_quick',
   'scoring_detailed',
+  // The measure of the reference set, asked for from the home machine (plan, section 9).
+  'scoring_benchmark',
 ] as const;
 export type AiUsage = (typeof aiUsages)[number];
 

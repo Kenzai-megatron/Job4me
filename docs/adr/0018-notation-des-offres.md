@@ -53,3 +53,16 @@ La spécification (section 5) note chaque offre sur 100 avec Claude Haiku 5.5, p
   - **un changement du profil** ne relance pas Claude tout de suite : les scores de Claude devenus obsolètes cèdent la place au score sans IA, et Claude note de nouveau au passage suivant, pour qu'une série de retouches du profil ne coûte qu'une notation ;
   - le **plafond total de 10 $** de la phase 1 (`ai.caps.totalUsd`) s'applique aussi : à relever quand la notation par Claude sera activée durablement.
 - **Tests**, tous sur un transport simulé, sans aucun appel réel : rien n'est envoyé tant que le réglage est coupé ou sans clé ; lots de 25 à tour de rôle entre les sources ; aucune valeur d'identité ni coordonnée de recruteur dans les requêtes ; annonce piégée (balise de fin neutralisée, lot suspect renoté offre par offre) ; offre manquante ou champ en trop refusés ; API injoignable et plafond atteint ; plafond d'offres par passage ; offre sans texte en confiance basse ; un compte ne note jamais les offres d'un autre.
+
+## Mise en œuvre (lot 6, 24/11/2026) : jeu de référence, nouvelles offres à 80 ou plus
+
+- **« Ma note »** sur la fiche d'une offre : une note de 0 à 100 et un mot d'explication (200 caractères au plus), propres au compte (`offer_rating`, RLS). L'écran Paramètres > IA montre où en est le jeu de référence (objectif : 30 offres variées) et les dernières mesures.
+- **Mesure depuis la machine de la maison** (décision D1) : `pnpm stack:cli scoring:benchmark` demande la mesure au worker et l'affiche quand elle est finie ; elle est gardée (`scoring_benchmark`) :
+  - **notation sans IA**, toujours, gratuite : écart moyen avec tes notes et les cinq plus grands écarts, contre le seuil de 10 points (Hypothèse de la spécification) ;
+  - **Claude**, avec `--claude` seulement (quelques centimes, dans les plafonds, usage « mesure du jeu de référence » dans le journal des appels) : les mêmes étapes que la notation après un passage (lots, second essai, lot suspect, analyse détaillée à partir de 70), sur les offres notées qui ne servent pas d'étalon ; coût total et coût par offre ; la mesure ne modifie aucun score ;
+  - **pré-filtre de titre** : la part des offres notées 60 ou plus qu'il aurait écartées, contre le plafond de 5 % (Hypothèse).
+- **Étalon de sévérité** (spécification, section 5) : jusqu'à 5 offres notées dans le prompt de la notation rapide, une par tranche d'abord (80, 60, 40, 0), les notes les plus anciennes d'abord, pour qu'une nouvelle note ne change rien une fois l'étalon complet.
+- `pnpm stack:cli scoring:run` lance la notation par Claude tout de suite plutôt qu'au passage suivant, si elle est activée.
+- **Nouvelles offres à 80 ou plus** (décision D7) : après un passage (après la notation par Claude quand elle est activée), une notification « N nouvelles offres à 80 ou plus » si des offres gardées, vues pour la première fois dans les sept jours, atteignent 80 ; chaque offre n'est nommée qu'une fois (`offer.alerted_at`), jamais une offre ajoutée à la main. L'accueil les liste toute la semaine, les meilleures d'abord. Seuil et fenêtre dans la configuration (`scoring.alert`).
+- **Précision par rapport à l'ADR 0015, à valider par Mehdi** : une offre que tu as notée n'est **jamais purgée** après 90 jours, sinon le jeu de référence s'effriterait ; retirer la note la rend à la règle commune.
+

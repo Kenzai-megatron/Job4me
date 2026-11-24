@@ -14,6 +14,7 @@ import {
   offerParamsSchema,
   type OfferPosting,
   offerPostingSchema,
+  offerRatingInputSchema,
   offerSchema,
   offersQuerySchema,
   offersResponseSchema,
@@ -91,6 +92,13 @@ export async function loadOffers(
       and(eq(schema.offerScores.userId, userId), inArray(schema.offerScores.offerId, [...ids])),
     );
   const scores = new Map(scored.map((row) => [row.offerId, row]));
+  const rated = await tx
+    .select()
+    .from(schema.offerRatings)
+    .where(
+      and(eq(schema.offerRatings.userId, userId), inArray(schema.offerRatings.offerId, [...ids])),
+    );
+  const ratings = new Map(rated.map((row) => [row.offerId, row]));
   const postings = await tx
     .select()
     .from(schema.jobOffers)
@@ -141,6 +149,12 @@ export async function loadOffers(
                 analysis: row.analysis ?? null,
                 scoredAt: row.scoredAt.toISOString(),
               }
+            : null;
+        })(),
+        rating: (() => {
+          const row = ratings.get(offer.id);
+          return row
+            ? { value: row.rating, note: row.note, ratedAt: row.updatedAt.toISOString() }
             : null;
         })(),
         postings: [retained, ...list.filter((posting) => posting !== retained)].map(toPosting),
@@ -245,6 +259,62 @@ export function offerRoutes(deps: AppDeps): FastifyPluginAsyncZod {
         const [offer] = await withUser(deps.db, userId, (tx) =>
           loadOffers(tx, userId, [request.params.id]),
         );
+        if (!offer) throw new HttpError(404, 'not_found');
+        return offer;
+      },
+    );
+
+    // « Ma note » (phase 3 plan, section 9): Mehdi's rating of an offer, the reference set that
+    // measures the scorings. Only an offer of the signed-in account can be rated.
+    app.put(
+      '/api/offers/:id/rating',
+      {
+        schema: {
+          params: offerParamsSchema,
+          body: offerRatingInputSchema,
+          response: { 200: offerSchema },
+        },
+      },
+      async (request) => {
+        const { userId } = requireSession(request);
+        const { id } = request.params;
+        const [offer] = await withUser(deps.db, userId, async (tx) => {
+          const [owned] = await tx
+            .select({ id: schema.offers.id })
+            .from(schema.offers)
+            .where(and(eq(schema.offers.id, id), eq(schema.offers.userId, userId)));
+          if (!owned) return [];
+          const now = new Date();
+          const values = {
+            rating: request.body.value,
+            note: request.body.note || null,
+            updatedAt: now,
+          };
+          await tx
+            .insert(schema.offerRatings)
+            .values({ userId, offerId: id, ...values })
+            .onConflictDoUpdate({ target: schema.offerRatings.offerId, set: values });
+          return loadOffers(tx, userId, [id]);
+        });
+        if (!offer) throw new HttpError(404, 'not_found');
+        return offer;
+      },
+    );
+
+    app.delete(
+      '/api/offers/:id/rating',
+      { schema: { params: offerParamsSchema, response: { 200: offerSchema } } },
+      async (request) => {
+        const { userId } = requireSession(request);
+        const { id } = request.params;
+        const [offer] = await withUser(deps.db, userId, async (tx) => {
+          await tx
+            .delete(schema.offerRatings)
+            .where(
+              and(eq(schema.offerRatings.offerId, id), eq(schema.offerRatings.userId, userId)),
+            );
+          return loadOffers(tx, userId, [id]);
+        });
         if (!offer) throw new HttpError(404, 'not_found');
         return offer;
       },

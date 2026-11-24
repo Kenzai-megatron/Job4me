@@ -8,6 +8,7 @@ import {
   index,
   integer,
   jsonb,
+  numeric,
   pgTable,
   text,
   uniqueIndex,
@@ -189,6 +190,8 @@ export const offers = pgTable(
      */
     excludedReason: text('excluded_reason'),
     screenedAt: at('screened_at'),
+    /** When a notification of new offers of 80 or more named it (decision D7): once only. */
+    alertedAt: at('alerted_at'),
   },
   (t) => [
     index('offer_user_first_seen_idx').on(t.userId, t.firstSeenAt),
@@ -318,9 +321,81 @@ export const offerScores = pgTable(
   ],
 );
 
+/**
+ * Mehdi's own rating of an announcement (phase 3 plan, section 9): the reference set that
+ * measures the scorings, and a few of them the calibration of Claude's severity. Never in the
+ * repository or the CI (decision D1); a rated announcement is never purged.
+ */
+export const offerRatings = pgTable(
+  'offer_rating',
+  {
+    ...common(),
+    offerId: uuid('offer_id')
+      .notNull()
+      .references(() => offers.id, { onDelete: 'cascade' }),
+    rating: integer('rating').notNull(),
+    note: text('note'),
+  },
+  (t) => [
+    uniqueIndex('offer_rating_offer_idx').on(t.offerId),
+    index('offer_rating_user_idx').on(t.userId, t.createdAt),
+    check('offer_rating_rating_check', sql`${t.rating} between 0 and 100`),
+    check('offer_rating_note_check', sql`${t.note} is null or char_length(${t.note}) <= 200`),
+    ownerPolicy('offer_rating'),
+  ],
+);
+
+/**
+ * One measure of the reference set (phase 3 plan, section 9): the scoring without AI, and Claude
+ * when asked, against Mehdi's ratings; and the share of his offers of 60 or more that the title
+ * filter would have set aside. Run by the worker, asked for from the home machine.
+ */
+export const scoringBenchmarks = pgTable(
+  'scoring_benchmark',
+  {
+    ...common(),
+    status: text('status').notNull().default('queued'),
+    /** Claude asked for too (it costs a few cents), else the scoring without AI only. */
+    withClaude: boolean('with_claude').notNull().default(false),
+    errorCode: text('error_code'),
+    rated: integer('rated').notNull().default(0),
+    rulesVersion: text('rules_version'),
+    rulesMeanGap: doublePrecision('rules_mean_gap'),
+    /** The five widest gaps: offer, title, rating, score. */
+    rulesWorst: jsonb('rules_worst').$type<unknown[]>(),
+    /** Claude is measured on the rated offers that are not its calibration. */
+    claudeRated: integer('claude_rated'),
+    claudeMeanGap: doublePrecision('claude_mean_gap'),
+    claudeWorst: jsonb('claude_worst').$type<unknown[]>(),
+    quickModel: text('quick_model'),
+    detailedModel: text('detailed_model'),
+    promptVersion: text('prompt_version'),
+    costUsd: numeric('cost_usd', { precision: 12, scale: 6, mode: 'number' }).notNull().default(0),
+    /** Offers rated 60 or more, and how many of them the title filter would set aside. */
+    filterRated: integer('filter_rated'),
+    filterRejected: integer('filter_rejected'),
+    finishedAt: at('finished_at'),
+  },
+  (t) => [
+    index('scoring_benchmark_user_idx').on(t.userId, t.createdAt),
+    check(
+      'scoring_benchmark_status_check',
+      sql`${t.status} in ('queued', 'running', 'done', 'failed')`,
+    ),
+    check(
+      'scoring_benchmark_error_code_check',
+      sql`${t.errorCode} is null or ${t.errorCode} in ('ai_disabled', 'ai_cap_reached', 'ai_refused', 'ai_invalid_output', 'ai_failed', 'no_rating')`,
+    ),
+    check('scoring_benchmark_cost_check', sql`${t.costUsd} >= 0`),
+    ownerPolicy('scoring_benchmark'),
+  ],
+);
+
 export type SourceSettingRow = typeof sourceSettings.$inferSelect;
 export type CollectionPassRow = typeof collectionPasses.$inferSelect;
 export type SourceRunRow = typeof sourceRuns.$inferSelect;
 export type JobOfferRow = typeof jobOffers.$inferSelect;
 export type OfferRow = typeof offers.$inferSelect;
 export type OfferScoreRow = typeof offerScores.$inferSelect;
+export type OfferRatingRow = typeof offerRatings.$inferSelect;
+export type ScoringBenchmarkRow = typeof scoringBenchmarks.$inferSelect;

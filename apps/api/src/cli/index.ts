@@ -6,6 +6,7 @@ import { parseMasterKey } from '@job4me/security';
 import { PasswordTooWeakError } from '../modules/auth/users';
 import { auditTail, CliError, sessionsRevokeAll, userCreate, userEnrollLink } from './commands';
 import { sendTestMail } from './mail';
+import { scoringBenchmark, scoringRun } from './scoring';
 import { sourcesPass } from './sources';
 
 // `pnpm job4me <command>`: administration from the machine itself, the root of trust (ADR 0003).
@@ -20,6 +21,9 @@ const HELP = `Utilisation : pnpm job4me <commande> [options]
   mail:test --to <adresse>                     envoie un mail de test (Mailpit en développement)
   sources:test [--source <nom>]… [--email …]   teste les sources : un mot-clé, une page chacune
   sources:run [--source <nom>]… [--email …]    lance un passage de collecte complet
+  scoring:benchmark [--claude] [--email …]     mesure les notations sur tes offres notées
+                                               (--claude : Claude aussi, quelques centimes)
+  scoring:run [--email …]                      notation par Claude maintenant (si activée)
 
 Le mot de passe est demandé sans écho ; hors terminal, il est lu sur l'entrée standard.`;
 
@@ -99,6 +103,7 @@ async function main(): Promise<void> {
       to: { type: 'string' },
       limit: { type: 'string', default: '20' },
       source: { type: 'string', multiple: true },
+      claude: { type: 'boolean', default: false },
     },
     allowPositionals: false,
   });
@@ -185,6 +190,32 @@ async function main(): Promise<void> {
             queue: boss,
           });
           if (pass.runs.some((run) => run.status === 'failed')) process.exitCode = 2;
+        } finally {
+          await boss.stop({ graceful: false });
+        }
+        break;
+      }
+      case 'scoring:benchmark':
+      case 'scoring:run': {
+        // The worker scores (it alone holds the Claude key); the command line queues and waits.
+        const boss = new PgBoss({
+          ...queueOptions(secrets.databaseUrl),
+          supervise: false,
+          schedule: false,
+          max: 1,
+        });
+        await boss.start();
+        try {
+          if (command === 'scoring:run') {
+            await scoringRun(database.db, config, { email: values.email, queue: boss });
+          } else {
+            const benchmark = await scoringBenchmark(database.db, config, {
+              email: values.email,
+              claude: values.claude ?? false,
+              queue: boss,
+            });
+            if (benchmark.status === 'failed') process.exitCode = 2;
+          }
         } finally {
           await boss.stop({ graceful: false });
         }

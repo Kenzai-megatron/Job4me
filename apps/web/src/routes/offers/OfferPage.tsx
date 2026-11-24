@@ -1,15 +1,17 @@
 import {
+  type Offer,
   type OfferPosting,
   type OfferUnmergeResponse,
   type ScoreAnalysis,
   scoringCriteria,
 } from '@job4me/contracts';
 import { formatDate } from '@job4me/i18n';
-import { Alert, Badge, Button, Card, Spinner } from '@job4me/ui';
+import { Alert, Badge, Button, Card, Spinner, TextAreaField, TextField } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { benchmarksQuery } from '../../api/ai';
 import { api } from '../../api/client';
 import { offerQuery, safeLink } from '../../api/collect';
 import { errorMessage } from '../../components/errors';
@@ -172,9 +174,140 @@ function ScoreDetail({ score }: { score: NonNullable<OfferUnmergeResponse['offer
   );
 }
 
+/** « Ma note » (phase 3 plan, section 9): Mehdi's own rating, the reference set. */
+function RatingSection({ offer }: { offer: Offer }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const reference = useQuery(benchmarksQuery);
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState('');
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+  const rating = offer.rating;
+
+  const settle = async (updated: Offer, message: string) => {
+    queryClient.setQueryData(offerQuery(offer.id).queryKey, updated);
+    await queryClient.invalidateQueries({ queryKey: ['scoring', 'benchmarks'] });
+    setEditing(false);
+    setDone(message);
+  };
+  const open = () => {
+    setValue(rating ? String(rating.value) : '');
+    setNote(rating?.note ?? '');
+    setDone(null);
+    setError(null);
+    setEditing(true);
+  };
+  const save = async (event: FormEvent) => {
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
+    try {
+      const updated = await api.put<Offer>(`/api/offers/${offer.id}/rating`, {
+        value: Number(value),
+        note: note.trim() === '' ? null : note.trim(),
+      });
+      await settle(updated, t('offer.rating.saved'));
+    } catch (caught) {
+      setError(errorMessage(t, caught));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const remove = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await settle(
+        await api.delete<Offer>(`/api/offers/${offer.id}/rating`),
+        t('offer.rating.removed'),
+      );
+    } catch (caught) {
+      setError(errorMessage(t, caught));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card aria-labelledby="offer-rating-title">
+      <div className="flex flex-col gap-3">
+        <h2 id="offer-rating-title" className="text-lg font-semibold">
+          {t('offer.rating.title')}
+        </h2>
+        <p className="text-sm text-muted">
+          {t('offer.rating.intro', { goal: reference.data?.goal ?? 30 })}
+        </p>
+        {editing ? (
+          <form onSubmit={(event) => void save(event)} className="flex flex-col gap-3">
+            <TextField
+              label={t('offer.rating.value')}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={100}
+              step={1}
+              required
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+            <TextAreaField
+              label={t('offer.rating.note')}
+              maxLength={200}
+              rows={2}
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+            <div className="flex flex-wrap gap-3">
+              <Button type="submit" loading={busy}>
+                {t('offer.rating.save')}
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setEditing(false)}>
+                {t('offer.rating.cancel')}
+              </Button>
+            </div>
+          </form>
+        ) : rating ? (
+          <div className="flex flex-col gap-2">
+            <p className="font-semibold">{t('offer.rating.yours', { value: rating.value })}</p>
+            {rating.note ? <p className="text-sm">{rating.note}</p> : null}
+            {offer.score ? (
+              <p className="text-sm text-muted">
+                {t('offer.rating.gap', { gap: Math.abs(rating.value - offer.score.value) })}
+              </p>
+            ) : null}
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={open}>
+                {t('offer.rating.edit')}
+              </Button>
+              <Button variant="secondary" loading={busy} onClick={() => void remove()}>
+                {t('offer.rating.remove')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <Button variant="secondary" onClick={open}>
+              {t('offer.rating.rate')}
+            </Button>
+          </div>
+        )}
+        {done ? (
+          <p role="status" className="text-sm">
+            {done}
+          </p>
+        ) : null}
+        {error ? <Alert tone="error">{error}</Alert> : null}
+      </div>
+    </Card>
+  );
+}
+
 /**
- * One announcement (ADR 0016): its score and what made it, its retained posting, then every site
- * that carries it, with "not the same offer" to undo a wrong merge.
+ * One announcement (ADR 0016): its score and what made it, Mehdi's own rating, its retained
+ * posting, then every site that carries it, with "not the same offer" to undo a wrong merge.
  */
 export function OfferPage() {
   const { t } = useTranslation();
@@ -245,6 +378,8 @@ export function OfferPage() {
               </Alert>
             ) : null}
           </div>
+
+          <RatingSection key={data.id} offer={data} />
 
           <Card aria-labelledby="offer-description-title">
             <h2 id="offer-description-title" className="mb-2 text-lg font-semibold">

@@ -93,7 +93,7 @@ export function formatPass(pass: CollectionPass): string {
 }
 
 /** The account named by --email, or the only active one. */
-async function accountOf(db: Database, email: string | undefined): Promise<string> {
+export async function accountOf(db: Database, email: string | undefined): Promise<string> {
   if (email) {
     const user = await findUserByEmail(db, email);
     if (!user) throw new CliError('Aucun compte pour cette adresse.');

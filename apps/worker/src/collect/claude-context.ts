@@ -7,6 +7,7 @@ import {
   type ClaudeOffer,
   type ClaudeProfile,
   DETAILED_PROMPT_VERSION,
+  inTurns,
   offerText,
   QUICK_PROMPT_VERSION,
   type RatedExample,
@@ -20,8 +21,10 @@ import {
 export interface ClaudeContext {
   profile: ClaudeProfile;
   instructions: string | null;
-  /** Offers the candidate rated, as the calibration of severity (lot 6). */
+  /** Offers the candidate rated, as the calibration of severity (SPEC, section 5). */
   examples: RatedExample[];
+  /** Their announcements: the measure of the reference set leaves them aside. */
+  calibrationIds: string[];
   /** The grid of the detailed analysis: the profile's, else the configuration's. */
   weights: ScoringWeights;
   /** Prompts, models, settings and data sent: a change scores every offer again. */
@@ -141,13 +144,44 @@ export async function claudeContextOf(
   const stored = profile?.weights as ScoringWeights | null | undefined;
   const weights: ScoringWeights = stored ?? settings.scoring.defaultWeights;
   const instructions = profile?.instructions ?? null;
-  const examples: RatedExample[] = [];
+  // The calibration (SPEC, section 5): one rated offer per band first (80, 60, 40, 0), the oldest
+  // ratings first, so that a new rating changes nothing once the calibration is full.
+  const rated = await tx
+    .select({
+      offerId: schema.offerRatings.offerId,
+      rating: schema.offerRatings.rating,
+      note: schema.offerRatings.note,
+      title: schema.jobOffers.title,
+      company: schema.jobOffers.company,
+      location: schema.jobOffers.location,
+      placeStatus: schema.offers.placeStatus,
+      placeName: schema.offers.placeName,
+    })
+    .from(schema.offerRatings)
+    .innerJoin(schema.offers, eq(schema.offers.id, schema.offerRatings.offerId))
+    .innerJoin(schema.jobOffers, eq(schema.jobOffers.id, schema.offers.retainedId))
+    .where(eq(schema.offerRatings.userId, userId))
+    .orderBy(asc(schema.offerRatings.createdAt), asc(schema.offerRatings.id));
+  const band = (rating: number) => (rating >= 80 ? 0 : rating >= 60 ? 1 : rating >= 40 ? 2 : 3);
+  const calibration = inTurns(
+    [...rated].sort((a, b) => band(a.rating) - band(b.rating)),
+    (row) => String(band(row.rating)),
+  ).slice(0, settings.ai.scoring.quick.examples);
+  const examples: RatedExample[] = calibration.map((row) => ({
+    title: offerText(row.title),
+    company: offerText(row.company) || '?',
+    place:
+      offerText(row.placeStatus === 'found' && row.placeName ? row.placeName : row.location) || '?',
+    rating: row.rating,
+    note: row.note ? offerText(row.note) : null,
+  }));
   // What changes an answer; not how many offers a pass sends, nor the threshold of the analysis.
   const { quick, detailed } = settings.ai.scoring;
   return {
     profile: claudeProfile,
     instructions,
     examples,
+    calibrationIds: calibration.map((row) => row.offerId),
     weights,
     version: versionOf({
       prompts: [QUICK_PROMPT_VERSION, DETAILED_PROMPT_VERSION],
