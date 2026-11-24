@@ -17,6 +17,7 @@ import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
 import { AiPage } from './routes/settings/AiPage';
 import { ImportReviewPage } from './routes/profile/ImportReviewPage';
+import { OfferPage } from './routes/offers/OfferPage';
 import { OffersPage } from './routes/offers/OffersPage';
 import { SourcesPage } from './routes/sources/SourcesPage';
 
@@ -62,6 +63,11 @@ const offersRoute = createRoute({
   getParentRoute: () => appRoute,
   path: '/offers',
   component: OffersPage,
+});
+const offerRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/offers/$offerId',
+  component: OfferPage,
 });
 const sourcesRoute = createRoute({
   getParentRoute: () => appRoute,
@@ -115,6 +121,7 @@ const routeTree = rootRoute.addChildren([
   appRoute.addChildren([
     homeRoute,
     offersRoute,
+    offerRoute,
     sourcesRoute,
     applicationsRoute,
     documentsRoute,

@@ -46,6 +46,22 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await expect(page.locator('img[src="x"]')).toHaveCount(0);
   await expectAccessible(page);
 
+  // The offer's page: the announcement and its one posting, nothing to separate.
+  await offer.getByRole('link', { name: title }).click();
+  await expect(page.getByRole('heading', { name: title, level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '1 parution' })).toBeVisible();
+  await expect(page.getByText('Texte collé de l’annonce.')).toBeVisible();
+  const posting = page.getByRole('listitem').filter({ hasText: 'Ajout manuel' });
+  await expect(posting.getByRole('link', { name: "Voir l'annonce" })).toHaveAttribute(
+    'href',
+    'https://example.org/offres/42',
+  );
+  await expect(page.getByRole('button', { name: "Ce n'est pas la même offre" })).toHaveCount(0);
+  await expect(page.locator('img[src="x"]')).toHaveCount(0);
+  await expectAccessible(page);
+  await page.getByRole('link', { name: 'Toutes les offres' }).click();
+  await expect(page.getByRole('heading', { name: 'Offres', level: 1 })).toBeVisible();
+
   // A priority keyword, for the demo source to read something.
   await page.getByRole('link', { name: 'Profil' }).first().click();
   const keywords = page.locator('#rubric-keywords');
@@ -80,9 +96,10 @@ test('adds an offer by hand, then tests the sources', async ({ page }) => {
   await page.getByRole('button', { name: 'Tester les sources' }).click();
   const test = page.locator('section').filter({ hasText: 'Un mot-clé et une page par source' });
   if (stack) {
-    // The worker runs the demo source: one keyword, one page, three offers read, none stored.
+    // The worker runs the demo source: one keyword, one page, three offers read, none stored;
+    // the third one republishes the first (ADR 0016).
     await expect(test).toContainText('Réussie', { timeout: 30_000 });
-    await expect(test).toContainText('3 lues · 3 retenues · 3 inédites');
+    await expect(test).toContainText('3 lues · 3 retenues · 2 inédites · 1 fusionnées');
     await expect(demo).toContainText('Réussie');
     await page.getByRole('link', { name: 'Offres' }).first().click();
     await expect(page.getByRole('listitem')).toHaveCount(1);

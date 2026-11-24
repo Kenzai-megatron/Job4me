@@ -1,12 +1,14 @@
-import type { Connector } from '@job4me/collect';
+import { type Connector, DEDUP_VERSION, identify } from '@job4me/collect';
 import type {
   CollectionPass,
+  ManualOfferResponse,
   Offer,
   OffersResponse,
+  OfferUnmergeResponse,
   SourceSummary,
   SourcesResponse,
 } from '@job4me/contracts';
-import { and, eq, schema, withUser } from '@job4me/db';
+import { and, eq, schema, type Transaction, withUser } from '@job4me/db';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { CliError } from './cli/commands';
 import { formatPass, sourcesPass } from './cli/sources';
@@ -66,6 +68,54 @@ afterEach(() => {
   ctx.deps.config.settings.collect.usageMode = 'personal';
   vi.restoreAllMocks();
 });
+
+/** Plays the worker: one announcement with its postings, the first one retained. */
+async function collected(
+  tx: Transaction,
+  userId: string,
+  ...postings: Array<{
+    source: string;
+    externalId: string;
+    title: string;
+    company?: string;
+    seen?: Date;
+    mergeReason?: 'key' | 'employer';
+  }>
+) {
+  const seen = postings[0]!.seen ?? new Date();
+  const [offer] = await tx
+    .insert(schema.offers)
+    .values({ userId, firstSeenAt: seen, lastSeenAt: seen })
+    .returning();
+  const rows = await tx
+    .insert(schema.jobOffers)
+    .values(
+      postings.map((posting) => ({
+        userId,
+        offerId: offer!.id,
+        source: posting.source,
+        externalId: posting.externalId,
+        title: posting.title,
+        company: posting.company ?? '?',
+        ...(({ key, bare, refs }) => ({
+          contentKey: key,
+          bareTitle: bare,
+          titleRefs: refs,
+          dedupVersion: DEDUP_VERSION,
+        }))(identify(posting.title, posting.company ?? '?')),
+        url: `https://jobs.example.org/${posting.source}/${posting.externalId}`,
+        mergeReason: posting.mergeReason ?? null,
+        firstSeenAt: posting.seen ?? seen,
+        lastSeenAt: posting.seen ?? seen,
+      })),
+    )
+    .returning();
+  await tx
+    .update(schema.offers)
+    .set({ retainedId: rows[0]!.id })
+    .where(eq(schema.offers.id, offer!.id));
+  return { offerId: offer!.id, postingIds: rows.map((row) => row.id) };
+}
 
 /** Plays the worker: closes the pass with one successful run per source. */
 async function finish(userId: string, passId: string, trigger: string) {
@@ -255,7 +305,15 @@ describe('sources', () => {
     const alpha = listed.sources.find((source) => source.name === 'alpha')!;
     expect(alpha.alert).toMatchObject({ kind: 'collapse', read: 3, usual: 40 });
     expect(alpha.quota).toMatchObject({ remaining: 120 });
-    expect(alpha.window).toEqual({ days: 28, runs: 3, failed: 1, read: 43, kept: 21, fresh: 10 });
+    expect(alpha.window).toEqual({
+      days: 28,
+      runs: 3,
+      failed: 1,
+      read: 43,
+      kept: 21,
+      fresh: 10,
+      merged: 0,
+    });
     const other = listed.sources.find((source) => source.name === 'pages')!;
     expect(other).toMatchObject({ alert: null, quota: null });
     expect(other.window.runs).toBe(0);
@@ -277,15 +335,18 @@ describe('offers', () => {
       text: 'Texte collé de l’annonce.',
     });
     expect(response.statusCode).toBe(200);
-    expect(response.json<Offer>()).toMatchObject({
-      source: 'manual',
-      origin: 'manual',
+    const added = response.json<ManualOfferResponse>();
+    expect(added.merged).toBe(false);
+    expect(added.offer).toMatchObject({
       title: 'Gestionnaire de dossiers',
       company: '?',
       location: '?',
       url: 'https://jobs.example.org/offre/42',
       description: 'Texte collé de l’annonce.',
     });
+    expect(added.offer.postings).toEqual([
+      expect.objectContaining({ source: 'manual', origin: 'manual', mergeReason: null }),
+    ]);
     expect(fetchSpy).not.toHaveBeenCalled();
     const audit = await ctx.deps.db
       .select()
@@ -315,28 +376,31 @@ describe('offers', () => {
       400,
     );
     expect((await browser.post('/api/offers', { title: '' })).statusCode).toBe(400);
-    // Without a link, two offers with the same title are two offers.
-    expect((await browser.post('/api/offers', { title: 'Sans lien' })).statusCode).toBe(200);
-    expect((await browser.post('/api/offers', { title: 'Sans lien' })).statusCode).toBe(200);
+    // Without a link, two offers with the same title are two offers: two offers added by hand
+    // are never merged together.
+    const first = await browser.post('/api/offers', { title: 'Sans lien' });
+    const second = await browser.post('/api/offers', { title: 'Sans lien' });
+    expect(second.statusCode).toBe(200);
+    expect(second.json<ManualOfferResponse>().merged).toBe(false);
+    expect(second.json<ManualOfferResponse>().offer.id).not.toBe(
+      first.json<ManualOfferResponse>().offer.id,
+    );
   });
 
   it('list the offers of the account, newest first, by source and page by page', async () => {
     const alice = await signedInBrowser(ctx, 'list-alice');
     const bob = await signedInBrowser(ctx, 'list-bob');
     const day = (count: number) => new Date(Date.now() - count * 86_400_000);
-    await withUser(ctx.deps.db, alice.userId, (tx) =>
-      tx.insert(schema.jobOffers).values(
-        [3, 2, 1].map((age) => ({
-          userId: alice.userId,
+    await withUser(ctx.deps.db, alice.userId, async (tx) => {
+      for (const age of [3, 2, 1]) {
+        await collected(tx, alice.userId, {
           source: 'alpha',
           externalId: `a-${age}`,
           title: `<script>alert(${age})</script> Offre ${age}`,
-          url: `https://jobs.example.org/${age}`,
-          firstSeenAt: day(age),
-          lastSeenAt: day(age),
-        })),
-      ),
-    );
+          seen: day(age),
+        });
+      }
+    });
     await alice.browser.post('/api/offers', { title: 'Manuelle' });
 
     const all = (await alice.browser.get('/api/offers')).json<OffersResponse>();
@@ -362,6 +426,128 @@ describe('offers', () => {
     // Another account's cursor is unknown here.
     const foreign = await bob.browser.get(`/api/offers?before=${all.offers[0]!.id}`);
     expect(foreign.statusCode).toBe(400);
+  });
+
+  it('list an announcement once with every posting, and filter by any of its sources', async () => {
+    const alice = await signedInBrowser(ctx, 'merged-alice');
+    const bob = await signedInBrowser(ctx, 'merged-bob');
+    const { offerId } = await withUser(ctx.deps.db, alice.userId, (tx) =>
+      collected(
+        tx,
+        alice.userId,
+        { source: 'alpha', externalId: 'x1', title: 'Comptable', company: 'Exemple' },
+        {
+          source: 'pages',
+          externalId: 'p1',
+          title: 'Comptable (H/F)',
+          company: 'Exemple SA',
+          mergeReason: 'key',
+        },
+      ),
+    );
+    const list = (await alice.browser.get('/api/offers')).json<OffersResponse>();
+    expect(list.offers).toHaveLength(1);
+    expect(list.offers[0]).toMatchObject({ id: offerId, title: 'Comptable', company: 'Exemple' });
+    expect(
+      list.offers[0]!.postings.map((posting) => [posting.source, posting.mergeReason]),
+    ).toEqual([
+      ['alpha', null],
+      ['pages', 'key'],
+    ]);
+    for (const source of ['alpha', 'pages']) {
+      const filtered = (
+        await alice.browser.get(`/api/offers?source=${source}`)
+      ).json<OffersResponse>();
+      expect(filtered.offers.map((offer) => offer.id)).toEqual([offerId]);
+    }
+
+    const page = await alice.browser.get(`/api/offers/${offerId}`);
+    expect(page.statusCode).toBe(200);
+    expect(page.json<Offer>().postings).toHaveLength(2);
+    expect((await bob.browser.get(`/api/offers/${offerId}`)).statusCode).toBe(404);
+    expect(
+      (await alice.browser.get('/api/offers/00000000-0000-7000-8000-000000000000')).statusCode,
+    ).toBe(404);
+  });
+
+  it("undo a merge from the offer's page, for its own account only", async () => {
+    const alice = await signedInBrowser(ctx, 'unmerge-alice');
+    const bob = await signedInBrowser(ctx, 'unmerge-bob');
+    const { offerId, postingIds } = await withUser(ctx.deps.db, alice.userId, (tx) =>
+      collected(
+        tx,
+        alice.userId,
+        { source: 'alpha', externalId: 'u1', title: 'Juriste', company: 'Exemple' },
+        {
+          source: 'pages',
+          externalId: 'u2',
+          title: 'Juriste',
+          company: 'Exemple Brussels',
+          mergeReason: 'employer',
+        },
+      ),
+    );
+    const [alphaPosting, pagesPosting] = postingIds;
+    const url = `/api/offers/${offerId}/unmerge`;
+    expect((await bob.browser.post(url, { postingId: pagesPosting })).statusCode).toBe(404);
+    expect(
+      (await alice.browser.post(url, { postingId: '00000000-0000-7000-8000-000000000000' }))
+        .statusCode,
+    ).toBe(404);
+
+    const response = await alice.browser.post(url, { postingId: pagesPosting });
+    expect(response.statusCode).toBe(200);
+    const { offer, detached } = response.json<OfferUnmergeResponse>();
+    expect(offer.postings.map((posting) => posting.id)).toEqual([alphaPosting]);
+    expect(detached.id).not.toBe(offerId);
+    expect(detached).toMatchObject({ title: 'Juriste', company: 'Exemple Brussels' });
+    expect(detached.postings).toEqual([
+      expect.objectContaining({ id: pagesPosting, source: 'pages', mergeReason: null }),
+    ]);
+    const audit = await ctx.deps.db
+      .select()
+      .from(schema.auditLog)
+      .where(
+        and(
+          eq(schema.auditLog.actorUserId, alice.userId),
+          eq(schema.auditLog.action, 'offer.unmerged'),
+        ),
+      );
+    expect(audit).toHaveLength(1);
+    expect(audit[0]).toMatchObject({ targetType: 'offer', targetId: offerId });
+
+    // An announcement with one posting has nothing to undo.
+    const alone = await alice.browser.post(url, { postingId: alphaPosting });
+    expect(alone.statusCode).toBe(409);
+    expect(alone.json()).toMatchObject({ error: 'offer_not_merged' });
+    expect((await alice.browser.get('/api/offers')).json<OffersResponse>().offers).toHaveLength(2);
+  });
+
+  it('join an offer added by hand to the announcement already collected', async () => {
+    const { browser, userId } = await signedInBrowser(ctx, 'manual-merged');
+    const { offerId } = await withUser(ctx.deps.db, userId, (tx) =>
+      collected(tx, userId, {
+        source: 'alpha',
+        externalId: 'm1',
+        title: 'Juriste - Bruxelles',
+        company: 'Exemple',
+      }),
+    );
+    const response = await browser.post('/api/offers', {
+      title: 'Juriste (H/F/X)',
+      company: 'Exemple SA',
+      text: 'Texte collé de l’annonce, plus complet que celui de la source.',
+    });
+    expect(response.statusCode).toBe(200);
+    const added = response.json<ManualOfferResponse>();
+    expect(added.merged).toBe(true);
+    expect(added.offer.id).toBe(offerId);
+    // The posting with the longest description is the one shown.
+    expect(added.offer).toMatchObject({ title: 'Juriste (H/F/X)', company: 'Exemple SA' });
+    expect(added.offer.postings.map((posting) => [posting.source, posting.mergeReason])).toEqual([
+      ['manual', 'key'],
+      ['alpha', null],
+    ]);
   });
 });
 
@@ -391,7 +577,7 @@ describe('command line', () => {
     expect(sent).toEqual(['collect_pass']);
     expect(pass.status).toBe('done');
     expect(printed[0]).toBe('Test des sources lancé : alpha, pages. En attente du worker…');
-    expect(printed[1]).toMatch(/alpha\s+réussie\s+12\s+9\s+4\s+1,5 s/);
+    expect(printed[1]).toMatch(/alpha\s+réussie\s+12\s+9\s+4\s+0\s+1,5 s/);
   });
 
   it('names the sources of the machine when one asked for is unknown', async () => {
@@ -432,6 +618,7 @@ describe('command line', () => {
           readCount: 0,
           keptCount: 0,
           newCount: 0,
+          mergedCount: 0,
           invalidCount: 0,
           requestCount: 1,
           durationMs: 820,
@@ -450,6 +637,7 @@ describe('command line', () => {
           readCount: 0,
           keptCount: 0,
           newCount: 0,
+          mergedCount: 0,
           invalidCount: 0,
           requestCount: 0,
           durationMs: 0,
@@ -459,10 +647,12 @@ describe('command line', () => {
       ],
     });
     const lines = text.split('\n');
-    expect(lines[0]).toMatch(/^Source\s+Statut\s+Lues\s+Retenues\s+Inédites\s+Durée\s+Détail$/);
-    expect(lines[1]).toMatch(
-      /^alpha\s+en échec\s+0\s+0\s+0\s+0,8 s\s+refusée par le site \(HTTP 429\)$/,
+    expect(lines[0]).toMatch(
+      /^Source\s+Statut\s+Lues\s+Retenues\s+Inédites\s+Fusionnées\s+Durée\s+Détail$/,
     );
-    expect(lines[2]).toMatch(/^pages\s+sautée\s+-\s+-\s+-\s+-\s+interrupteur coupé$/);
+    expect(lines[1]).toMatch(
+      /^alpha\s+en échec\s+0\s+0\s+0\s+0\s+0,8 s\s+refusée par le site \(HTTP 429\)$/,
+    );
+    expect(lines[2]).toMatch(/^pages\s+sautée\s+-\s+-\s+-\s+-\s+-\s+interrupteur coupé$/);
   });
 });

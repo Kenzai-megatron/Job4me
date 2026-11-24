@@ -12,6 +12,7 @@ import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
 import { runPass } from './collect/pass';
+import { identifyStoredPostings } from './collect/postings';
 import { purgeCollection, schedulePasses } from './collect/schedule';
 import { proposeKeywords } from './jobs/keywords';
 import { purgeExpired, purgeImports } from './jobs/purge';
@@ -68,6 +69,12 @@ async function main(): Promise<void> {
   await boss.schedule(QUEUES.collectSchedule, collect.schedule.cron, null, {
     tz: collect.schedule.timeZone,
   });
+  // Postings stored before their identity existed (phase 2) are identified and regrouped
+  // into announcements (ADR 0016) before any pass may add to them.
+  await identifyStoredPostings(
+    { db: database.db, logger },
+    connectors.map((connector) => connector.name),
+  );
   const collectDeps = {
     db: database.db,
     settings: config.settings,

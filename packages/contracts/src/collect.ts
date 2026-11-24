@@ -63,7 +63,10 @@ export const collectErrorCodes = [
 ] as const;
 export type CollectErrorCode = (typeof collectErrorCodes)[number];
 
-/** One source in one pass: read before any filter, kept after the title filter, new among those. */
+/**
+ * One source in one pass: read before any filter, kept after the title filter; among the kept
+ * ones, the new announcements and the postings merged into an announcement already there.
+ */
 export const sourceRunSchema = z.object({
   id: z.uuid(),
   passId: z.uuid(),
@@ -76,6 +79,7 @@ export const sourceRunSchema = z.object({
   readCount: z.number().int().min(0),
   keptCount: z.number().int().min(0),
   newCount: z.number().int().min(0),
+  mergedCount: z.number().int().min(0),
   invalidCount: z.number().int().min(0),
   requestCount: z.number().int().min(0),
   durationMs: z.number().int().min(0).nullable(),
@@ -105,6 +109,7 @@ export const sourceWindowSchema = z.object({
   read: z.number().int().min(0),
   kept: z.number().int().min(0),
   fresh: z.number().int().min(0),
+  merged: z.number().int().min(0),
 });
 export type SourceWindow = z.infer<typeof sourceWindowSchema>;
 
@@ -165,11 +170,38 @@ export const latestTestResponseSchema = z.object({ pass: passSchema.nullable() }
 export const offerOrigins = ['collected', 'manual'] as const;
 export type OfferOrigin = (typeof offerOrigins)[number];
 
-/** An offer in the common format (docs/SOURCES.md, section 1.1); "?" stands for unknown. */
-export const offerSchema = z.object({
+/**
+ * Why a posting joined an announcement (ADR 0016), strongest first: the same content key, a
+ * common internal reference, the same link, the same employer up to a name extension, or one of
+ * the two without an employer (the last three at an identical bare title).
+ */
+export const mergeReasons = ['key', 'reference', 'url', 'employer', 'no_employer'] as const;
+export type MergeReason = (typeof mergeReasons)[number];
+
+/** A posting: the offer as one site carries it (docs/SOURCES.md, section 1.1); "?" is unknown. */
+export const offerPostingSchema = z.object({
   id: z.uuid(),
   source: sourceNameSchema,
   origin: z.enum(offerOrigins),
+  title: z.string(),
+  company: z.string(),
+  location: z.string(),
+  postedOn: z.string().nullable(),
+  url: z.string().nullable(),
+  /** How it joined the announcement; null for the posting that started it. */
+  mergeReason: z.enum(mergeReasons).nullable(),
+  firstSeenAt: z.string(),
+  lastSeenAt: z.string(),
+});
+export type OfferPosting = z.infer<typeof offerPostingSchema>;
+
+/**
+ * An announcement (ADR 0016): one offer, however many sites carry it. It shows its retained
+ * posting (it names the employer, then has the longest description); `postings` lists every
+ * site, the retained posting first.
+ */
+export const offerSchema = z.object({
+  id: z.uuid(),
   title: z.string(),
   company: z.string(),
   location: z.string(),
@@ -180,15 +212,23 @@ export const offerSchema = z.object({
   description: z.string(),
   firstSeenAt: z.string(),
   lastSeenAt: z.string(),
+  postings: z.array(offerPostingSchema).min(1),
 });
 export type Offer = z.infer<typeof offerSchema>;
 
 export const offersQuerySchema = z.object({
+  /** Announcements carried by this source among others. */
   source: sourceNameSchema.optional(),
   /** Cursor: the id of the last offer of the previous page. */
   before: z.uuid().optional(),
   limit: z.coerce.number().int().min(1).max(100).optional(),
 });
+export const offerParamsSchema = z.object({ id: z.uuid() });
+
+/** "Not the same offer": the posting leaves the announcement and starts its own. */
+export const offerUnmergeSchema = z.object({ postingId: z.uuid() });
+export const offerUnmergeResponseSchema = z.object({ offer: offerSchema, detached: offerSchema });
+export type OfferUnmergeResponse = z.infer<typeof offerUnmergeResponseSchema>;
 export const offersResponseSchema = z.object({
   offers: z.array(offerSchema),
   nextCursor: z.uuid().nullable(),
@@ -223,3 +263,7 @@ export const manualOfferInputSchema = z.object({
   text: optionalField(50_000),
 });
 export type ManualOfferInput = z.input<typeof manualOfferInputSchema>;
+
+/** The announcement the offer added by hand belongs to: `merged` when it was already there. */
+export const manualOfferResponseSchema = z.object({ offer: offerSchema, merged: z.boolean() });
+export type ManualOfferResponse = z.infer<typeof manualOfferResponseSchema>;

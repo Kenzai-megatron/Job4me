@@ -20,11 +20,13 @@ import { and, asc, type Database, desc, eq, inArray, lt, schema, sql, withUser }
 import type { Logger } from '@job4me/logger';
 import type { PushMessage } from '../notify';
 import { checkSilentSources } from './alerts';
+import { storePostings } from './postings';
 
 // The orchestrator (ADR 0013): one pass, one source at a time in calling order, each in its own
 // try/catch and time budget within the pass budget. A source that fails never stops the others;
 // a source deliberately not called is "skipped" with its reason, never "0 offers". Every run is
-// logged with what was read, kept after the title filter, and new among those (CLAUDE.md).
+// logged with what was read, kept after the title filter, and among those the new announcements
+// and the postings merged into one already there (CLAUDE.md, ADR 0016).
 
 export interface CollectDeps {
   db: Database;
@@ -50,6 +52,7 @@ export interface RunOutcome {
   readCount: number;
   keptCount: number;
   newCount: number;
+  mergedCount: number;
 }
 
 interface Profile {
@@ -175,8 +178,6 @@ async function withinBudget(work: Promise<void>, signal: AbortSignal): Promise<v
   }
 }
 
-const CHUNK = 500;
-
 /** Runs one source; whatever happens, its run is written with what it read. */
 async function runSource(
   deps: CollectDeps,
@@ -219,6 +220,7 @@ async function runSource(
       readCount: 0,
       keptCount: 0,
       newCount: 0,
+      mergedCount: 0,
     };
   }
 
@@ -317,6 +319,7 @@ async function runSource(
       readCount: 0,
       keptCount: 0,
       newCount: 0,
+      mergedCount: 0,
     };
   }
 
@@ -334,65 +337,20 @@ async function runSource(
   );
 
   const finishedAt = deps.now?.() ?? new Date();
-  const newCount = await withUser(deps.db, userId, async (tx) => {
-    const offers = schema.jobOffers;
-    const known = new Set<string>();
-    for (let index = 0; index < kept.length; index += CHUNK) {
-      const ids = kept.slice(index, index + CHUNK).map((offer) => offer.externalId);
-      const rows = await tx
-        .select({ externalId: offers.externalId })
-        .from(offers)
-        .where(
-          and(
-            eq(offers.userId, userId),
-            eq(offers.source, connector.name),
-            inArray(offers.externalId, ids),
-          ),
-        );
-      for (const row of rows) known.add(row.externalId);
-    }
-    // "Test the sources" writes its log, never offers (ADR 0013).
-    if (pass.trigger !== 'test') {
-      for (let index = 0; index < kept.length; index += CHUNK) {
-        await tx
-          .insert(offers)
-          .values(
-            kept.slice(index, index + CHUNK).map((offer) => ({
-              userId,
-              source: connector.name,
-              externalId: offer.externalId,
-              origin: 'collected',
-              title: offer.title,
-              company: offer.company,
-              location: offer.location,
-              postedOn: offer.postedAt,
-              url: offer.url,
-              salary: offer.salary,
-              description: offer.description,
-              details: offer.details,
-              firstSeenAt: finishedAt,
-              lastSeenAt: finishedAt,
-            })),
-          )
-          .onConflictDoUpdate({
-            target: [offers.userId, offers.source, offers.externalId],
-            set: {
-              title: sql`excluded.title`,
-              company: sql`excluded.company`,
-              location: sql`excluded.location`,
-              postedOn: sql`coalesce(excluded.posted_on, ${offers.postedOn})`,
-              url: sql`excluded.url`,
-              salary: sql`excluded.salary`,
-              description: sql`excluded.description`,
-              details: sql`excluded.details`,
-              lastSeenAt: finishedAt,
-              updatedAt: finishedAt,
-            },
-          });
-      }
-    }
-    return kept.filter((offer) => !known.has(offer.externalId)).length;
-  });
+  const { newCount, mergedCount } = await withUser(deps.db, userId, (tx) =>
+    storePostings(
+      tx,
+      {
+        userId,
+        source: connector.name,
+        trigger: pass.trigger,
+        at: finishedAt,
+        settings: deps.settings,
+        sourceOrder: deps.connectors.map((item) => item.name),
+      },
+      kept,
+    ),
+  );
 
   const problem = failure ?? warnings[0] ?? null;
   const status: RunStatus =
@@ -410,6 +368,7 @@ async function runSource(
     readCount,
     keptCount: kept.length,
     newCount,
+    mergedCount,
     invalidCount,
     requestCount: http.requestCount,
     durationMs: Date.now() - started,
@@ -439,6 +398,7 @@ async function runSource(
       read: readCount,
       kept: kept.length,
       new: newCount,
+      merged: mergedCount,
       invalid: invalidCount,
       requests: http.requestCount,
       ms: result.durationMs,
@@ -455,6 +415,7 @@ async function runSource(
     readCount,
     keptCount: kept.length,
     newCount,
+    mergedCount,
   };
 }
 
@@ -604,8 +565,9 @@ export async function runPass(deps: CollectDeps, job: CollectPassJob): Promise<R
       read: sum.read + outcome.readCount,
       kept: sum.kept + outcome.keptCount,
       new: sum.new + outcome.newCount,
+      merged: sum.merged + outcome.mergedCount,
     }),
-    { read: 0, kept: 0, new: 0 },
+    { read: 0, kept: 0, new: 0, merged: 0 },
   );
   deps.logger.info(
     { passId, trigger, sources: outcomes.length, ...totals },

@@ -9,6 +9,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { judgeRun } from './collect/alerts';
 import { closeStalePasses, type CollectDeps, keywordsFor, runPass } from './collect/pass';
+import { identifyStoredPostings } from './collect/postings';
 import { dueSources, isoWeekday, purgeCollection, schedulePasses } from './collect/schedule';
 
 let database: TestDatabase;
@@ -108,7 +109,22 @@ function runsOf(userId: string, passId: string) {
 
 function offersOf(userId: string) {
   return withUser(handle.db, userId, (tx) =>
-    tx.select().from(schema.jobOffers).where(eq(schema.jobOffers.userId, userId)),
+    tx
+      .select()
+      .from(schema.jobOffers)
+      .where(eq(schema.jobOffers.userId, userId))
+      .orderBy(schema.jobOffers.firstSeenAt, schema.jobOffers.id),
+  );
+}
+
+/** The announcements of an account, oldest first. */
+function announcementsOf(userId: string) {
+  return withUser(handle.db, userId, (tx) =>
+    tx
+      .select()
+      .from(schema.offers)
+      .where(eq(schema.offers.userId, userId))
+      .orderBy(schema.offers.firstSeenAt, schema.offers.id),
   );
 }
 
@@ -176,13 +192,20 @@ describe('a collection pass', () => {
     const offers = await offersOf(userId);
     expect(offers).toHaveLength(3);
     expect(offers[0]).toMatchObject({ source: 'demo', company: 'Exemple SA', origin: 'collected' });
+    // The demo's third offer republishes the first, its employer written with the city.
+    expect(await announcementsOf(userId)).toHaveLength(2);
+    expect(offers.find((offer) => offer.externalId === 'demo-comptable-3')).toMatchObject({
+      offerId: offers.find((offer) => offer.externalId === 'demo-comptable-1')!.offerId,
+      mergeReason: 'employer',
+    });
 
     const [run] = await runsOf(userId, first);
     expect(run).toMatchObject({
       status: 'succeeded',
       readCount: 3,
       keptCount: 3,
-      newCount: 3,
+      newCount: 2,
+      mergedCount: 1,
       invalidCount: 0,
       trigger: 'manual',
     });
@@ -191,8 +214,9 @@ describe('a collection pass', () => {
     const second = await pass(userId, ['demo']);
     await runPass(deps([demo]), { userId, passId: second });
     const [again] = await runsOf(userId, second);
-    expect(again).toMatchObject({ readCount: 3, keptCount: 3, newCount: 0 });
+    expect(again).toMatchObject({ readCount: 3, keptCount: 3, newCount: 0, mergedCount: 0 });
     expect(await offersOf(userId)).toHaveLength(3);
+    expect(await announcementsOf(userId)).toHaveLength(2);
     const [passRow] = await withUser(handle.db, userId, (tx) =>
       tx.select().from(schema.collectionPasses).where(eq(schema.collectionPasses.id, second)),
     );
@@ -238,7 +262,14 @@ describe('a collection pass', () => {
     await runPass(deps([filtered, precise], { fetch }), { userId, passId: id });
     const [alpha, beta] = await runsOf(userId, id);
     expect(alpha).toMatchObject({ source: 'alpha', readCount: 3, keptCount: 1, newCount: 1 });
-    expect(beta).toMatchObject({ source: 'beta', readCount: 3, keptCount: 3, newCount: 3 });
+    // Beta's "Comptable" is alpha's announcement: merged, not new.
+    expect(beta).toMatchObject({
+      source: 'beta',
+      readCount: 3,
+      keptCount: 3,
+      newCount: 2,
+      mergedCount: 1,
+    });
   });
 
   it('stops a source at the first 429, keeps the others going, and waits 24 h when asked', async () => {
@@ -538,6 +569,169 @@ describe('a collection pass', () => {
   });
 });
 
+/** A connector handing over the given offers, as written by its site. */
+const giving = (
+  name: string,
+  offers: Array<{ id: string; title: string; company?: string; description?: string }>,
+) =>
+  connector({
+    name,
+    run(context) {
+      context.add(
+        offers.map((offer) => ({
+          externalId: offer.id,
+          title: offer.title,
+          company: offer.company ?? null,
+          description: offer.description ?? null,
+          url: `https://jobs.example.org/${name}/${offer.id}`,
+        })),
+      );
+      return Promise.resolve();
+    },
+  });
+
+describe('announcements (ADR 0016)', () => {
+  it('merge one offer carried by two sources, keep two employers apart, and count both', async () => {
+    const userId = await account();
+    const alpha = giving('alpha', [
+      { id: 'a1', title: 'Comptable (m/f/x)', company: 'Exemple SA', description: 'Court.' },
+      { id: 'a2', title: 'Business Analyst', company: 'Deloitte' },
+    ]);
+    const beta = giving('beta', [
+      { id: 'b1', title: 'Comptable - Bruxelles', company: 'Exemple', description: 'Plus long.' },
+      { id: 'b2', title: 'Business Analyst', company: 'BNP Paribas Fortis' },
+    ]);
+    const id = await pass(userId, ['alpha', 'beta']);
+    await runPass(deps([alpha, beta]), { userId, passId: id });
+    const [first, second] = await runsOf(userId, id);
+    expect(first).toMatchObject({ source: 'alpha', newCount: 2, mergedCount: 0 });
+    expect(second).toMatchObject({ source: 'beta', newCount: 1, mergedCount: 1 });
+
+    const postings = await offersOf(userId);
+    const byId = new Map(postings.map((posting) => [posting.externalId, posting]));
+    expect(byId.get('b1')).toMatchObject({ offerId: byId.get('a1')!.offerId, mergeReason: 'key' });
+    expect(byId.get('b1')!.contentKey).toBe(byId.get('a1')!.contentKey);
+    expect(byId.get('b2')!.offerId).not.toBe(byId.get('a2')!.offerId);
+    const announcements = await announcementsOf(userId);
+    expect(announcements).toHaveLength(3);
+    // The retained posting names the employer, then has the longest description.
+    const comptable = announcements.find((offer) => offer.id === byId.get('a1')!.offerId)!;
+    expect(comptable.retainedId).toBe(byId.get('b1')!.id);
+    expect(comptable.firstSeenAt.getTime()).toBe(byId.get('a1')!.firstSeenAt.getTime());
+    expect(comptable.lastSeenAt.getTime()).toBe(byId.get('b1')!.lastSeenAt.getTime());
+  });
+
+  it('never move a posting stored before, so an undone merge stays undone', async () => {
+    const userId = await account();
+    const alpha = giving('alpha', [{ id: 'a1', title: 'Comptable', company: 'Exemple' }]);
+    const beta = giving('beta', [{ id: 'b1', title: 'Comptable', company: 'Exemple' }]);
+    await runPass(deps([alpha, beta]), { userId, passId: await pass(userId, ['alpha', 'beta']) });
+    // "Not the same offer", as the offer's page does it.
+    await withUser(handle.db, userId, async (tx) => {
+      const [own] = await tx.insert(schema.offers).values({ userId }).returning();
+      await tx
+        .update(schema.jobOffers)
+        .set({ offerId: own!.id, mergeReason: null })
+        .where(eq(schema.jobOffers.externalId, 'b1'));
+    });
+    const again = await pass(userId, ['alpha', 'beta']);
+    await runPass(deps([alpha, beta]), { userId, passId: again });
+    const postings = await offersOf(userId);
+    expect(new Set(postings.map((posting) => posting.offerId)).size).toBe(2);
+    expect((await runsOf(userId, again)).map((run) => run.mergedCount)).toEqual([0, 0]);
+  });
+
+  it('compare with the announcements of the last three weeks only', async () => {
+    const userId = await account();
+    const alpha = giving('alpha', [{ id: 'a1', title: 'Comptable', company: 'Exemple' }]);
+    const beta = giving('beta', [{ id: 'b1', title: 'Comptable', company: 'Exemple' }]);
+    const longAgo = new Date(Date.now() - 22 * 86_400_000);
+    await runPass(deps([alpha], { now: () => longAgo }), {
+      userId,
+      passId: await pass(userId, ['alpha']),
+    });
+    const id = await pass(userId, ['beta']);
+    await runPass(deps([beta]), { userId, passId: id });
+    expect((await runsOf(userId, id))[0]).toMatchObject({ newCount: 1, mergedCount: 0 });
+    expect(await announcementsOf(userId)).toHaveLength(2);
+  });
+
+  it('count new announcements and merges in test mode without writing anything', async () => {
+    const userId = await account();
+    const alpha = giving('alpha', [{ id: 'a1', title: 'Comptable', company: 'Exemple' }]);
+    await runPass(deps([alpha]), { userId, passId: await pass(userId, ['alpha']) });
+    const beta = giving('beta', [
+      { id: 'b1', title: 'Comptable (H/F)', company: 'Exemple SA' },
+      { id: 'b2', title: 'Juriste', company: 'Exemple' },
+    ]);
+    const id = await pass(userId, ['beta'], 'test');
+    await runPass(deps([beta]), { userId, passId: id });
+    expect((await runsOf(userId, id))[0]).toMatchObject({ newCount: 1, mergedCount: 1 });
+    expect(await offersOf(userId)).toHaveLength(1);
+  });
+
+  it('identify the postings of phase 2 at start-up and regroup them once', async () => {
+    const userId = await account();
+    const days = (count: number) => new Date(Date.now() - count * 86_400_000);
+    // As migration 0009 left them: one announcement each, under the posting's identifier.
+    await withUser(handle.db, userId, async (tx) => {
+      const legacy = [
+        { id: 'l1', source: 'alpha', title: 'Comptable', company: 'Exemple', seen: days(3) },
+        {
+          id: 'l2',
+          source: 'beta',
+          title: 'Comptable (H/F)',
+          company: 'Exemple SA',
+          seen: days(2),
+        },
+        { id: 'l3', source: 'beta', title: 'Juriste', company: 'Exemple', seen: days(1) },
+        // Two offers added by hand: the collected one joins the first, they stay apart.
+        { id: 'm1', source: 'manual', title: 'Analyste', company: 'Autre', seen: days(5) },
+        { id: 'm2', source: 'manual', title: 'Analyste', company: 'Autre', seen: days(4) },
+        { id: 'l4', source: 'alpha', title: 'Analyste (m/f/x)', company: 'Autre', seen: days(3) },
+      ];
+      for (const item of legacy) {
+        const [offer] = await tx
+          .insert(schema.offers)
+          .values({ userId, firstSeenAt: item.seen, lastSeenAt: item.seen })
+          .returning();
+        await tx.insert(schema.jobOffers).values({
+          id: offer!.id,
+          userId,
+          offerId: offer!.id,
+          source: item.source,
+          externalId: item.id,
+          title: item.title,
+          company: item.company,
+          firstSeenAt: item.seen,
+          lastSeenAt: item.seen,
+        });
+        await tx
+          .update(schema.offers)
+          .set({ retainedId: offer!.id })
+          .where(eq(schema.offers.id, offer!.id));
+      }
+    });
+    const result = await identifyStoredPostings({ db: handle.db, logger }, ['alpha', 'beta']);
+    expect(result.identified).toBeGreaterThanOrEqual(3);
+    const postings = await offersOf(userId);
+    expect(postings.every((posting) => posting.contentKey !== null)).toBe(true);
+    expect(postings.every((posting) => posting.dedupVersion === 1)).toBe(true);
+    const byId = new Map(postings.map((posting) => [posting.externalId, posting]));
+    expect(byId.get('l2')).toMatchObject({ offerId: byId.get('l1')!.offerId, mergeReason: 'key' });
+    expect(byId.get('m2')!.offerId).not.toBe(byId.get('m1')!.offerId);
+    expect(byId.get('l4')).toMatchObject({ offerId: byId.get('m1')!.offerId, mergeReason: 'key' });
+    const announcements = await announcementsOf(userId);
+    expect(announcements).toHaveLength(4);
+    const comptable = announcements.find((offer) => offer.id === byId.get('l1')!.offerId)!;
+    expect(comptable.lastSeenAt.getTime()).toBe(byId.get('l2')!.lastSeenAt.getTime());
+
+    // Once only: the next start-up finds nothing to do.
+    const next = await identifyStoredPostings({ db: handle.db, logger }, ['alpha', 'beta']);
+    expect(next).toEqual({ identified: 0, regrouped: 0 });
+  });
+});
+
 describe('silent sources (decision D4)', () => {
   /** A source reading as many ads as the test asks, all of them kept. */
   function counted(name: string) {
@@ -702,9 +896,25 @@ describe('schedule and purge', () => {
     const now = new Date();
     const days = (count: number) => new Date(now.getTime() - count * 86_400_000);
     const [oldPass] = await withUser(handle.db, userId, async (tx) => {
+      const [fresh, stale] = await tx
+        .insert(schema.offers)
+        .values([
+          { userId, lastSeenAt: days(10) },
+          { userId, lastSeenAt: days(91) },
+        ])
+        .returning();
+      // The announcement's last sighting counts: its stale posting stays with it.
       await tx.insert(schema.jobOffers).values([
-        { userId, source: 'alpha', externalId: 'fresh', title: 'Fresh', lastSeenAt: days(10) },
-        { userId, source: 'alpha', externalId: 'stale', title: 'Stale', lastSeenAt: days(91) },
+        { userId, offerId: fresh!.id, source: 'alpha', externalId: 'fresh', title: 'Fresh' },
+        {
+          userId,
+          offerId: fresh!.id,
+          source: 'beta',
+          externalId: 'old',
+          title: 'Fresh',
+          lastSeenAt: days(95),
+        },
+        { userId, offerId: stale!.id, source: 'alpha', externalId: 'stale', title: 'Stale' },
       ]);
       return tx
         .insert(schema.collectionPasses)
@@ -722,7 +932,11 @@ describe('schedule and purge', () => {
     );
     const result = await purgeCollection(handle.db, settings, now);
     expect(result.offers).toBeGreaterThanOrEqual(1);
-    expect((await offersOf(userId)).map((offer) => offer.externalId)).toEqual(['fresh']);
+    expect((await offersOf(userId)).map((offer) => offer.externalId).sort()).toEqual([
+      'fresh',
+      'old',
+    ]);
+    expect(await announcementsOf(userId)).toHaveLength(1);
     expect(await runsOf(userId, oldPass!.id)).toHaveLength(0);
   });
 });

@@ -14,7 +14,10 @@ export function useRunDetail() {
   };
 }
 
-/** Status, what was read, kept and new, how long it took, and why when it did not succeed. */
+/**
+ * Status, what was read and kept, the new announcements and the postings merged into one already
+ * there, how long it took, and why when it did not succeed.
+ */
 export function RunSummary({ run, withDate = true }: { run: SourceRun; withDate?: boolean }) {
   const { t } = useTranslation();
   const detail = useRunDetail()(run);
@@ -31,6 +34,7 @@ export function RunSummary({ run, withDate = true }: { run: SourceRun; withDate?
               read: formatNumber(run.readCount),
               kept: formatNumber(run.keptCount),
               fresh: formatNumber(run.newCount),
+              merged: formatNumber(run.mergedCount),
             })}
           </span>
         ) : null}

@@ -1,4 +1,4 @@
-import type { CollectionPass, OffersResponse, SourcesResponse } from '@job4me/contracts';
+import type { CollectionPass, Offer, OffersResponse, SourcesResponse } from '@job4me/contracts';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { api } from './client';
 
@@ -17,7 +17,15 @@ export const latestTestQuery = queryOptions({
   },
 });
 
-/** Offers, newest first, page by page; `source` narrows them to one source. */
+/** One announcement with all its postings (ADR 0016). */
+export function offerQuery(id: string) {
+  return queryOptions({
+    queryKey: ['offer', id],
+    queryFn: () => api.get<Offer>(`/api/offers/${id}`),
+  });
+}
+
+/** Announcements, newest first, page by page; `source` keeps those carried by one source. */
 export function offersQuery(source: string) {
   return infiniteQueryOptions({
     queryKey: ['offers', source],

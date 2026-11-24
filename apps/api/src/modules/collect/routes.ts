@@ -1,12 +1,6 @@
-import { createHash, randomUUID } from 'node:crypto';
 import { availableConnectors, lockedByUsageMode, sourceSettings } from '@job4me/collect';
 import {
   latestTestResponseSchema,
-  manualOfferInputSchema,
-  type Offer,
-  offerSchema,
-  offersQuerySchema,
-  offersResponseSchema,
   passSchema,
   sourceParamsSchema,
   sourceRunsQuerySchema,
@@ -22,10 +16,7 @@ import {
   desc,
   eq,
   gte,
-  type JobOfferRow,
-  lt,
   ne,
-  or,
   recordAudit,
   schema,
   sql,
@@ -38,32 +29,8 @@ import { HttpError } from '../../errors';
 import { requireSession } from '../auth/guards';
 import { createPass, loadPass, plannedSources, queuePass, toSourceRun } from './passes';
 
-// Sources and offers (phase 2 plan, section 8). Every query filters on the signed-in account and
-// runs under row-level security for it (ADR 0011).
-
-function toOffer(row: JobOfferRow): Offer {
-  return offerSchema.parse({
-    id: row.id,
-    source: row.source,
-    origin: row.origin,
-    title: row.title,
-    company: row.company,
-    location: row.location,
-    postedOn: row.postedOn,
-    url: row.url,
-    salary: row.salary,
-    details: row.details,
-    description: row.description,
-    firstSeenAt: row.firstSeenAt.toISOString(),
-    lastSeenAt: row.lastSeenAt.toISOString(),
-  });
-}
-
-/** A manual offer with a link is known by the link: the same one is not added twice. */
-function manualId(url: string | null): string {
-  if (!url) return `manual:${randomUUID()}`;
-  return `url:${createHash('sha256').update(new URL(url).href).digest('hex').slice(0, 40)}`;
-}
+// Sources (phase 2 plan, section 8); offers are in ./offers. Every query filters on the
+// signed-in account and runs under row-level security for it (ADR 0011).
 
 export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
   const { settings } = deps.config;
@@ -93,6 +60,7 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
         read: sql<number>`coalesce(sum(${runs.readCount}), 0)::int`,
         kept: sql<number>`coalesce(sum(${runs.keptCount}), 0)::int`,
         fresh: sql<number>`coalesce(sum(${runs.newCount}), 0)::int`,
+        merged: sql<number>`coalesce(sum(${runs.mergedCount}), 0)::int`,
       })
       .from(runs)
       .where(
@@ -145,7 +113,14 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
               : null,
           window: {
             days,
-            ...(windows.get(connector.name) ?? { runs: 0, failed: 0, read: 0, kept: 0, fresh: 0 }),
+            ...(windows.get(connector.name) ?? {
+              runs: 0,
+              failed: 0,
+              read: 0,
+              kept: 0,
+              fresh: 0,
+              merged: 0,
+            }),
           },
           runs: latest.map(toSourceRun),
         }),
@@ -277,92 +252,6 @@ export function collectRoutes(deps: AppDeps): FastifyPluginAsyncZod {
             .orderBy(desc(schema.collectionPasses.createdAt))
             .limit(1);
           return { pass: latest ? await loadPass(tx, userId, latest.id) : null };
-        });
-      },
-    );
-
-    app.get(
-      '/api/offers',
-      { schema: { querystring: offersQuerySchema, response: { 200: offersResponseSchema } } },
-      async (request) => {
-        const { userId } = requireSession(request);
-        const { source, before } = request.query;
-        const limit = request.query.limit ?? settings.collect.offers.listLimit;
-        const offers = schema.jobOffers;
-        return withUser(deps.db, userId, async (tx) => {
-          const conditions = [eq(offers.userId, userId)];
-          if (source) conditions.push(eq(offers.source, source));
-          if (before) {
-            const [cursor] = await tx
-              .select({ firstSeenAt: offers.firstSeenAt, id: offers.id })
-              .from(offers)
-              .where(and(eq(offers.id, before), eq(offers.userId, userId)));
-            if (!cursor) throw new HttpError(400, 'validation_error');
-            conditions.push(
-              or(
-                lt(offers.firstSeenAt, cursor.firstSeenAt),
-                and(eq(offers.firstSeenAt, cursor.firstSeenAt), lt(offers.id, cursor.id)),
-              )!,
-            );
-          }
-          const rows = await tx
-            .select()
-            .from(offers)
-            .where(and(...conditions))
-            .orderBy(desc(offers.firstSeenAt), desc(offers.id))
-            .limit(limit + 1);
-          const page = rows.slice(0, limit);
-          return {
-            offers: page.map(toOffer),
-            nextCursor: rows.length > limit ? page.at(-1)!.id : null,
-          };
-        });
-      },
-    );
-
-    // Manual add: the link is stored as it is and never opened by the server (threat 1).
-    app.post(
-      '/api/offers',
-      {
-        config: { rateLimit: { max: settings.collect.manual.addsPerHour, timeWindow: '1 hour' } },
-        schema: { body: manualOfferInputSchema, response: { 200: offerSchema } },
-      },
-      async (request) => {
-        const { userId } = requireSession(request);
-        const input = request.body;
-        if ((input.text?.length ?? 0) > settings.collect.manual.maxTextChars) {
-          throw new HttpError(400, 'validation_error');
-        }
-        const at = now();
-        return withUser(deps.db, userId, async (tx) => {
-          const [row] = await tx
-            .insert(schema.jobOffers)
-            .values({
-              userId,
-              source: 'manual',
-              origin: 'manual',
-              externalId: manualId(input.url),
-              title: input.title,
-              company: input.company ?? '?',
-              location: input.location ?? '?',
-              url: input.url,
-              description: input.text ?? '',
-              firstSeenAt: at,
-              lastSeenAt: at,
-            })
-            .onConflictDoNothing()
-            .returning();
-          if (!row) throw new HttpError(409, 'duplicate');
-          await recordAudit(tx, {
-            actorType: 'user',
-            actorUserId: userId,
-            action: 'offer.added',
-            outcome: 'success',
-            targetType: 'job_offer',
-            targetId: row.id,
-            requestId: request.id,
-          });
-          return toOffer(row);
         });
       },
     );

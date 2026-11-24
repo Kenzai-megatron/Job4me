@@ -43,9 +43,18 @@ const ERROR: Record<NonNullable<SourceRun['errorCode']>, string> = {
   interrupted: 'interrompue',
 };
 
-/** One line per source: status, read, kept, new, duration and why. */
+/** One line per source: status, read, kept, new, merged, duration and why. */
 export function formatPass(pass: CollectionPass): string {
-  const header = ['Source', 'Statut', 'Lues', 'Retenues', 'Inédites', 'Durée', 'Détail'];
+  const header = [
+    'Source',
+    'Statut',
+    'Lues',
+    'Retenues',
+    'Inédites',
+    'Fusionnées',
+    'Durée',
+    'Détail',
+  ];
   const rows = pass.runs.map((run) => {
     const skipped = run.status === 'skipped';
     const detail = run.skipReason
@@ -59,6 +68,7 @@ export function formatPass(pass: CollectionPass): string {
       skipped ? '-' : String(run.readCount),
       skipped ? '-' : String(run.keptCount),
       skipped ? '-' : String(run.newCount),
+      skipped ? '-' : String(run.mergedCount),
       run.durationMs === null || skipped
         ? '-'
         : `${(run.durationMs / 1000).toFixed(1).replace('.', ',')} s`,
@@ -72,7 +82,7 @@ export function formatPass(pass: CollectionPass): string {
     .map((row) =>
       row
         .map((cell, column) =>
-          column >= 2 && column <= 5
+          column >= 2 && column <= 6
             ? cell.padStart(widths[column]!)
             : cell.padEnd(widths[column]!),
         )

@@ -21,6 +21,7 @@ export {
   type MigrateOptions,
 } from './migrate';
 export { MIGRATION_COUNT } from './migrations';
+export { createOffers, findHistoryPostings, type HistoryPosting, refreshOffers } from './offers';
 export { queueOptions } from './queue';
 export { withUser } from './scope';
 export * as schema from './schema';
@@ -33,6 +34,7 @@ export type {
   ImportProposal,
   ImportRunRow,
   KeywordProposalRun,
+  OfferRow,
   Passkey,
   Profile,
   PushSubscription,
@@ -61,3 +63,4 @@ export {
   sql,
   type SQL,
 } from 'drizzle-orm';
+export { alias } from 'drizzle-orm/pg-core';

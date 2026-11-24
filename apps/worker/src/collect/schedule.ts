@@ -58,8 +58,9 @@ export async function schedulePasses(deps: ScheduleDeps, now: Date = new Date())
 }
 
 /**
- * Hourly purge (ADR 0015): offers not seen for the configured time, then pass logs (their runs
- * go with them) older than their retention. Account by account, under row-level security.
+ * Hourly purge (ADR 0015): announcements not seen for the configured time (their postings go
+ * with them, ADR 0016), then pass logs (their runs go with them) older than their retention.
+ * Account by account, under row-level security.
  */
 export async function purgeCollection(db: Database, settings: Settings, now: Date = new Date()) {
   const offerCutoff = new Date(now.getTime() - settings.collect.offers.retentionDays * DAY_MS);
@@ -70,14 +71,9 @@ export async function purgeCollection(db: Database, settings: Settings, now: Dat
   for (const account of accounts) {
     await withUser(db, account.id, async (tx) => {
       const gone = await tx
-        .delete(schema.jobOffers)
-        .where(
-          and(
-            eq(schema.jobOffers.userId, account.id),
-            lt(schema.jobOffers.lastSeenAt, offerCutoff),
-          ),
-        )
-        .returning({ id: schema.jobOffers.id });
+        .delete(schema.offers)
+        .where(and(eq(schema.offers.userId, account.id), lt(schema.offers.lastSeenAt, offerCutoff)))
+        .returning({ id: schema.offers.id });
       const old = await tx
         .delete(schema.collectionPasses)
         .where(
