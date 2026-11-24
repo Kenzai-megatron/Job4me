@@ -262,3 +262,6 @@ export * from './ai-schema';
 // Phase 2 collection: sources, passes, runs and offers (ADR 0013 to 0015).
 export * from './collect-schema';
 export * from './geo-schema';
+
+// Phase 4 documents: master CVs, documents and their versions (ADR 0020).
+export * from './documents-schema';

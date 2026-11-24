@@ -28,6 +28,7 @@ import { signInRoutes } from './modules/auth/routes-sign-in';
 import { registerSessionHook } from './modules/auth/session-hook';
 import { aiRoutes } from './modules/ai/routes';
 import { offerRoutes } from './modules/collect/offers';
+import { documentRoutes } from './modules/documents/routes';
 import { collectRoutes } from './modules/collect/routes';
 import { reviewRoutes } from './modules/imports/review';
 import { importRoutes } from './modules/imports/routes';
@@ -86,6 +87,7 @@ export async function buildApp(deps: AppDeps, options: BuildOptions = {}) {
   await app.register(aiRoutes(deps));
   await app.register(collectRoutes(deps));
   await app.register(offerRoutes(deps));
+  await app.register(documentRoutes(deps));
   if (!production) {
     app.get('/api/openapi.json', { schema: { hide: true } }, () => app.swagger());
   }

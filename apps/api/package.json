@@ -22,6 +22,7 @@
     "@job4me/collect": "workspace:*",
     "@job4me/config": "workspace:*",
     "@job4me/contracts": "workspace:*",
+    "@job4me/documents": "workspace:*",
     "@job4me/db": "workspace:*",
     "@job4me/i18n": "workspace:*",
     "@job4me/imports": "workspace:*",

@@ -118,6 +118,28 @@ test('fills the profile, follows its completeness and imports a CV', async ({ pa
     await expect(keywords.getByRole('status')).toHaveText('Demande transmise…');
   }
 
+  // Documents (phase 4): the master CV of the target job, built from the profile, then trimmed.
+  await skills.getByRole('button', { name: 'Ajouter' }).click();
+  await skills.getByLabel('Nom').fill('SQL');
+  await skills.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(skills.getByRole('listitem').filter({ hasText: 'SQL' })).toBeVisible();
+  await page.getByRole('link', { name: 'Documents' }).first().click();
+  await expect(page.getByRole('heading', { name: 'Documents', level: 1 })).toBeVisible();
+  await page.getByRole('button', { name: 'Créer le CV maître' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'CV maître : Analyste de données', level: 1 }),
+  ).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Aperçu de la version 1' })).toContainText('SQL');
+  await expectAccessible(page);
+  await page.getByRole('checkbox', { name: 'SQL' }).uncheck();
+  await page.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(page.getByRole('status')).toHaveText('Version 2 enregistrée.');
+  await expect(page.getByRole('region', { name: 'Aperçu de la version 2' })).not.toContainText(
+    'SQL',
+  );
+  await expect(page.getByText(/^Version 2 · .* · vos choix$/)).toBeVisible();
+  await expectAccessible(page);
+
   // Settings > AI: the spending against the caps, never the content of the calls.
   await page.getByRole('link', { name: 'Paramètres' }).first().click();
   await page

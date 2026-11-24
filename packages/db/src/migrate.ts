@@ -90,15 +90,23 @@ async function applyGrants(client: pg.Client): Promise<void> {
     `GRANT UPDATE (status, error_code, attempts, claimed_at, extracted_at, extracted, stats, updated_at) ON "import_run" TO ${extractor}`,
   ];
   for (const statement of statements) await client.query(statement);
+  const exists = async (table: string) =>
+    Boolean(
+      (
+        await client.query<{ name: string | null }>('select to_regclass($1)::text as name', [
+          `public.${table}`,
+        ])
+      ).rows[0]?.name,
+    );
   // Public data loaded by the migration (ADR 0017): read only for the application.
   for (const table of ['locality', 'dataset']) {
-    const exists = await client.query<{ name: string | null }>(
-      'select to_regclass($1)::text as name',
-      [`public.${table}`],
-    );
-    if (exists.rows[0]?.name) {
+    if (await exists(table)) {
       await client.query(`REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON "${table}" FROM ${role}`);
     }
+  }
+  // A version of a document is written once (ADR 0020): its document going takes it along.
+  if (await exists('document_version')) {
+    await client.query(`REVOKE UPDATE, DELETE, TRUNCATE ON "document_version" FROM ${role}`);
   }
 }
 

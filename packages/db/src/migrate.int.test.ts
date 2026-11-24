@@ -39,6 +39,8 @@ describe('migrations', () => {
       'certification',
       'collection_pass',
       'dataset',
+      'document',
+      'document_version',
       'education',
       'elimination_rule',
       'excluded_company',
@@ -50,6 +52,7 @@ describe('migrations', () => {
       'keyword_proposal_run',
       'language_level',
       'locality',
+      'master_cv',
       'offer',
       'offer_rating',
       'offer_score',
@@ -103,6 +106,9 @@ describe('migrations', () => {
       'offer_score',
       'offer_rating',
       'scoring_benchmark',
+      'master_cv',
+      'document',
+      'document_version',
     ]) {
       expect(guarded).toContain(table);
     }
@@ -203,6 +209,14 @@ describe('audit log', () => {
       /permission denied/,
     );
     await expect(app.query('delete from audit_log')).rejects.toThrow(/permission denied/);
+  });
+
+  it('add versions of a document, never rewrite or delete one (ADR 0020)', async () => {
+    await expect(app.query("update document_version set origin = 'manual'")).rejects.toThrow(
+      /permission denied/,
+    );
+    await expect(app.query('delete from document_version')).rejects.toThrow(/permission denied/);
+    await expect(app.query('truncate document_version')).rejects.toThrow(/permission denied/);
   });
 
   it('refuses updates, deletes and truncation even from the owner', async () => {
