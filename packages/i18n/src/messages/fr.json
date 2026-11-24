@@ -895,5 +895,57 @@
       "saved": "Note enregistrée.",
       "removed": "Note retirée."
     }
+  },
+  "documents": {
+    "title": "Documents",
+    "intro": "Vos CV maîtres, un par métier cible, construits à partir de votre profil sans IA. Les dossiers adaptés à chaque offre arrivent ensuite.",
+    "masterTitle": "CV maîtres",
+    "masterIntro": "Chaque ligne vient de votre profil. Vous choisissez ce qui y figure et dans quel ordre.",
+    "noTargetJob": "Aucun métier cible pour l’instant :",
+    "toProfile": "ajoutez-en un dans votre profil.",
+    "noMasterCv": "Pas encore de CV maître.",
+    "versionAt": "Version {{version}}, {{date}}",
+    "create": "Créer le CV maître",
+    "open": "Ouvrir",
+    "back": "Tous les documents",
+    "masterOf": "CV maître : {{job}}",
+    "masterHint": "Chaque ligne vient de votre profil, avec sa source ; rien n’y est inventé.",
+    "staleTitle": "Votre profil a changé",
+    "staleBody": "Un élément a été ajouté, modifié ou retiré depuis cette version du CV.",
+    "refresh": "Mettre à jour depuis le profil",
+    "choicesTitle": "Vos choix",
+    "choicesIntro": "Cochez ce qui figure sur le CV et réglez l’ordre ; chaque enregistrement qui change le CV en crée une version.",
+    "template": "Gabarit",
+    "templates": {
+      "classic": "Classique",
+      "modern": "Moderne"
+    },
+    "summary": "Accroche (facultative)",
+    "summaryHint": "Vos mots, en tête du CV : 600 caractères au plus.",
+    "sections": {
+      "experience": "Expérience",
+      "achievements": "Autres réalisations",
+      "skills": "Compétences",
+      "languages": "Langues",
+      "education": "Formation",
+      "certifications": "Certifications"
+    },
+    "up": "Monter « {{label}} »",
+    "down": "Descendre « {{label}} »",
+    "upShort": "Monter",
+    "downShort": "Descendre",
+    "save": "Enregistrer",
+    "saved": "Version {{version}} enregistrée.",
+    "unchanged": "Rien n’a changé : pas de nouvelle version.",
+    "previewTitle": "Aperçu de la version {{version}}",
+    "versionsTitle": "Versions",
+    "versionLine": "Version {{version}} · {{date}} · {{origin}}",
+    "origins": {
+      "profile": "construite à partir du profil",
+      "layout": "vos choix",
+      "manual": "modifiée à la main",
+      "template": "modèle sans IA",
+      "claude": "rédigée par Claude"
+    }
   }
 }

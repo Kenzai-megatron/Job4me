@@ -12,6 +12,8 @@ import { AppShell } from './components/AppShell';
 import { EnrollPage } from './routes/EnrollPage';
 import { HomePage } from './routes/HomePage';
 import { LoginPage } from './routes/LoginPage';
+import { DocumentsPage } from './routes/documents/DocumentsPage';
+import { MasterCvPage } from './routes/documents/MasterCvPage';
 import { PlaceholderPage } from './routes/PlaceholderPage';
 import { ProfilePage } from './routes/profile/ProfilePage';
 import { SecurityPage } from './routes/settings/SecurityPage';
@@ -82,7 +84,12 @@ const applicationsRoute = createRoute({
 const documentsRoute = createRoute({
   getParentRoute: () => appRoute,
   path: '/documents',
-  component: () => <PlaceholderPage section="documents" phase={4} />,
+  component: DocumentsPage,
+});
+const masterCvRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/documents/cv/$masterCvId',
+  component: MasterCvPage,
 });
 const profileRoute = createRoute({
   getParentRoute: () => appRoute,
@@ -125,6 +132,7 @@ const routeTree = rootRoute.addChildren([
     sourcesRoute,
     applicationsRoute,
     documentsRoute,
+    masterCvRoute,
     profileRoute,
     importReviewRoute,
     securityRoute,

@@ -3,12 +3,15 @@ import {
   aiUsages,
   benchmarkErrorCodes,
   collectErrorCodes,
+  cvSectionKinds,
+  documentTemplates,
   errorCodes,
   exclusionReasons,
   mergeReasons,
   scoreBands,
   scoreMethods,
   scoringCriteria,
+  versionOrigins,
   sourceAlertKinds,
   passTriggers,
   runStatuses,
@@ -51,6 +54,9 @@ describe('translation files', () => {
       ...aiUsages.map((usage) => `ai.usages.${usage}`),
       ...aiCallStatuses.map((status) => `ai.statuses.${status}`),
       ...benchmarkErrorCodes.map((code) => `ai.reference.errors.${code}`),
+      ...cvSectionKinds.map((kind) => `documents.sections.${kind}`),
+      ...documentTemplates.map((name) => `documents.templates.${name}`),
+      ...versionOrigins.map((origin) => `documents.origins.${origin}`),
     ];
     for (const key of expected) expect(french).toContain(key);
   });

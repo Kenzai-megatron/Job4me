@@ -1,6 +1,7 @@
 export * from './ai';
 export * from './auth';
 export * from './collect';
+export * from './documents';
 export * from './errors';
 export * from './health';
 export * from './imports';

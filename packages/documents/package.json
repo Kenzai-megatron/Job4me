@@ -1,0 +1,21 @@
+{
+  "name": "@job4me/documents",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Application documents: master CVs built from the profile, checks and rendering (ADR 0020, 0021)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@job4me/contracts": "workspace:*",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@job4me/tooling": "workspace:*"
+  }
+}
