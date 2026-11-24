@@ -109,6 +109,38 @@ function withoutReferences(text: string): { text: string; dropped: boolean } {
   return { text: kept.join('\n'), dropped };
 }
 
+/** A phone number by its digits: nine to fifteen, never a date or a range of dates. */
+function isPhone(match: string): boolean {
+  const number = digits(match);
+  return number.length >= 9 && number.length <= 15 && !DATE_LIKE.test(match.trim());
+}
+
+/**
+ * The text of a job offer before it reaches the AI (phase 3 plan, decision D2): the recruiter's
+ * e-mail addresses, phone numbers and links never leave the machine. Counts are for the tests
+ * and the logs, never the values.
+ */
+export function redactContacts(source: string): { text: string; counts: Record<string, number> } {
+  const counts: Record<string, number> = {};
+  const replace = (
+    text: string,
+    pattern: RegExp,
+    kind: string,
+    label: string,
+    keep?: (match: string) => boolean,
+  ) =>
+    text.replace(pattern, (match) => {
+      if (keep && !keep(match)) return match;
+      counts[kind] = (counts[kind] ?? 0) + 1;
+      return label;
+    });
+  let text = source.normalize('NFC');
+  text = replace(text, EMAIL, 'email', '[e-mail]');
+  text = replace(text, LINK, 'link', '[lien]');
+  text = replace(text, PHONE, 'phone', '[téléphone]', isPhone);
+  return { text, counts };
+}
+
 export function redactCv(source: string, known: KnownIdentity): Redaction {
   const counts: Record<string, number> = {};
   const found: FoundIdentity = { emails: [], phones: [], names: [] };
@@ -141,8 +173,7 @@ export function redactCv(source: string, known: KnownIdentity): Redaction {
   replace(LINK, 'link', '[lien]');
   replace(NATIONAL_NUMBER, 'personal', '[donnée personnelle retirée]');
   replace(PHONE, 'phone', '[téléphone]', (match) => {
-    const number = digits(match);
-    if (number.length < 9 || number.length > 15 || DATE_LIKE.test(match.trim())) return false;
+    if (!isPhone(match)) return false;
     found.phones.push(match.trim());
     return true;
   });

@@ -3,6 +3,7 @@ import { loadConfig, loadSecrets } from '@job4me/config';
 import {
   type CollectPassJob,
   type KeywordsProposeJob,
+  type OffersAiScoreJob,
   type OffersScreenJob,
   type PushTestJob,
   QUEUES,
@@ -12,6 +13,7 @@ import { createLogger } from '@job4me/logger';
 import { deriveKey, parseKey, parseMasterKey } from '@job4me/security';
 import { PgBoss } from 'pg-boss';
 import { createAiService } from './ai/service';
+import { scoreWithClaude } from './collect/claude';
 import { runPass } from './collect/pass';
 import { prepareStoredPostings } from './collect/postings';
 import { screenOffers, screenProfileOf } from './collect/screen';
@@ -59,6 +61,15 @@ async function main(): Promise<void> {
         }
       : null;
 
+  // Claude API (ADR 0009): without a key, every AI step answers "not configured".
+  const ai = createAiService({
+    db: database.db,
+    settings: config.settings,
+    logger,
+    apiKey: secrets.anthropicApiKey,
+  });
+  logger.info({ enabled: ai.enabled }, 'claude api');
+
   // Collection (ADR 0013): a pass is never retried by the queue (a private person's pace), and
   // may run as long as its budget before the queue considers it lost.
   assertSourceSettings(config.settings);
@@ -80,6 +91,21 @@ async function main(): Promise<void> {
     { db: database.db, logger, gazetteer, settings: config.settings },
     connectors.map((connector) => connector.name),
   );
+  // The scoring by Claude after each pass (phase 3 plan, sections 7 bis and 8), when the setting
+  // switches it on (decision D5: off); one run per account at a time.
+  const claudeScoring = config.settings.ai.scoring.enabled;
+  await ensureQueue(boss, QUEUES.offersAiScore, {
+    expireInSeconds: Math.ceil(config.settings.ai.scoring.staleAfterMs / 1000),
+    retryLimit: 0,
+  });
+  await boss.work<OffersAiScoreJob>(QUEUES.offersAiScore, async (jobs) => {
+    for (const job of jobs) {
+      await scoreWithClaude(
+        { db: database.db, ai, settings: config.settings, logger },
+        job.data.userId,
+      );
+    }
+  });
   const collectDeps = {
     db: database.db,
     gazetteer,
@@ -93,6 +119,12 @@ async function main(): Promise<void> {
       ? {
           notify: (userId: string, message: PushMessage) =>
             pushToUser({ db: database.db, logger, vapid }, userId, message),
+        }
+      : {}),
+    ...(claudeScoring
+      ? {
+          afterPass: (userId: string) =>
+            boss.send(QUEUES.offersAiScore, { userId }, { singletonKey: userId }),
         }
       : {}),
   };
@@ -142,14 +174,6 @@ async function main(): Promise<void> {
     logger.info({ ...result, ...imports, ...collected }, 'expired records purged');
   });
 
-  // Claude API (ADR 0009): without a key, every AI step answers "not configured".
-  const ai = createAiService({
-    db: database.db,
-    settings: config.settings,
-    logger,
-    apiKey: secrets.anthropicApiKey,
-  });
-  logger.info({ enabled: ai.enabled }, 'claude api');
   await boss.work<KeywordsProposeJob>(QUEUES.keywordsPropose, async (jobs) => {
     for (const job of jobs) {
       await proposeKeywords({ db: database.db, ai, settings: config.settings, logger }, job.data);

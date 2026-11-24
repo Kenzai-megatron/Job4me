@@ -33,8 +33,9 @@ import { baseLocation, baseOf, gazetteerOf, offerGeo } from '../collect/geo';
 import { requestScreening } from '../collect/screening';
 
 /**
- * The fields of the profile the deterministic filter or the scoring read (phase 3 plan, sections
- * 6 and 7): a change of one has the worker screen and score the offers again.
+ * The fields of the profile the deterministic filter or the scorings read (phase 3 plan, sections
+ * 6 to 8): a change of one has the worker screen and score the offers again, and a score by
+ * Claude made before it give way to the score without AI until Claude scores again.
  */
 const SCREENED_FIELDS = [
   'baseCity',
@@ -43,8 +44,13 @@ const SCREENED_FIELDS = [
   'contractTypes',
   'workRegimes',
   'remotePreference',
+  'salaryMinMonthly',
+  'motivations',
+  'motivationTags',
+  'scoringInstructions',
+  'scoringWeights',
 ] as const;
-/** The rubrics the deterministic filter or the scoring read. */
+/** The rubrics the deterministic filter or the scorings read. */
 const SCREENED_RUBRICS = new Set([
   'excluded-companies',
   'eliminations',
@@ -54,6 +60,9 @@ const SCREENED_RUBRICS = new Set([
   'languages',
   'sectors',
   'title-filters',
+  'experiences',
+  'education',
+  'certifications',
 ]);
 import { type RubricDefinition, rubricDefinitions } from './rubrics';
 

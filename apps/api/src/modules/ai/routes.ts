@@ -2,6 +2,7 @@ import {
   type AiCallStatus,
   type AiUsage,
   aiUsageResponseSchema,
+  aiUsages,
   type KeywordRun,
   keywordRunSchema,
   latestKeywordRunSchema,
@@ -119,16 +120,34 @@ export function aiRoutes(deps: AppDeps): FastifyPluginAsyncZod {
             })
             .from(calls)
             .where(eq(calls.userId, userId));
+          const perUsage = await tx
+            .select({
+              usage: calls.usage,
+              week: sql<number>`coalesce(sum(${calls.costUsd}) filter (where ${calls.createdAt} >= ${since}), 0)::float8`,
+              total: sql<number>`coalesce(sum(${calls.costUsd}), 0)::float8`,
+              // Requests sent: the ones a cap or a missing key held back cost nothing.
+              calls: sql<number>`(count(*) filter (where ${calls.status} not in ('blocked', 'disabled')))::int`,
+            })
+            .from(calls)
+            .where(eq(calls.userId, userId))
+            .groupBy(calls.usage);
           const recent = await tx
             .select()
             .from(calls)
             .where(eq(calls.userId, userId))
             .orderBy(desc(calls.createdAt))
             .limit(20);
+          const spend = new Map(perUsage.map((row) => [row.usage, row]));
           return {
             weekUsd: sums?.week ?? 0,
             totalUsd: sums?.total ?? 0,
             caps: settings.ai.caps,
+            byUsage: aiUsages.flatMap((usage) => {
+              const row = spend.get(usage);
+              return row
+                ? [{ usage, weekUsd: row.week, totalUsd: row.total, calls: row.calls }]
+                : [];
+            }),
             calls: recent.map((call) => ({
               id: call.id,
               usage: call.usage as AiUsage,

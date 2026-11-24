@@ -9,6 +9,8 @@ export const QUEUES = {
   collectPass: 'collect_pass',
   /** The deterministic filter again on every offer of an account, its criteria changed. */
   offersScreen: 'offers_screen',
+  /** The scoring by Claude after a pass, when switched on (phase 3 plan, sections 7 bis and 8). */
+  offersAiScore: 'offers_ai_score',
 } as const;
 
 /** Ask Claude Sonnet for search keywords (one run of keyword_proposal_run). */
@@ -30,5 +32,10 @@ export interface CollectPassJob {
 
 /** Run the deterministic filter again on every offer of an account (phase 3 plan, section 6). */
 export interface OffersScreenJob {
+  userId: string;
+}
+
+/** Score with Claude the kept offers of an account still without a current Claude score. */
+export interface OffersAiScoreJob {
   userId: string;
 }

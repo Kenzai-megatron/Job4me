@@ -626,11 +626,12 @@ describe('offers', () => {
     expect((await browser.get('/api/offers?view=other')).statusCode).toBe(400);
   });
 
-  it('ask the worker to screen again when a criterion of the filter changes', async () => {
+  it('ask the worker to screen and score again when what they read changes', async () => {
     const { browser, userId } = await signedInBrowser(ctx, 'filter-criteria');
     const screens = () =>
       queued.filter((job) => job.name === 'offers_screen' && job.data.userId === userId).length;
-    await browser.send('PATCH', '/api/profile', { motivations: 'Aider les PME.' });
+    // Read by neither the filter nor the scorings.
+    await browser.send('PATCH', '/api/profile', { availableFrom: '2027-01-04' });
     expect(screens()).toBe(0);
     await browser.send('PATCH', '/api/profile', { radiusKm: 25 });
     expect(screens()).toBe(1);
@@ -638,6 +639,20 @@ describe('offers', () => {
     expect(screens()).toBe(2);
     await browser.post('/api/profile/eliminations', { kind: 'language', value: 'Allemand' });
     expect(screens()).toBe(3);
+    // Read by the scoring by Claude (phase 3 plan, section 7 bis): its scores made before give
+    // way to the scores without AI until it scores again.
+    await browser.send('PATCH', '/api/profile', { motivations: 'Aider les PME.' });
+    expect(screens()).toBe(4);
+    await browser.post('/api/profile/experiences', {
+      title: 'Aide-comptable',
+      employer: 'Démo',
+      location: null,
+      startMonth: '2021-01',
+      endMonth: null,
+      current: true,
+      description: null,
+    });
+    expect(screens()).toBe(5);
     // An offer added by hand is kept, whatever the criteria.
     const added = (
       await browser.post('/api/offers', { title: 'Juriste', company: 'Deloitte' })
@@ -710,6 +725,65 @@ describe('offers', () => {
       titles((await browser.get('/api/offers?fresh=true')).json<OffersResponse>()),
     ).not.toContain('top');
     expect(made.top).toBeDefined();
+  });
+
+  it('show the detailed analysis of an offer scored by Claude, to its account only', async () => {
+    const alice = await signedInBrowser(ctx, 'analysis-alice');
+    const bob = await signedInBrowser(ctx, 'analysis-bob');
+    const analysis = {
+      subscores: {
+        skills: 90,
+        experience: 80,
+        languages: 60,
+        practical: 100,
+        sector: 70,
+        motivations: 70,
+      },
+      weights: {
+        skills: 30,
+        experience: 20,
+        languages: 15,
+        practical: 15,
+        sector: 10,
+        motivations: 10,
+      },
+      strengths: ['Winbooks au quotidien'],
+      gaps: ['Néerlandais B2 demandé'],
+      blockers: [],
+      keywords: ['comptabilité générale'],
+    };
+    const offerId = await withUser(ctx.deps.db, alice.userId, async (tx) => {
+      const { offerId: id } = await collected(tx, alice.userId, {
+        source: 'alpha',
+        externalId: 'analysed',
+        title: 'Comptable',
+        seen: new Date(),
+      });
+      await tx.insert(schema.offerScores).values({
+        userId: alice.userId,
+        offerId: id,
+        method: 'claude_detailed',
+        score: 81,
+        confidence: 'normal',
+        factors: [],
+        reason: 'Métier visé, Winbooks, néerlandais à renforcer.',
+        analysis,
+        model: 'claude-sonnet-5-5',
+        promptVersion: 'detailed-1',
+        profileVersion: 'p',
+        offerVersion: 'o',
+      });
+      return id;
+    });
+    const offer = (await alice.browser.get(`/api/offers/${offerId}`)).json<Offer>();
+    expect(offer.score).toMatchObject({
+      value: 81,
+      method: 'claude_detailed',
+      confidence: 'normal',
+      reason: 'Métier visé, Winbooks, néerlandais à renforcer.',
+      analysis,
+    });
+    expect((await bob.browser.get(`/api/offers/${offerId}`)).statusCode).toBe(404);
   });
 
   it('give each source its relevance: the share of its offers scored 80 or more', async () => {

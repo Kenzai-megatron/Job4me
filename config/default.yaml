@@ -140,6 +140,44 @@ ai:
     pollIntervalMs: 3000
     # A structuring still running after this long is taken again (the worker stopped).
     staleAfterMs: 600000
+  # Scoring by Claude (phase 3 plan, sections 7 bis and 8; ADR 0018): written and tested, but off
+  # (decision D5: free during the test phase). Switched on, it shares the caps above (2 $ a week).
+  scoring:
+    enabled: false
+    # A run (a few batches, ten analyses) still going after an hour is considered lost; the queue
+    # never runs it again on its own, so that no request is paid for twice.
+    staleAfterMs: 3600000
+    quick:
+      model: claude-haiku-5-5
+      maxTokens: 16000
+      effort: medium
+      batchSize: 25
+      # Decision D2: 500 characters of description per offer, without e-mail or phone number.
+      descriptionChars: 500
+      reasonChars: 200
+      # Offers scored per pass, taken in turn from each source; the rest waits for the next pass.
+      perPass: 200
+    detailed:
+      model: claude-sonnet-5-5
+      maxTokens: 8000
+      effort: medium
+      # No server-side fallback: an offer Claude Sonnet declines keeps its quick score.
+      fallbacks: false
+      # Hypothèse (SPEC, section 5): a quick score of 70 or more gets the detailed analysis.
+      threshold: 70
+      descriptionChars: 1200
+      # About twenty offers a week are expected (plan, section 8); the caps bound the rest.
+      perPass: 10
+      # An offer with a blocking element (a required language level, diploma or licence the
+      # profile lacks) is never « apply today »: its score stays in « for want of better ».
+      blockerCap: 59
+      maxFindings: 5
+      findingChars: 200
+    # Threat 1 of the plan: a batch of three offers or more whose every score jumps 30 points
+    # above the score without AI is suspect; each of its offers is scored again on its own.
+    suspect:
+      minBatch: 3
+      jump: 30
   # USD per million tokens, Anthropic price list of 3/11/2026 (check before relying on them).
   # Cache reads are 0.1x the input price, 5-minute cache writes 1.25x.
   prices:

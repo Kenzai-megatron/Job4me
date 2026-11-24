@@ -49,6 +49,8 @@ export interface CollectDeps {
   now?: () => Date;
   /** Tells the account's phone of a silent source (decision D4); absent without push keys. */
   notify?: (userId: string, message: PushMessage) => Promise<unknown>;
+  /** After a pass that stored offers (never a test): the scoring by Claude, when switched on. */
+  afterPass?: (userId: string) => Promise<unknown>;
 }
 
 export interface RunOutcome {
@@ -583,6 +585,14 @@ export async function runPass(deps: CollectDeps, job: CollectPassJob): Promise<R
         'silent sources not checked',
       ),
     );
+    await deps
+      .afterPass?.(userId)
+      ?.catch((error: unknown) =>
+        deps.logger.error(
+          { passId, err: error instanceof Error ? error.message : 'unknown' },
+          'step after the pass failed',
+        ),
+      );
   }
   const totals = outcomes.reduce(
     (sum, outcome) => ({

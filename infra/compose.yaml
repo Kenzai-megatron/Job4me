@@ -28,6 +28,8 @@ x-app-env: &app-env
   JOB4ME_PUSH_CONTACT: ${JOB4ME_PUSH_CONTACT:-mailto:job4me@example.invalid}
   # Development stacks only (pnpm setup:dev): the demo source, which makes no request.
   JOB4ME_COLLECT_DEMO_SOURCE: ${JOB4ME_COLLECT_DEMO_SOURCE:-false}
+  # The scoring by Claude (ADR 0018, decision D5): off unless .env says true.
+  JOB4ME_AI_SCORING: ${JOB4ME_AI_SCORING:-false}
 
 services:
   postgres:

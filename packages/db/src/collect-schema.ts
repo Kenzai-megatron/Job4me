@@ -276,8 +276,9 @@ export const jobOffers = pgTable(
 
 /**
  * The current score of an announcement (phase 3 plan, section 3; ADR 0018): without AI by default
- * (`rules`, its factors), or by Claude once switched on (lot 5). Computed again only when the
- * profile or the offer changes (their versions), or when the rules change.
+ * (`rules`, its factors), or by Claude once switched on (`claude_quick`, then `claude_detailed`
+ * from 70). Computed again only when the profile or the offer changes (their versions), or when
+ * the rules change; a Claude score no longer current gives way to the score without AI.
  */
 export const offerScores = pgTable(
   'offer_score',
@@ -291,8 +292,13 @@ export const offerScores = pgTable(
     confidence: text('confidence').notNull(),
     /** What made a score without AI, as data the interface words. */
     factors: jsonb('factors').$type<unknown[]>(),
-    /** Claude's short reason (lot 5). */
+    /** Claude's reason, in one sentence. */
     reason: text('reason'),
+    /**
+     * The detailed analysis by Claude Sonnet (phase 3 plan, section 8): subscores of the grid and
+     * the weights used, strengths, gaps, blocking elements, keywords.
+     */
+    analysis: jsonb('analysis').$type<Record<string, unknown>>(),
     model: text('model'),
     promptVersion: text('prompt_version'),
     profileVersion: text('profile_version').notNull(),

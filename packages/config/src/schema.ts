@@ -220,6 +220,45 @@ export const settingsSchema = z
         pollIntervalMs: z.number().int().min(500).max(60_000),
         staleAfterMs: z.number().int().min(60_000),
       }),
+      /**
+       * Scoring by Claude (phase 3 plan, sections 7 bis and 8; ADR 0018): off by default
+       * (decision D5); on, under the caps above. Every count and threshold of it lives here.
+       */
+      scoring: z.object({
+        enabled: z.boolean(),
+        /** A run still going after this long is considered lost; it is never run again. */
+        staleAfterMs: z.number().int().min(60_000),
+        quick: aiTaskSchema.extend({
+          /** Offers per request. */
+          batchSize: z.number().int().min(1).max(50),
+          /** Characters of description sent per offer, contacts removed (decision D2). */
+          descriptionChars: z.number().int().min(0).max(2000),
+          /** Longer reasons are cut. */
+          reasonChars: z.number().int().min(40).max(500),
+          /** Offers scored per pass, in turn from each source; the rest waits. */
+          perPass: z.number().int().min(0).max(5000),
+        }),
+        detailed: aiTaskSchema.extend({
+          fallbacks: z.boolean(),
+          /** A quick score from this value gets the detailed analysis (SPEC: 70, Hypothèse). */
+          threshold: z.number().int().min(0).max(100),
+          descriptionChars: z.number().int().min(0).max(5000),
+          perPass: z.number().int().min(0).max(500),
+          /** With a blocking element, the score stays at or below this value. */
+          blockerCap: z.number().int().min(0).max(100),
+          /** At most this many strengths, gaps, blocking elements; keywords: twice as many. */
+          maxFindings: z.number().int().min(1).max(20),
+          findingChars: z.number().int().min(40).max(500),
+        }),
+        /**
+         * A batch of at least `minBatch` offers whose every score is `jump` points or more above
+         * the score without AI is suspect (threat 1): each of its offers is scored again alone.
+         */
+        suspect: z.object({
+          minBatch: z.number().int().min(2).max(50),
+          jump: z.number().int().min(1).max(100),
+        }),
+      }),
       /** USD per million tokens, by model; an unknown model (a fallback) is priced at `unknown`. */
       prices: z.record(z.string(), priceSchema),
       unknownModelPrice: priceSchema,

@@ -1,4 +1,9 @@
-import type { OfferPosting, OfferUnmergeResponse } from '@job4me/contracts';
+import {
+  type OfferPosting,
+  type OfferUnmergeResponse,
+  type ScoreAnalysis,
+  scoringCriteria,
+} from '@job4me/contracts';
 import { formatDate } from '@job4me/i18n';
 import { Alert, Badge, Button, Card, Spinner } from '@job4me/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -71,6 +76,75 @@ function PostingItem({
   );
 }
 
+/** A list of the detailed analysis, when it has something to say. */
+function Findings({ id, title, items }: { id: string; title: string; items: readonly string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <section aria-labelledby={id} className="flex flex-col gap-1">
+      <h3 id={id} className="text-sm font-semibold">
+        {title}
+      </h3>
+      <ul className="list-disc ps-5 text-sm">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Claude Sonnet's analysis (phase 3 plan, section 8): the grid, then what it found. */
+function Analysis({ analysis }: { analysis: ScoreAnalysis }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-3">
+      <table className="w-full text-sm">
+        <caption className="sr-only">{t('offer.analysis.grid')}</caption>
+        <thead>
+          <tr className="text-left text-muted">
+            <th scope="col" className="py-1 font-medium">
+              {t('offer.analysis.criterion')}
+            </th>
+            <th scope="col" className="py-1 text-right font-medium">
+              {t('offer.analysis.weight')}
+            </th>
+            <th scope="col" className="py-1 text-right font-medium">
+              {t('offer.analysis.subscore')}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {scoringCriteria.map((criterion) => (
+            <tr key={criterion} className="border-t border-line">
+              <th scope="row" className="py-1 text-left font-normal">
+                {t(`profile.scoringCriteria.${criterion}`)}
+              </th>
+              <td className="py-1 text-right">{analysis.weights[criterion]}</td>
+              <td className="py-1 text-right font-semibold">{analysis.subscores[criterion]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Findings
+        id="offer-analysis-blockers"
+        title={t('offer.analysis.blockers')}
+        items={analysis.blockers}
+      />
+      <Findings
+        id="offer-analysis-strengths"
+        title={t('offer.analysis.strengths')}
+        items={analysis.strengths}
+      />
+      <Findings id="offer-analysis-gaps" title={t('offer.analysis.gaps')} items={analysis.gaps} />
+      <Findings
+        id="offer-analysis-keywords"
+        title={t('offer.analysis.keywords')}
+        items={analysis.keywords}
+      />
+    </div>
+  );
+}
+
 /** The score with every factor that made it, and how far it can be trusted. */
 function ScoreDetail({ score }: { score: NonNullable<OfferUnmergeResponse['offer']['score']> }) {
   const { t } = useTranslation();
@@ -87,7 +161,13 @@ function ScoreDetail({ score }: { score: NonNullable<OfferUnmergeResponse['offer
           ))}
         </ul>
       ) : null}
-      <p className="text-sm text-muted">{t(`offers.methods.${score.method}`)}</p>
+      {score.analysis ? <Analysis analysis={score.analysis} /> : null}
+      <p className="text-sm text-muted">
+        {t(`offers.methods.${score.method}`)}
+        {score.method !== 'rules' && score.confidence === 'low'
+          ? ` ${t('offer.lowConfidence')}`
+          : ''}
+      </p>
     </div>
   );
 }
