@@ -23,3 +23,6 @@ Chaque décision structurante de Job4me tient dans une fiche courte : contexte, 
 | [0017](0017-geographie-geonames.md) | Géographie : localités GeoNames et distances | Acceptée le 23/11/2026 |
 | [0018](0018-notation-des-offres.md) | Notation des offres : sans IA par défaut, Claude en option | Acceptée le 23/11/2026 |
 | [0019](0019-filtre-deterministe.md) | Filtre déterministe | Acceptée le 24/11/2026 |
+| [0020](0020-documents-modele-versions-rendu.md) | Documents : modèle, versions et rendu | Acceptée le 24/11/2026 |
+| [0021](0021-controle-anti-invention.md) | Contrôle anti-invention | Acceptée le 24/11/2026 |
+| [0022](0022-redaction-par-claude.md) | Rédaction des documents par Claude | Acceptée le 24/11/2026 |
